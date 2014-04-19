@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://reminderfox/skin/reminder.css"  type="text/css"?>
+<?xml-stylesheet href="chrome://reminderfox/skin/catBox.css"  type="text/css"?>
+
+<!-- DTD Files -->
+<!DOCTYPE window 
+[
+    <!ENTITY % dtd2 SYSTEM "chrome://reminderfox/locale/reminderfox.dtd" > %dtd2;
+]>
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	id="reminderFox-manage-categories">
+
+	<vbox id="reminderFoxCategoryVbox">
+		<label id="mainHeader" value="&rf.categories.currentCatHeader.default;"
+			width="60px" />
+		<hbox flex="1">
+			<listbox id="mainCatBox" onclick="mainCategoryListFocus(this)"
+				flex="3" seltype="single" style="overflow: auto;" rows="8">
+			</listbox>
+			<vbox flex="1">
+				<separator class="thin" />
+				<button id="sCatAdd" label="&rf.categories.list.button.add;"
+					tooltiptext="&rf.categories.tooltip.sCatAdd;" onclick="go4Category(this);" />
+				<button id="sCatEdit" label="&rf.categories.list.button.edit;"
+					tooltiptext="&rf.categories.tooltip.sCatEdit;" onclick="go4Category(this);"
+					disabled="true" />
+				<button id="sCatDelete" label="&rf.categories.list.button.delete;"
+					tooltiptext="&rf.categories.tooltip.sCatDelete;" onclick="selectedCatItemDelete(this);"
+					disabled="true" />
+				<hbox>
+					<button id="reminderFox_cats_moveUp"
+						label="&rf.options.list.reminder.lists.button.moveup.label;"
+						oncommand="catMoveUp();" disabled="true" flex="1" />
+					<button id="reminderFox_cats_moveDown"
+						label="&rf.options.list.reminder.lists.button.movedown.label;"
+						oncommand="catMoveDown();" disabled="true" flex="1" />
+				</hbox>
+
+				<hbox>
+					<button id="reminderFox_cats_sortUp"
+						label="&rf.options.list.reminder.lists.button.sortup.label;"
+						oncommand="catSort('up')" flex="1" />
+					<button id="reminderFox_cats_sortDown"
+						label="&rf.options.list.reminder.lists.button.sortdown.label;"
+						oncommand="catSort('down');" flex="1" />
+				</hbox>
+
+				<button id="sCatShowAll" label="&rf.categories.list.button.viewall;"
+					onclick="showAllCurrentCategories(this);" />
+			</vbox>
+		</hbox>
+
+	</vbox>
+
+	<script type="application/x-javascript"><![CDATA[
+	
+	
+	function showAllCurrentCategories(){
+		window.openDialog("chrome://reminderfox/content/categories/currentCategories.xul", "reminderFox-editAdd-categories", "chrome,resizable,modal");
+	}
+
+	function mainCategoryListFocus(event){
+		var sCatEdit = document.getElementById('sCatEdit');
+		var sCatDelete = document.getElementById('sCatDelete');
+		sCatEdit.removeAttribute("disabled");
+		sCatDelete.removeAttribute("disabled");
+		document.getElementById('reminderFox_cats_moveUp').removeAttribute("disabled");
+		document.getElementById('reminderFox_cats_moveDown').removeAttribute("disabled");
+	}
+	
+	function go4Category(event){
+		var editCat;
+		reminderfox.category.addOrEdit = event.id;
+		
+		if (reminderfox.category.addOrEdit == "sCatEdit") {
+			var catCurList = document.getElementById('mainCatBox');
+			var selCatItem = catCurList.currentIndex;
+			
+			if (selCatItem == -1) {
+				return;
+			} /* no item selecetd */
+			var editCat = catCurList.childNodes[selCatItem].label
+		}
+		else { /*  sCatAdd */
+			editCat = "";
+		}
+		
+		var callOptions = {
+			eventID: reminderfox.category.addOrEdit,
+			currentItem: editCat
+		};
+		window.openDialog("chrome://reminderfox/content/categories/addCategory.xul", "reminderFox-editAdd-categories", "chrome,resizable,modal", callOptions);
+
+		var item = callOptions.currentItem;
+
+		//function returnCategory(item){
+			/* --------------------------------------------------
+			 'item' has been send from Add/Edit Mask
+			 Have to
+			 -- check for duplicates in 'standard'-cat-item list
+			 -- escape commas
+			 Will new/added item push to top of list
+			 */
+			if (reminderfox.category.addOrEdit == "sCatEdit") {
+				selectedCatItemDelete();
+			}
+			reminderfox.category.saveGroups();
+			reminderfox.category.addOrEdit = "";
+			reminderfox.core.writeCategories2prefs(reminderfox.category.NoDup(reminderfox.util.escapeCommas(item) + ',' + reminderfox.core.readCategories2prefs()));
+			reminderfox.category.readDefault();
+		//}
+
+
+	}
+	
+	
+	function catMoveUp(){
+		var categoryList = document.getElementById("mainCatBox");
+		var index = categoryList.selectedIndex;
+		;
+		
+		if (index > 0) {
+			var child = categoryList.childNodes[index - 1];
+			var moved = categoryList.removeChild(categoryList.childNodes[index]);
+			categoryList.insertBefore(moved, child);
+			categoryList.selectedIndex = index - 1;
+		}
+	}
+	
+	
+	function catMoveDown(){
+		var categoryList = document.getElementById("mainCatBox");
+		var index = categoryList.selectedIndex;
+		;
+		
+		if (index == categoryList.childNodes.length - 2) {
+			var moved = categoryList.removeChild(categoryList.childNodes[index]);
+			categoryList.appendChild(moved);
+			categoryList.selectedIndex = categoryList.childNodes.length - 1;
+			;
+			
+		}
+		else 
+			if (index < categoryList.childNodes.length - 1) {
+				var child = categoryList.childNodes[index];
+				var moved = categoryList.removeChild(categoryList.childNodes[index + 1]);
+				categoryList.insertBefore(moved, child);
+				categoryList.selectedIndex = index + 1;
+			}
+	}
+	
+	
+	/**
+	 * Categories sorting for 'Default'
+	 * @param mode		= 'up' or 'down'
+	 */
+	function catSort(mode){
+		if (!mode) mode = "";
+		reminderfox.category.saveGroups(mode);
+		reminderfox.category.readDefault();
+	}
+	
+	
+	function selectedCatItemDelete(){
+		var catMainList = document.getElementById('mainCatBox');
+		var selCatItem = catMainList.currentIndex;
+		
+		if ((selCatItem > -1)) {
+			catMainList.removeChild(catMainList.childNodes[selCatItem]);
+		}
+	}
+	]]></script>
+
+
+</overlay>

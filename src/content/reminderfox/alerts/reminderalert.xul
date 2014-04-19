@@ -1,0 +1,55 @@
+<?xml-stylesheet href="chrome://reminderfox/skin/reminder.css"  type="text/css"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://global/skin/alerts/alert.css" type="text/css"?>
+
+<!-- DTD Files -->
+<!DOCTYPE window 
+[
+    <!ENTITY % dtd2 SYSTEM "chrome://reminderfox/locale/reminderfox.dtd" > %dtd2;
+]>
+
+<window id="alertNotification"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        windowtype="window:alert2"
+        xmlns:xhtml2="http://www.w3.org/TR/xhtml2"
+        xmlns:wairole="http://www.w3.org/2005/01/wai-rdf/GUIRoleTaxonomy#"
+        xhtml2:role="wairole:alert"
+        align="start"
+        onload="onAlertLoad()">
+  
+	  <stringbundleset id="stringbundleset">
+	    <stringbundle id="reminderFox-bundle" src="chrome://reminderfox/locale/reminderfox.properties"/>
+	  </stringbundleset>
+	  	<script type="application/x-javascript"  src="chrome://reminderfox/content/utils/rmFxUtils.js" />
+	        <script type="application/x-javascript"  src="chrome://reminderfox/content/network/upload.js" />
+	        <script type="application/x-javascript"  src="chrome://reminderfox/content/network/download.js" />
+	        <script type="application/x-javascript" src="chrome://reminderfox/content/reminderFoxCore.js" />
+      <script type="application/x-javascript"  src="chrome://reminderfox/content/network/networkService.js" />
+          <script type="application/x-javascript"  src="chrome://reminderfox/content/network/passwordManagerUtils.js" />
+
+    <script type="application/x-javascript"  src="chrome://reminderfox/content/reminderFox.js" />
+
+    <script type="application/x-javascript" src="chrome://reminderfox/content/alerts/reminderalert.js" />
+  
+  <hbox id="alertBox" class="alertBox" onclick="onAlertClick();">
+		<vbox id="reminderfox-foxpaw">
+			<hbox>
+				<image src='chrome://reminderfox/skin/images/foxy-small.png' class="small-fox-icon"/>
+				<spacer id="reminderfox-entry-spacer.i" width="6px" />
+			</hbox>
+		</vbox>
+		<vbox id="tooltipChildrenReminders2">
+			<description id="reminderfox-todayRemindersDescription2" style="font-weight:bold">&rf.main.tooltip.todaysreminders.label;</description> 
+			<vbox id="reminderfox-todaysRemindersBox2" >
+			</vbox>
+			<spacer id="reminderfox-reminderSpacer" height="4px"/>
+			<description value="&rf.main.tooltip.upcomingreminders.label;" id="reminderfox-upcomingRemindersDescription2" style="font-weight:bold"/>
+			<vbox id="reminderfox-upcomingRemindersBox2">
+			</vbox>
+		</vbox>	
+  </hbox>
+
+  <!-- This method is called inline because we want to make sure we establish the width
+       and height of the alert before we fire the onload handler. -->
+  <script type="application/x-javascript">prefillAlertInfo();</script>
+</window>

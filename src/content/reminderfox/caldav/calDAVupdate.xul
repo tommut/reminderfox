@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://reminderfox/skin/reminder.css"  type="text/css"?>
+
+<!-- DTD Files -->
+<!DOCTYPE window 
+[
+    <!ENTITY % dtd1 SYSTEM "chrome://reminderfox/locale/reminderfox.dtd" > %dtd1;
+]>
+
+<!--   Note:   this XUL dialog is HIDDEN; 
+       Also there is no user action required, an update of all remote calendars 
+       is required at system startup and it needs to run separately. 
+       With sync failing of any remote calendar the XUL dialog is unhidden
+       and shows the error for the calendar. Handles to open Options tab:sync 
+       to configure, or to ignore and proceed with next calendar
+       -->
+
+<window xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	windowtype="window:rmFxCaldavUpdate" orient="vertical"
+	onload="calDAVupdate()"
+	width="400px" 
+	title="Reminderfox Remote Calendar -- Auto Sync">
+
+	<stringbundleset id="stringbundleset">
+		<stringbundle id="reminderFox-bundle"
+			src="chrome://reminderfox/locale/reminderfox.properties" />
+	</stringbundleset>
+
+	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/rmFxUtils.js" />
+	<script type="application/x-javascript"
+		src="chrome://reminderfox/content/network/passwordManagerUtils.js" />
+
+	<script type="application/x-javascript"
+		src="chrome://reminderfox/content/caldav/calDAVrequester.js" />
+	<script type="application/x-javascript"
+		src="chrome://reminderfox/content/caldav/calDAVcalls.js" />
+	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/HTTP.js" />
+
+	<script type="application/x-javascript" src="chrome://reminderfox/content/reminderFoxCore.js" />
+	<script type="application/x-javascript" src="chrome://reminderfox/content/reminderFox.js" />
+
+
+	<hbox id="rmFxCaldavUpdate" hidden="true">
+		<spacer width="15px"/>
+		<vbox>
+
+			<hbox>
+				<label id="errorStatus" width="250px" class="reminderFox_BoldError"/>
+			</hbox>
+			<description id="account" width="250px" class="reminderfox_TextNote">
+			</description>
+			<description id="url" width="250px" class="reminderfox_TextNote">
+			</description>
+
+			<spacer height="10px"/>
+			<description id="callDetails" width="250px" class="reminderfox_TextNote">
+			</description>
+
+			<hbox>
+				<button id="reminderFox_go4OptionSync" 
+					class="reminderfox-iconLabel"
+					oncommand="go4NextSync(true);"
+					label="Next Calendars" tooltiptext="Skip this Calendar, go for others."/>		<!-- //$$$locale -->
+
+				<spacer flex="1"/>
+
+				<button id="reminderFox_go4OptionSync" 
+					class="reminderfox-iconLabel"
+					oncommand="go4OptionSync(true);"
+					label="Configure Calendar" tooltiptext="Open 'Options/Sync' to correct Calendar setting."/><!-- //$$$locale -->
+			</hbox>
+		</vbox>
+	</hbox>
+
+	<spacer height="10px"/>
+
+	<script type="application/x-javascript"><![CDATA[
+		function calDAVupdate () {
+			var updateWindow = reminderfox.util.getWindow("window:rmFxCaldavUpdate");
+			updateWindow.screenX= 10;
+			updateWindow.screenY= (738 /*this.screen.height*/ - 150);
+
+			document.getElementById('errorStatus').value       = window.arguments[0].sMsg;
+			document.getElementById('account').value           = window.arguments[0].aMsg;
+			document.getElementById('url').value               = window.arguments[0].uMsg;
+			document.getElementById('callDetails').value       = window.arguments[0].calls;
+			document.getElementById('rmFxCaldavUpdate').hidden = false;
+
+			rmFx_CalDAV_SyncActiveAccounts(null, "window:rmFxCaldavUpdate");
+		}
+
+		function go4OptionSync() {
+			reminderfox.overlay.openOptionsDialog('network');
+		// here we can close the XUL 
+			window.close();
+		}
+
+		function go4NextSync() {
+			rmFx_CalDAV_SyncActiveAccountsNext(false);
+	// need to hold the XUL open or the further sync process will stop !
+	//		window.close();  
+		}
+
+	]]></script>
+
+</window>

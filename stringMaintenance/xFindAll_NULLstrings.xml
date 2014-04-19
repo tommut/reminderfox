@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="FindAll_NULLstrings" default="bootstrap">
+
+<!-- _____________________  Checking  .dtd / .properties  ______________________
+
+      Check for valid .dtd and .properties entries in all XUL/XML or JS all files 
+      of a Mozilla XPI project
+
+      To run the checks use the different targets  'dtd' or 'properties'
+      Set the property values "xpiName" and "locale" approbiated for the XPI project:
+
+      The routines are based on entries in .properties and .dtd files like this:
+            <!ENTITY rf.name           "ReminderFox">
+            rf.title=ReminderFox
+       here the leading "rf" is used as the "search" key.
+-->
+        <property name="xpiName"      value="reminderfox" />
+        <property name="locale"       value="en-US" />
+        <property name="search"       value="rf" />
+<!--
+
+      With a first use only also run the target 'bootstrap'
+
+      Note:  All tasks need long run time, a typical project can run
+             more than a minute!
+
+      Directory structure:
+
+        { eclipse workspace }/
+              |_ xpiProject/
+                   |_ maitain/
+                   |   |_ {thisANT}.xml
+                   |   |_ {resulting files}
+                   |
+                   |_ src/
+                       |_ subdirectories with JS/XUL files 
+                       |_ locale
+
+     Results are stored in:
+         _dtd_STRINGS.txt           all strings in .dtd
+         _dtd_NULLstrings.txt       all strings without use in project
+
+         _prop_STRINGS.txt          all strings in .properties
+         _prop_NULLstrings.txt      all strings without use in project
+
+         The 'NULLstrings'-files contains all strings NOT found in XUL / JS files.
+
+     IMPORTANT NOTE:
+       XUL files can contain .properties as well if they contain JS functions!
+       Use target 'propertiesInXUL' to find all 'properties' used in XUL files,
+       stored in:
+         _propXUL_STRINGS.txt
+
+    ________________________________________________________________________-->
+
+	<target name="bootstrap" description="Used to install contrib/ivy task jar. Need to run only first time.">
+		<mkdir dir="${user.home}/.ant/lib"/>
+		<get dest="${user.home}/.ant/lib/groovy-all.jar" 
+			src="http://search.maven.org/remotecontent?filepath=org/codehaus/groovy/groovy-all/2.1.9/groovy-all-2.1.9.jar"/>
+		<get dest="${user.home}/.ant/lib/ant-contrib-1.0b3.jar"
+			src="http://search.maven.org/remotecontent?filepath=ant-contrib/ant-contrib/1.0b3/ant-contrib-1.0b3.jar"/>
+	</target>
+
+	<taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy">
+		<classpath>
+			<fileset dir="${user.home}/.ant/lib" includes="*.jar"/>
+		</classpath>
+	</taskdef>
+
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="${user.home}/.ant/lib/ant-contrib-1.0b3.jar"/>
+		</classpath>
+	</taskdef>
+
+
+	<!-- .dtd  sed attribute string -->
+	<var name="d1" value="-r 's/^([^ ]*) (.*)/\2/;/^"/>
+	<var name="d2" value="${d1}${search}"/> 
+	<var name="d3" value="${d2}*/!d;s/\t/ /g;s/^([^ ]*) (.*)/\1/' "/>
+
+	<!-- .properties  sed attribute string -->
+	<var name="p1" value="-r 's/^([^=]*)=(.*)/\1/;/^"/>
+	<var name="p2" value="${p1}${search}"/> 
+	<var name="p3" value="${p2}*/!d' "/>
+
+
+	<!-- _________  NULLstrings in DTD  _____________________________________ -->
+
+	<target name="dtd" description="NULLstrings in DTD">
+
+		<copy file="../src/locale/${locale}/${xpiName}/${xpiName}.dtd"
+			tofile="tempDTD0.txt" overwrite="true"/>
+
+		<var name="d" value="${d3} tempDTD0.txt"/>
+		<echo>DTD SED search string  ${d}</echo> 
+		<exec executable="sed" output="_dtd_STRINGS.txt">
+			<arg line="${d}"/>
+		</exec>
+
+		<fileset id="existing" dir="../src" includes="**/*.xul,**/*.xml"/>
+
+		<groovy>
+		  new File("tempDTD.txt").withWriter { writer ->
+		    new File("_dtd_STRINGS.txt").eachLine { term ->
+		      def files = project.references.existing.findAll{
+		        new File(it.toString()).text.contains(term)
+		      }
+		      writer.println "${term} in files : ${files.size}"
+		    }
+		  }
+		</groovy>
+
+		<exec executable="sed" output="_dtd_NULLstrings.txt">
+		<arg line="'/in files : 0/!d;s/ in files : 0//g'  tempDTD.txt"/>
+		</exec>
+		<!--delete file="tempDTD.txt"/-->
+	</target>
+
+
+	<!-- __________ NULLstrings in PROPERTIES ______________________________ -->
+
+	<target name="properties" description="NULLstrings in PROPERTIES">
+
+		<copy file="../src/locale/${locale}/${xpiName}/${xpiName}.properties"
+			tofile="tempProp.txt" overwrite="true"/>
+
+		<var name="p" value="${p3} tempProp.txt"/>
+		<echo>PROPERTIES SED search string  ${p}</echo>
+		<exec executable="sed" output="_prop_STRINGS.txt">
+			<arg line="${p}"/>
+		</exec>
+
+		<fileset id="existing" dir="../src" includes="**/*.js"/>
+
+		<groovy>
+		  new File("tempProp.txt").withWriter { writer ->
+		    new File("_prop_STRINGS.txt").eachLine { term ->
+		      def files = project.references.existing.findAll{
+		        new File(it.toString()).text.contains(term)
+		      }
+		      writer.println "${term} in files : ${files.size}"
+		    }
+		  }
+		</groovy>
+
+		<exec executable="sed" output="_prop_NULLstrings.txt">
+		<arg line="'/in files : 0/!d;s/ in files : 0//g'  tempProp.txt"/>
+		</exec>
+		<!--delete file="tempProp.txt"/-->
+	</target>
+
+
+	<!-- _________  PROPERTY strings in XUL with JS functions _______________ -->
+
+	<target name="propertiesInXUL" description="PROPERTY strings in XUL JS functions">
+
+		<copy file="../src/locale/${locale}/${xpiName}/${xpiName}.properties"  
+			tofile="tempProp.txt" overwrite="true"/>
+
+		<var name="p" value="${p3} tempProp.txt"/> 
+
+		<exec executable="sed" output="_prop_STRINGS.txt">
+			<arg line="${p}"/>
+		</exec>
+
+		<fileset id="existing" dir="../src" includes="**/*.xul"/>
+
+		<groovy>
+		  new File("tempProp1.txt").withWriter { writer ->
+		    new File("_prop_STRINGS.txt").eachLine { term ->
+		      def files = project.references.existing.findAll{
+		        new File(it.toString()).text.contains(term)
+		      }
+		      writer.println "${term} in files : ${files.size}"
+		    }
+		  }
+		</groovy>
+
+		<exec executable="sed" output="_propXUL_STRINGS.txt">
+		<arg line="'s/in files : 0//g;/in files :/!d'  tempProp1.txt"/>
+		</exec>
+		<!--delete file="tempProp1.txt"/-->
+	</target>
+
+</project>

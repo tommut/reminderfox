@@ -1,0 +1,167 @@
+<?xml version="1.0" ?>
+
+	<project name="buildXPI" default="createJAR">
+
+	<description>
+		'build_eANT.xml' is used to generate a MOZ extension using 'Eclispe SDK' 
+		with 'ANT' builder. It supports generating JAR / XPI files, but not 
+		compiling of source files.
+
+
+		PART 1	Build JAR
+				Basic Definitions for the JAR/XPI build process is read from
+				'install.rdf'  and  'build.properties'
+
+		Proposed directory structure:
+
+         _DATA/
+            |
+            |_ { eclipse workspace }/
+                  |_ extensionDir/              <!-- the HG directory  -->
+                      |_ build/
+                      |    |_ build_eANT.xml
+                      |    |_ build.properties
+                      |    |_ extension.jar
+                      |    |_ extension.xpi    <!-- maybe stored to xpiDIR  -->
+                      |
+                      |_ src/
+                           |_ install.rdf
+                           |_ JAR/XPI files and directories
+
+		PART 2	Build XPI 
+				Defines files/directories has to be loaded for the XPI.
+
+		PART 3	Copy to Profiles etc **Optional**
+				Store the JAR directly to the application profile(s).
+				In many cases it's easier to use this with a 'restart' of the 
+				application compared to do a normal XPI install.
+			Note:   It replaces the chrome/{extension}.JAR only!
+
+	</description>
+
+
+	<xmlproperty file="build.properties"    prefix="X"     keeproot="false"/>
+	<xmlproperty file="../src/install.rdf"  prefix="RDF"   keeproot="false"/>
+	<tstamp />
+ 
+
+	<!--  PART 1 ______  XPI definition  ___________________________________  -->
+
+	<property name="xpiname"      value="${X.description}" />
+	<property name="xpiNAME"      value="${X.Description}" />
+	<property name="xpiVersion"   value="${RDF.Description.em:version}" />
+	<property name="GUID"         value="${RDF.Description.em:id}" />
+
+	<property name="xpiStamp"     value="${DSTAMP}_${TSTAMP}" />
+
+	<property name="contentDir"   value="${X.contentDir}"/>
+	<property name="otherDir"     value="${X.otherDir}"/>
+
+	<property name="xpiNameString" value="${xpiname}_${xpiVersion}_${X.fork}_${xpiStamp}.xpi"/>
+	<property name="xpiDIR"        value="${X.xpiDIR}${X.shortName}/XPI/${X.fork}/"/>
+
+	<tstamp>
+		<!--  "EEE, d MMM yyyy HH:mm:ss Z (z)" Wed, 4 Jul 2001 12:08:56 -0700 (PDT)  -->
+		<format property="tInfo" pattern="EEE, d MMM yyyy HH:mm:ss Z (z)"/>
+	</tstamp>
+
+	<tstamp />
+
+
+	<echo file="version.log" append="false">
+	${xpiNAME}  [${xpiVersion}] ${X.fork}
+	   as of:    ${tInfo}
+	'${xpiNameString}'   &lt;'${xpiStamp}'&gt;
+	</echo>
+
+	<copy file="version.txt" tofile="version_1.txt">
+		<filterchain>
+			<striplinecomments>
+				<comment value="##"/>
+			</striplinecomments>
+		</filterchain>
+	</copy>
+
+	<concat destfile="version.log" append="true">
+		<filelist dir="" files="version_1.txt"/>
+	</concat>
+	<delete file="version_1.txt" />
+
+
+	<!--  PART 2 ______  generate JAR / XPI / version.log  _________________  -->
+
+		<delete file="${xpiname}.jar" />
+
+		<target name="createJAR">
+			<zip destfile="${xpiname}.jar">
+				<zipfileset dir="${X.jarDir}"       includes="${X.jarContent}" />
+			</zip>
+		</target>
+
+
+		<target name="createXPI">
+			<zip destfile="${xpiDIR}${xpiNameString}">	
+				<zipfileset dir="${X.jarDir}"   prefix="chrome"    includes="${X.jarContent}" />
+				<zipfileset dir="${X.xpiDir}"        includes="${X.xpiContent}"/>
+				<zipfileset dir=""              includes="build*.*,version.log"/>
+			</zip>
+		</target>
+
+	<!--  PART 3 _________  Optional  Copy JAR / XPI   _____________________  -->
+
+		<!-- PART 3.1....... XPI to Dropbox ............................-->
+		<target name="copyXPI_Dropbox" description="XPI to Dropbox">
+			<copy
+				todir="${user.home}/Dropbox/Public/${X.shortName}/XPI/${X.fork}"
+				failonerror="true" overwrite="true">
+				<fileset dir="${xpiDIR}" includes="${xpiNameString}" />
+				<fileset dir="" includes="version.log" />
+			</copy>
+		</target>
+		<!--........... -->
+
+		<!--  PART 3.2 ...... JAR to TB profile directories ............ -->
+		<target name="copy_TB_LX" description="JAR to TB (Linux)">
+			<copy
+				todir="${X.LX.dir}${X.TB.profiles}/Profiles/${X.TB.p}/extensions/${GUID}/chrome"
+				failonerror="true" overwrite="false">
+				<fileset dir="" includes="${xpiname}.jar" />
+			</copy>
+		</target>
+
+		<target name="copy_TB_Win" description="JAR to TB (Win)">
+			<copy
+				todir="${X.WIN.dir}${X.TB.profiles}/Profiles/${X.TB.p}/extensions/${GUID}/chrome"
+				failonerror="true" overwrite="false">
+				<fileset dir="" includes="${xpiname}.jar" />
+			</copy>
+		</target>
+
+
+		<!--  PART 3.3 ..... JAR to FX profile directory ...............  -->
+		<target name="copy_FX_LX" description="JAR to FX (Linux)">
+			<copy
+				todir="${X.LX.dir}${X.FX.profiles}/Profiles/${X.FX.p}/extensions/${GUID}/chrome"
+				failonerror="true" overwrite="false">
+				<fileset dir="" includes="${xpiname}.jar" />
+			</copy>
+		</target>
+
+		<target name="copy_FX_WIN" description="JAR to FX (Win)">
+			<copy
+				todir="${X.WIN.dir}${X.FX.profiles}/Profiles/${X.FX.p}/extensions/${GUID}/chrome"
+				failonerror="true" overwrite="false">
+				<fileset dir="" includes="${xpiname}.jar" />
+			</copy>
+		</target>
+
+
+		<!--  PART 3.4 ..... JAR to SM2 profile directory ...........  -->
+		<target name="copySM" description="JAR to SM (LX)">
+			<copy todir="${X.SM.profiles}${X.SM.p}/extensions/${GUID}/chrome"
+				failonerror="true" overwrite="false">
+				<fileset dir="" includes="${xpiname}.jar" />
+			</copy>
+		</target>
+
+	</project>
