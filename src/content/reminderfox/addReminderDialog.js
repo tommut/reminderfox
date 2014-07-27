@@ -530,7 +530,6 @@ function rmFx_mainDialogLoadReload() {
  *  Starting the ReminderFox Main Dialog with MainList and/or Calendar
  */
 function rmFx_mainDialogLoad(restartSkip){
-
 	// --- calDAV accounts setup: reminderfox.calDAV.accounts  ---- 
 	reminderfox.calDAV.accountsReadIn();
 
@@ -783,7 +782,9 @@ reminderfox.util.Logger('sync',"Sync settings  ..   networkSync: " + networkSync
 			}
 		}
 	}
-	reminderFox_updateFoxyBadge()
+	reminderFox_updateFoxyBadge();
+	focusAddButton();
+	
 }
 
 
@@ -871,6 +872,11 @@ function repopulateListForYear(oldYear, newYear){
 	calendarTodoArray = null;
 	fillList(true, false);
 	selectCalendarSync = true;
+}
+
+function focusAddButton() { 
+	var desc = document.getElementById("reminderfox-calendar-add");
+	desc.focus();
 }
 
 
