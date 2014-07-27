@@ -1,4 +1,4 @@
-/*  --- reminderfox-calendar-box  --- */
+header/*  --- reminderfox-calendar-box  --- */
 #reminderfox-calendar-box {
 	background-color: #F8F8F8;
 	font-size: 12px;
@@ -136,7 +136,7 @@
 .reminderfox-calendar-week-day-number {
 	margin: 1px;
 	font-size: .8em; /*9px*/;
-	cursor: pointer;
+	/*cursor: pointer;*/
 	}
 	.reminderfox-calendar-week-day-number[sunday="true"]{
 		color: red;
@@ -204,10 +204,11 @@
 	border-right: 0px solid #E2E2E2; /* no border */
 }
 
-	.reminderfox-calendar-month-day-box-class:hover {
+	
+	.reminderfox-calendar-month-day-box-class:hover[nonheader=true] {
 		background-color: #e8e8e8;  /*#C9E8F1;  #FFFF99; */
 	}
-
+	
 	/* --- calendar box day attributes --- */
 	.reminderfox-calendar-month-day-box-class[today] {
 		font-weight: bold;

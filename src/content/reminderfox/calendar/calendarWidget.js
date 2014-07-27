@@ -703,6 +703,7 @@ reminderfox.calendar.ui.mouseDayOnGrid= function(xThis, xEvent) {
 		if (oldDayBox != null) { // reset the previous selected day to be normal (non-expanded)
 			oldDayBox.setAttribute('selectedReminder', false);
 			oldDayBox.setAttribute("class", "reminderfox-calendar-month-day-box-class");
+			oldDayBox.setAttribute("nonheader", true);
 		}
 		var oldColumn = +oldDayBox.attributes['gridColumn'].value
 			+ +(reminderfox.calendar.prefsGetShowWeeks() == true);	//if week#, first column is weekno, so increase coladdress
@@ -786,6 +787,7 @@ reminderfox.calendar.ui.selectDayOnCalndr= function(selectedDate) {
 		if (oldDayBox != null) { // reset the previous selected day to be normal (non-expanded)
 			oldDayBox.setAttribute('selectedReminder', false);
 			oldDayBox.setAttribute("class", "reminderfox-calendar-month-day-box-class");
+			oldDayBox.setAttribute("nonheader", true);
 		}
 		var oldColumn = +oldDayBox.attributes['gridColumn'].value
 			+ +(reminderfox.calendar.prefsGetShowWeeks() == true);	//if week#, first column is weekno, so increase coladdress
@@ -1543,7 +1545,7 @@ reminderfox.calendar.grid.monthCalendar= function (weekHeaderBox, monthsGrid) {
 		var hbox = document.createElement("hbox");
 		// add '#'  for weekNo
 		if ((n==1) && (weeksShow != 0)) {
-			hbox.setAttribute("flex", "0");
+			hbox.setAttribute("flex", "1");
 			hbox.setAttribute("class", "reminderfox-calendar-week-number-box-class");
 
 				var alabel = document.createElement("label");
@@ -1557,9 +1559,10 @@ reminderfox.calendar.grid.monthCalendar= function (weekHeaderBox, monthsGrid) {
 			x = (x >6) ? x -7 : x
 
 			hbox.setAttribute("id", "reminderfox-calendar-week-header-"+ n);
+			
 			hbox.setAttribute("class", "reminderfox-calendar-month-day-box-class");
 			hbox.setAttribute("selectedDay", x);
-			hbox.addEventListener("click", function() {reminderfox.calendar.ui.firstDayOfWeek(this);},false);
+			//hbox.addEventListener("click", function() {reminderfox.calendar.ui.firstDayOfWeek(this);},false);
 
 			var alabel = document.createElement("label");
 			alabel.setAttribute("id", "calDay" + x);
@@ -1570,7 +1573,7 @@ reminderfox.calendar.grid.monthCalendar= function (weekHeaderBox, monthsGrid) {
 			alabel.setAttribute("value",
 				reminderfox.string("rf.options.day."+ x + ".name.MMM"));
 
-			alabel.setAttribute("tooltiptext", reminderfox.string('rf.calendar.firstdayofweek')); // + ' ' +x);
+			//alabel.setAttribute("tooltiptext", reminderfox.string('rf.calendar.firstdayofweek')); // + ' ' +x);
 			hbox.appendChild(alabel);
 
 			weekHeaderBox.appendChild(hbox);
@@ -1588,9 +1591,10 @@ reminderfox.calendar.grid.monthCalendar= function (weekHeaderBox, monthsGrid) {
 			for (var n = 1; n < nCol; n++) {  // 7 *col / 8 cols with week
 				var gridCol = document.createElement("column");
 					if ((n==1) && (weeksShow != 0)) {
-						gridCol.setAttribute("flex", "0");
+						gridCol.setAttribute("flex", "1");
 					} else {
 						gridCol.setAttribute("class", "reminderfox-calendar-month-day-box-class");
+						gridCol.setAttribute("nonheader", true);
 					}
 					gridCol.setAttribute("id", "monthCol-"+n);
 					monthCols.appendChild(gridCol);
@@ -1730,7 +1734,7 @@ reminderfox.calendar.grid.Month= function(calndrGrid, currentDate, nMonth, numMo
 				var gDate = reminderfox.date.convertDate(gridDayNum);
 				var vbox = document.createElement("vbox");
 					vbox.setAttribute("class", "reminderfox-calendar-month-day-box-class");
-
+					vbox.setAttribute("nonheader", true);
 					// label (show the month day)
 					var alabel = document.createElement("label");
 					alabel.setAttribute("class", "reminderfox-calendar-month-day-number-class");
