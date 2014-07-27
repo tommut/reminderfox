@@ -2243,7 +2243,7 @@ reminderfox.overlay.showAlertSlider= function(){
 				lastTimeElapsed +
 				" - currentTime: " +
 				currentTime, reminderfox.consts.LOG_LEVEL_INFO);
-
+				// TODO: setInterval - can remove these lastTime checks
 				if (lastTime == null || (currentTime + 100) >= lastTimeElapsed) { // +100 as small buffer (sometimes times are slightly off)
 					// problem with MAC and alertslider
 //					var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo);
@@ -2314,8 +2314,16 @@ reminderfox.overlay.showAlertSlider= function(){
 
 					reminderfox.core.clearRemindersAndTodos();
 					reminderfox.core.logMessageLevel("AlertSlider: " + currentDate, reminderfox.consts.LOG_LEVEL_INFO);
-					reminderfox.overlay.storeTimeOfLastAlert();
-					window.setTimeout(reminderfox.overlay.showAlertSlider, alert_timeout);
+					reminderfox.overlay.storeTimeOfLastAlert(); 
+					
+					
+					//window.setInterval(reminderfox.overlay.showAlertSlider, alert_timeout);
+					// if lastAlertTimeout != alertTimeout
+					// window.clearInterval...    (have to have saved original setInterval)
+					// window.setInterval( ... ) 
+					
+					
+					//window.setTimeout(reminderfox.overlay.showAlertSlider, alert_timeout);
 
 				}
 			}
@@ -2723,12 +2731,23 @@ reminderfox.overlay.start_postInit= function() {
 			else {
 				// the very first time, we'll just ... 
 				// ... set the alert slider time to occur in the default amount of time after the first...
-				var alert_timeout = reminderfox._prefsBranch.getIntPref(reminderfox.consts.ALERT_TIMEOUT_PREF);
-				if ( alert_timeout > 0) {
-					// convert from minutes to milliseconds
-					alert_timeout = alert_timeout * 60000;
-					window.setTimeout(function() {reminderfox.overlay.showAlertSlider()}, alert_timeout);
-				}
+//				var alert_timeout = reminderfox._prefsBranch.getIntPref(reminderfox.consts.ALERT_TIMEOUT_PREF);
+//				if ( alert_timeout > 0) {
+//					// convert from minutes to milliseconds
+//					alert_timeout = alert_timeout * 60000;
+//					//window.setTimeout(function() {reminderfox.overlay.showAlertSlider()}, alert_timeout);
+//					window.setInterval(reminderfox.overlay.showAlertSlider, alert_timeout);
+//
+//				}
+			}
+			
+			var alert_timeout = reminderfox._prefsBranch.getIntPref(reminderfox.consts.ALERT_TIMEOUT_PREF);
+			if ( alert_timeout > 0) {
+				// convert from minutes to milliseconds
+				alert_timeout = alert_timeout * 60000;
+				//window.setTimeout(function() {reminderfox.overlay.showAlertSlider()}, alert_timeout);
+				window.setInterval(reminderfox.overlay.showAlertSlider, alert_timeout);
+
 			}
 		}
 	}

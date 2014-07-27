@@ -2743,7 +2743,10 @@ reminderfox.core.initiliazeTooltip= function(){
 };
 
 reminderfox.core.hideTooltip= function(){
-	reminderfox.overlay.showAlertSlider();
+	// 07/28/14: using setinterval for alert slider now; do not need
+	// to manually call (which was being done to ensure that alert slider
+	// timer would be run in the event that the setTimeout stopped working)
+	//reminderfox.overlay.showAlertSlider();
 };
 
 
