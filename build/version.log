@@ -1,7 +1,7 @@
 
 	Reminderfox  [2.1.5] release
-	   as of:    Sun, 27 Jul 2014 09:43:09 -0400 (EDT)
-	'reminderfox_2.1.5_release_20140727_0943.xpi'   <'20140727_0943'>
+	   as of:    Sun, 3 Aug 2014 11:55:50 -0400 (EDT)
+	'reminderfox_2.1.5_release_20140803_1155.xpi'   <'20140803_1155'>
 	
 update  2014-04-15 ____version 2.1.5 (release) ____________________________________
 	calDAV updates/housekeeping
@@ -10,35 +10,6 @@ update  2014-04-13 ____version 2.1.5 (test) ____________________________________
 	CalDAV Sync failed on FX/TB start with new event for first calendar
 		At start removing an event failed
 	Provision to better trace for data loss at startup
-
-Reminderfox  [2.1.5] release
-	   as of:    Tue, 8 Apr 2014 21:54:11 -0400 (EDT)
-	'reminderfox_2.1.5_release_20140408_2154.xpi'   <'20140408_2154'>
-
-
-Improved workflow for upcoming Firefox "Australis" UI.
-
-The Foxy toolbar icon is the main access interface for ReminderFox.
-From the Options -> Access tab, you can choose to display the number of events for today, as well as display the text of today's reminders.
-For those that prefer the original 'ribbon-icon' rather than the Foxy icon, you can choose that instead. Right-click on the menu and choose Customize... and drag the Ribbon icon and use that instead.
-
-Improvements:
-* Styling and UI tweaks.
-* Options pages - Minor updates to wording and styling to make some options clearer.
-* Remote calendar performance improvements - compares remote calendar status with local and only updates if needed.
-* Remote calendar errors now display error details to the user.
-* Added address autocomplete when adding an invitation in Thunnderbird.  (Thanks to contributor Onno Ekker!)
-
-Fixes:
-* Fixed: Subscribe with Reminderfox web page context menu action was not working.
-* Fixed: Add/Import as New Calendar - was not working.
-* From the edit reminder dialog, the Launch Url and Launch Location now open two distinct tabs instead of reusing a single tab.
-* Fixes: No longer store timezone information from remote calendars; could cause the ICS file to drastically increase in size.
-* Fixed: Foxy toolbar icon and ribbon status icon were not being remembered across restarts (would be hidden upon restart)
-* Fixed: When editing a reminder from the alarm dialog, no longer opens the Reminder list window as well.
-* Fixed: There was an issue where some invalid ToDo's (that has an invalid empty date) could cause ReminderFox to crash.
-* Fixed: Adding a reminder via the web page context menu was not including the page URL
-* Fixed: Foxy toolbar icon and Bow status icon now work properly with Seamonkey
 
 
 Updates 2014-02-13 ___ version 2.1.4.2 (release) _______________________________

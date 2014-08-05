@@ -2735,7 +2735,9 @@ reminderfox.core.initiliazeTooltip= function(){
 	if (!changed) {
 		// add some extra checks in when hiding tooltip; in case the setTimeout threads have been suspended,
 		// this will kick them off again if neccessary
-		reminderfox.overlay.initializeReminderFoxHourly();
+        // 08/03/2014 update: now using reminderfox.overlay.timerObject which should be reliable and do not need
+        // these checks like we did to kick off setTimeout's if they failed
+		//reminderfox.overlay.initializeReminderFoxHourly();
 
 		//reminderfox.core.filesystemTimeStampHasChanged
 	}
