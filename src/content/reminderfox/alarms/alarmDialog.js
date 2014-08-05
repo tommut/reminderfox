@@ -1189,7 +1189,7 @@ function reminderFox_snooze() {
 				//Timeout values too big to fit into a signed 32-bit integer may cause overflow in FF, Safari, and Chrome, resulting in the timeout being scheduled immediately. It makes more sense simply not to schedule these timeouts, since 24.8 days is beyond a reasonable expectation for the browser to stay open.
 				// ACTUALLY (update 02/26/2010): if larger than 60 minutes it is unneccessary, as hourly
 				// processing thread will pick this up and set the alarm then
-				if(setSnoozeTime < 3600000) {// if snooze greater than an hour; just let hourly process do it
+				if(setSnoozeTime <= 3600000) {// if snooze greater than an hour; just let hourly process do it
 					oldestWindow.setTimeout(oldestWindow.reminderfox.overlay.showMissedAlarmsSnooze, setSnoozeTime, snoozeTime, reminderAlarmArray[index].alarmRecentReminder.id, reminderAlarmArray[index].alarmListName, reminderAlarmArray[index].alarmTimeString, reminderAlarmArray[index].alarmIsReminder, reminderAlarmArray[index].alarmIsTodo, reminderAlarmArray[index].alarmAlarmMissed, reminderAlarmArray[index].reminderTime, reminderAlarmArray[index].reminderTimeDifference);
 
 				}
