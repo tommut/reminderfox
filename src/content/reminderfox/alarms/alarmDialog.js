@@ -15,6 +15,14 @@ const MAX_TAB_TITLE_LENGTH = 30;
 var reminderAlarmArray = new Array();
 var reminderFox_QAcalendarOpened = false;
 
+//https://developer.mozilla.org/en-US/docs/Mozilla/JavaScript_code_modules/Using
+// trying to import js code with .utils.import -- fails for EXPORTED_SYMBOLS
+//Components.utils.import("resource://app/modules/gloda/mimemsg.js");
+//chrome://<yourextension>/content/<yourmodule>.jsm.
+//Components.utils.import("chrome://reminderfox/content/network/passwordManagerUtils.js")
+//Error: chrome://reminderfox/content/network/passwordManagerUtils.js - EXPORTED_SYMBOLS is not an array.
+
+
 function updateTimeUntil() {
 	//dump( "FOCUSE" );
 	// after FIRST focus; see if focus lost happens within a second...
@@ -694,6 +702,7 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 	if(reminderFox_snoozed && actionIndex != REMINDERFOX_ACTION_TYPE.SNOOZE) {// if the alarm is snoozed, we'll do nothing
 		return;
 	}
+
 	if(actionIndex == REMINDERFOX_ACTION_TYPE.OPEN) {
 		// reset to Acknowledge after opened...
 		var actionList = getChildElementByIdForCurrentTab("reminderFox-alarm-action");
@@ -720,6 +729,7 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 	if(reminder != null) {
 		var removed = false;
 		var completed = false;
+
 		if(actionIndex == REMINDERFOX_ACTION_TYPE.SNOOZE) {
 			reminder.snoozeTime = alarmTime + ";PT" + snoozeTime + "M";
 		} else {
@@ -745,6 +755,7 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 				reminder.remindUntilCompleted = reminderfox.consts.REMIND_UNTIL_COMPLETE_TO_BE_MARKED;
 			}
 			completed = true;
+
 		} else if(actionIndex == REMINDERFOX_ACTION_TYPE.DELETE) {
 			// remove from model list
 			if(isReminder == "true" || isReminder == true) {
@@ -946,6 +957,7 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 						topWindow.updateInListTodo(editWindowReminder)
 					}
 					topWindow.modifiedReminders();
+
 				} else if(actionIndex == REMINDERFOX_ACTION_TYPE.DELETE) {
 					if(isReminder == "true" || isReminder == true) {
 						// remove from UI list

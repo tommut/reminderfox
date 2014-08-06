@@ -226,7 +226,7 @@
 			<hbox>				
 				<image id="smartfoxy_image_bow" /> 
 			</hbox>
-			<label id="reminderfox_smartFoxyBadge_bow"  hidden="true" value="" important="false"/>		
+			<label id="reminderfox_smartFoxyBadge"  hidden="true" value="" important="false"/>		
 	</toolbarbutton>
 	
 

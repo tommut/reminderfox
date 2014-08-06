@@ -7,10 +7,10 @@ if (!reminderfox.core.method) reminderfox.core.method = "";
 
 
 // constants
-reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5";		// update also install.rdf
+reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5b";		// update also install.rdf
 
 // ************************* for offical MOZILLA set to "release"  *****
-reminderfox.consts.SPECIAL_VERSION_DETAIL					= "release";
+reminderfox.consts.SPECIAL_VERSION_DETAIL					= "wip";
 reminderfox.consts.DROPBOX										= "https://dl.dropbox.com/u/35444930/rmFX/XPI/" 
 																			+ reminderfox.consts.SPECIAL_VERSION_DETAIL + "/";
 
@@ -2611,7 +2611,7 @@ reminderfox.core.getReminderEvents= function(clear){
 		return subscribedCal;
 	}
 
-	else  { // no subscription
+	else  { // not subscription
 		if ((!reminderfox.core.reminderFoxEvents) || clear) {
 			reminderfox.core.reminderFoxEvents = new Array();
 			reminderfox.core.reminderFoxTodosArray = {};
@@ -2667,7 +2667,7 @@ reminderfox.core.getReminderTodos= function(){
 
 
 reminderfox.core.clearRemindersAndTodos= function(){
-reminderfox.util.Logger('Alert', ".core.clearRemindersAndTodos");		//gWDATALoss
+reminderfox.util.Logger('checkData', ".core.clearRemindersAndTodos");		//gWcheckData
 
 	reminderfox.core.reminderFoxEvents = null;
 	reminderfox.core.reminderFoxTodosArray = null;
@@ -2677,17 +2677,17 @@ reminderfox.util.Logger('Alert', ".core.clearRemindersAndTodos");		//gWDATALoss
 };
 
 
-reminderfox.core.readRemindersAndTodosAndCalDAV= function(){
-	reminderfox.core.clearRemindersAndTodos();
+//reminderfox.core.readRemindersAndTodosAndCalDAV= function(){
+//	reminderfox.core.clearRemindersAndTodos();
 
-	var file = reminderfox.core.getReminderStoreFile();
+//	var file = reminderfox.core.getReminderStoreFile();
 
 	// bail if the file doesn't yet exist; no reminders to read
-	if (!file.exists()) {
-		return reminderfox.core.reminderFoxTodosArray;
-	}
-	reminderfox.core.readInRemindersAndTodosICSFromFile(reminderfox.core.reminderFoxEvents, reminderfox.core.reminderFoxTodosArray, file);
-};
+//	if (!file.exists()) {
+//		return reminderfox.core.reminderFoxTodosArray;
+//	}
+//	reminderfox.core.readInRemindersAndTodosICSFromFile(reminderfox.core.reminderFoxEvents, reminderfox.core.reminderFoxTodosArray, file);
+//};
 
 
 
@@ -3252,6 +3252,9 @@ reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, 
 	outputStr += "X-REMINDERFOX-SUMMARY:Events=" + rLen + " Todos=" + tLen +  newline;
 	outputStr += "END:VCALENDAR" + newline;
 
+reminderfox.util.Logger('checkData', " ---- .core.constructReminderOutput"
+		+ " ..writes to file:  Events=" + rLen + " Todos=" + tLen);		//gWcheckData
+
 	//reminderfox.core.logMessageLevel("Finished output to file.  Final file:\n***************\n\n" + outputStr, reminderfox.consts.LOG_LEVEL_DEBUG);
 	return outputStr;
 };
@@ -3396,7 +3399,8 @@ reminderfox.core.createStringForEndDate= function(reminderOrTodo, currentDate, i
 
 
 reminderfox.core.writeOutRemindersAndTodos= function(isExport){
-	
+reminderfox.util.Logger('checkData', ".core.writeOutRemindersAndTodos");		//gWcheckData
+
 	var remindersToOutput = reminderfox.core.getReminderEvents();
 	//§§§ 2014-02-16  var remindersToOutput = reminderfox.core.reminderFoxEvents;		//gWSaveReminders
 	var outputStr = reminderfox.core.constructReminderOutput(remindersToOutput, 
@@ -5441,7 +5445,7 @@ reminderfox.core.importRemindersUpdateAll= function(isNetworkImport, lastModifie
 			currentWindow.reminderfox.core.reminderFoxTodosArray = reminderfox.core.reminderFoxTodosArray;
 
 			currentWindow.reminderfox.overlay.updateRemindersInWindow();
-			currentWindow.reminderfox.core.clearRemindersAndTodos();
+//checkDATA   disabled 2014-06-01 gW			currentWindow.reminderfox.core.clearRemindersAndTodos();
 		}
 	}
 	catch (e) {
@@ -6165,8 +6169,8 @@ reminderfox.core.addTodo= function (newTodo, thisDate){
 
 reminderfox.core.addReminderHeadlessly= function(originalReminder, isEdit, isTodo) {
 //------------------------------------------------------------------------------
-var logMsg ="core.addReminderHeadlessly   reminder: " +originalReminder.summary;
-//reminderfox.util.Logger('addTest', logMsg);
+var logMsg ="core.addReminderHeadlessly   originalReminder: " +originalReminder.summary;
+reminderfox.util.Logger('addTest', logMsg);
 
 	isEdit = !!isEdit;
 	// make sure parameters set, if null --> false
@@ -6301,6 +6305,9 @@ reminderfox.util.Logger('Alert',"  new/edited reminder : " + newOptions.reminder
 */
 reminderfox.core.updateMainDialog= function (currentReminder, oldTabName, newTabName) {
 //---------------------------------------------------------------------------------
+var msglog = "  core.updateMainDialog  currentReminder: " + currentReminder.summary
+reminderfox.util.Logger("ALERT", msglog);
+
 	if (!oldTabName) oldTabName = reminderfox.tabInfo.tabID
 	if (!newTabName) newTabName = oldTabName
 
@@ -6354,7 +6361,8 @@ reminderfox.core.updateMainDialog= function (currentReminder, oldTabName, newTab
 			// CalDAV   update on server
 			topWindow.rmFx_CalDAV_UpdateReminder(currentReminder);
 		}
-
+		setTimeout(function () { highlightClosestUpcomingReminder (reminderfox.datePicker.gSelectedDate, //gW 2014-0806
+			'fillList sorted', currentReminder)},0);
 	} // end 'Reminders' ............
 
 
@@ -7128,7 +7136,7 @@ reminderfox.core.foxyStatus= function(todayEvents, important, upcomingEvents, ev
 	         }
          }
 
-         var smartFoxyBadge = win.document.getElementById('reminderfox_smartFoxyBadge_bow');
+         var smartFoxyBadge = win.document.getElementById('reminderfox_smartFoxyBadge');
          if (smartFoxyBadge) {
          	 smartFoxyBadge.setAttribute('hidden', true);
              if (aSmartFoxy === 0){

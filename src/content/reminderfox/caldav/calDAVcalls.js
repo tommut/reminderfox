@@ -284,7 +284,7 @@ function rmFx_CalDAV_AccountSelect () {
  */
 function  rmFx_CalDAV_SyncActiveAccounts(reload, trace) {
 //------------------------------------------------------------------------------
-reminderfox.util.Logger('Alert', "rmFx_CalDAV_SyncActiveAccounts  trace: " + trace)  //gWDATALoss
+reminderfox.util.Logger('checkData', "rmFx_CalDAV_SyncActiveAccounts  trace: " + trace)  //gWcheckData
 
 	var _timeStamp = new Date().getTime();
 	rmFx_CalDAV_ActiveAccountsList = "";
@@ -1781,6 +1781,7 @@ reminderfoxX.XcalDAVrequest = function () {}
 
 				msg += "\n  Account    [" + call.account.ID + "]  " + call.account.Name; 
 				msg += "\n  ContentType: " + call.contentType;
+				msg += "\n  call.urlstr: " + call.urlstr;
 				msg += "\n\n" + callMsg;
 				reminderfox.util.Logger('calDAV', msg);
 

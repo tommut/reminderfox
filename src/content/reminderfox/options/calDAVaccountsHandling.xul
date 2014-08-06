@@ -68,7 +68,7 @@
 	/**
 	 *   Setup the dialog 
 	 */
-	thisLoad = function () {
+	function thisLoad() {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 				var rmFx_icsFileLocationNew = window.arguments[0].newFile;
 				var rmFx_icsFileLocationOld = window.arguments[0].oldFile;
@@ -86,7 +86,7 @@
 				document.getElementById('key1').label = window.arguments[0].key1;
 	};
 
-	go = function (xThis){
+	function go (xThis){
 		window.arguments[0].whichKey = xThis.id;
 		window.close();
 	}

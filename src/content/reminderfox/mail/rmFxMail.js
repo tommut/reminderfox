@@ -1020,11 +1020,14 @@ if(!reminderfox.messenger) reminderfox.messenger = {
 		*/
 	getMsgFolderFromUri : function (uri) {
 		var msgfolder = null;
-	
+
+		//gW  replace nsIRDFService with MailUtils
+
+		if (reminderfox.msgnr.whichMessenger () != "" ) {
+			Components.utils.import("resource:///modules/MailUtils.js"); // for getFolderForURI
+		}
 		try {
-			var RDF = Components.classes["@mozilla.org/rdf/rdf-service;1"]
-										.getService(Components.interfaces.nsIRDFService);
-			var resource = RDF.GetResource(uri);
+			var resource =MailUtils.getFolderForURI(uri);
 
 			if (resource instanceof Components.interfaces.nsIMsgFolder &&
 				(resource.parent || resource.isServer))

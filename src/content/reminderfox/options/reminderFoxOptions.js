@@ -971,7 +971,7 @@ function reminderFox_updateOptions() {
 
 		var sFile = document.getElementById("reminderFox-file-location").value;
 		var fs = reminderfox.util.fileCheck(sFile);
-		if(fs == -1) {
+		if(fs < 0) { // -1 for file -2 for dir
 			alert(reminderfox.string("rf.options.isfilelocation.valid"));
 			return;
 		};
@@ -1399,8 +1399,8 @@ function reminderFox_calDAVsave() {
  */
 function reminderFox_saveOptions() {
 
+	if (rmFx_calDAVfileCheckAndSave() == -2) return;  // directory error 
 	if(document.getElementById("reminderFox-apply").disabled == false) {
-		rmFx_calDAVfileCheckAndSave()
 		reminderFox_updateOptions();
 		reminderFox_updateWindows();
 	}
@@ -1415,7 +1415,7 @@ function reminderFox_saveOptions() {
  */
 function reminderFox_saveOptionsAndClose() {
 
-	rmFx_calDAVfileCheckAndSave();
+	if (rmFx_calDAVfileCheckAndSave() == -2) return;  // directory error 
 	reminderFox_updateOptions();
 	window.close();
 	reminderFox_updateWindows();
@@ -1446,6 +1446,15 @@ function rmFx_calDAVfileCheckAndSave() {
 	// "rmFx_icsFileLocationCurrent"  is the file/path when "Options.." XUL was opened 
 	// "rmFx_icsFileLocationNew"                       as defined on "Options.." File
 	var rmFx_icsFileLocationNew = document.getElementById("reminderFox-file-location").value;
+
+	//2014-07-18  need to check directory and file name!
+
+	var cStatus = reminderfox.util.fileCheck (rmFx_icsFileLocationNew)
+	if (cStatus == -2) {
+//		reminderfox.util.Logger('Alert', "  dir/file check: " + cStatus + " dir/f: " + rmFx_icsFileLocationNew)
+		alert("The 'directory' for the ICS file isn't valid!");
+		return -2;
+	}
 	var rmFx_calDAVaccountsFileLocationNew = rmFx_icsFileLocationNew + ".dav";
 
 	if (rmFx_icsFileLocationNew != rmFx_icsFileLocationCurrent) {
@@ -2232,8 +2241,10 @@ function reminderFox_populatePositions() {
 		var len = bar.childNodes.length;
 
 		//don't include ourself in count
-		if(win.document.getElementById("reminderFox-statusLabel").parentNode == bar)
-			len--;
+		try {		//gW 2014-05-11      need to be changed for FX 29 etc ???
+			if(win.document.getElementById("reminderFox-statusLabel").parentNode == bar)
+				len--;
+		} catch(ex){}
 		reminderFox_mPositionMax = len;
 	}
 

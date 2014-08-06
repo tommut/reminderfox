@@ -1246,6 +1246,7 @@ reminderfox.util.getIOService= function(){
  * @param {string | object}  filepath or nsIFile object
  * @return {integer}  1 = valid fileName; 0 = file doesn't exist
  *                   -1 = directory
+ *                   -2 = parent directory isn't valid
  */
 reminderfox.util.fileCheck= function (filepath) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1255,8 +1256,21 @@ reminderfox.util.fileCheck= function (filepath) {
 			.createInstance(Components.interfaces.nsIFile);
 	}
 	sfile.initWithPath(filepath);
+//	reminderfox.util.Logger('Alert', " .util.fileCheck: >>" + sfile.path + '<<')
 
-	if (sfile.exists() === false) return 0;
+	if (sfile.exists() === false) {
+		// check if parent directory exists
+		var sdir = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
+		sdir.initWithPath(sfile.parent.path);
+		try {
+			sdir.isDirectory()
+			// dir is OK but file isn't
+			return 0;
+		}
+		catch (e) {
+			return -2;
+		}
+	}
 	if (sfile.isDirectory() === true) return -1;
 	return 1;
 };
@@ -1625,7 +1639,7 @@ reminderfox.util.Logger = function (Log, msg) {
 
 	if ((Log == 'alert') || (Log == 'Alert') || (Log == 'ALERT')){
 		var date = new Date();
-		logMsg = "Reminderfox  ** Alert **    " + date.toLocaleFormat("%Y-%m-%d %H:%M") + "\n" + msg;
+		logMsg = "Reminderfox  ** Alert **    " + date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + "\n" + msg;
 		if (Log == 'ALERT') logMsg += "\n" + reminderfox.util.STACK();
 		if (Log == 'Alert') logMsg += "\n" + reminderfox.util.STACK(1);
 		if (Log == 'alert') logMsg += "\n";
@@ -1654,7 +1668,7 @@ reminderfox.util.Logger = function (Log, msg) {
 
 	var date = new Date();
 	logMsg = "Reminderfox Logger : "+ rootID + "  [" + Log + " : " + logId + "]      "
-		+ date.toLocaleFormat("%Y-%m-%d %H:%M") + "\n" + msg;
+		+ date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + "\n" + msg;
 
 	if (logNum >= 50 /* 'Warn', 'Error', 'Fatal' */) logMsg += "\n" + reminderfox.util.STACK();
 
@@ -2386,7 +2400,7 @@ reminderfox.versionCompare = {
 				"reminderFox-versionControl", "chrome,resizable,modal", versions);
 
 		} else {  // ERROR Handling
-			msg = ("Local XPI version is:\n\n"
+			var msg = ("Local XPI version is:\n\n"
 				+ reminderfox.aboutXPI());
 	
 			var parser = new DOMParser();
@@ -2730,7 +2744,10 @@ reminderfox.calDAV.accountsFile= function (currentFilePath) {
 	if (!currentFilePath) {
 		currentFilePath = reminderfox.core.getReminderStoreFile().path;
 	}
-//reminderfox.util.Logger('calDAV', " reminderfox.calDAV.accountsFile   currentFilePath   >>" + currentFilePath + "<<")
+reminderfox.util.Logger('calDAV', " reminderfox.calDAV.accountsFile   currentFilePath   >>" + currentFilePath + "<<")
+	var cStatus = reminderfox.util.fileCheck (currentFilePath)
+//	reminderfox.util.Logger('Alert', "  dir/file check: " + cStatus + " dir/f: " + currentFilePath)
+
 
 	var calDAVpath = currentFilePath + ".dav";
 

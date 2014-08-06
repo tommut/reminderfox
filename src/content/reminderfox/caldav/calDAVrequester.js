@@ -34,6 +34,8 @@ reminderfoxX.XcalDAVhttp = function () {}
 	reminderfoxX.XcalDAVhttp.prototype.handlePW= function (call) {
 	//---------------------------------------------------------------
 		if ((call.password === "") && (call.username !== "")) {
+
+			reminderfox.util.JS.dispatch('network')	//gW  2014-08-05
 			return reminderFox_getPassword ({
 				ljURL    : call.url,
 				username : call.username,

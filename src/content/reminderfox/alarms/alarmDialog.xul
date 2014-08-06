@@ -33,6 +33,7 @@
 		src="chrome://reminderfox/content/editing/eventEntry.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/network/download.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/network/upload.js" />
+	<script type="application/x-javascript" src="chrome://reminderfox/content/passwordManagerUtils.js"/>
 	<script type="application/x-javascript" src="chrome://reminderfox/content/addReminderDialog.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/reminderFox.js" />
 	<script type="application/x-javascript"
