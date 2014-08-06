@@ -2774,16 +2774,6 @@ reminderfox.overlay.start_postInit= function() {
 			}
 
             reminderfox.overlay.showAlertSliderTimingFunction.notify(reminderfox.overlay.alertTimerObject); //this is how we start the timer, we start off by running the callback, then from there every 5 sec it will call
-
-
-            var alert_timeout = reminderfox._prefsBranch.getIntPref(reminderfox.consts.ALERT_TIMEOUT_PREF);
-			if ( alert_timeout > 0) {
-				// convert from minutes to milliseconds
-				alert_timeout = alert_timeout * 60000;
-				//window.setTimeout(function() {reminderfox.overlay.showAlertSlider()}, alert_timeout);
-				window.setInterval(reminderfox.overlay.showAlertSlider, alert_timeout);
-
-			}
 		}
 	}
 	// clear reminders from memory
