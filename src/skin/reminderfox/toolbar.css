@@ -163,3 +163,37 @@ toolbar[iconsize="small"]  #reminderFox_openButton_bow {
 #smartfoxy_image_bow[status="noReminders"] {
 	list-style-image: url("chrome://reminderfox/skin/images/noReminderBow.png");
 }
+
+/*  smartFoxy  bow icon */
+#reminderfox_smartFoxyBadge_bow[bowtext=false] {
+    position:absolute;
+    margin-top: -2px;           /*   << change to position the height, but could influence the whole menu bar!  */
+    margin-left: -5px;         /*   << change value to overlap/or not  */
+    margin-bottom: 5px;
+    padding:1px 4px 1px 4px;
+    font-weight:bold;
+    font-size:0.75em;
+
+    background-color:#FCFFBA;   /*   << could use a background image as well  */
+    border-radius:50px;
+    box-shadow:2px 1px 2px gray;
+}
+
+#reminderfox_smartFoxyBadge_bow[bowtext=true] {
+    position:absolute;
+    margin-top: 2px;           /*   << change to position the height, but could influence the whole menu bar!  */
+    margin-left: 2px;         /*   << change value to overlap/or not  */
+    padding:1px 2px 0px 2px;
+    font-size:1em;
+}
+
+
+#reminderfox_smartFoxyBadge_bow[important=true]{
+    font-weight:bold;         /*  need to have bold or it's hard to read */
+    color: white;
+    background-color: #FF4545;
+}
+
+#reminderfox_smartFoxyBadge_bow[importantText=true]{
+    color: red;
+}

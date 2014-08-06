@@ -7136,7 +7136,7 @@ reminderfox.core.foxyStatus= function(todayEvents, important, upcomingEvents, ev
 	         }
          }
 
-         var smartFoxyBadge = win.document.getElementById('reminderfox_smartFoxyBadge');
+         var smartFoxyBadge = win.document.getElementById('reminderfox_smartFoxyBadge_bow');
          if (smartFoxyBadge) {
          	 smartFoxyBadge.setAttribute('hidden', true);
              if (aSmartFoxy === 0){
