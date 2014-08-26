@@ -1,48 +1,44 @@
 /* -------- toolbar.css ----------------- */
 
-toolbar[mode="icons"] toolbarbutton:not([type="menu"]):not([class~="textonly"]) > .toolbarbutton-text,
-toolbar[mode="text"] toolbarbutton:not([type="menu"]):not([class~="textonly"]) > .toolbarbutton-icon {
-	display: none;
-}
 
 toolbarbutton.reminderfox-sendPlus {
     -moz-binding: url('chrome://reminderfox/content/mail/rmFxMailIcon.xml#changeSendPlusIcon');
 }
-		
-		.reminderfox-sendPlusTBird { 
+
+		.reminderfox-sendPlusTBird {
 		  list-style-image: url("chrome://reminderfox/skin/images/sendPlus.png");
 		   -moz-image-region: rect(0px,24px, 24px,0px);
 		}
-		.reminderfox-sendPlusTBird:hover { 
+		.reminderfox-sendPlusTBird:hover {
 		  list-style-image: url("chrome://reminderfox/skin/images/sendPlus.png");
 		   -moz-image-region: rect(24px,24px, 48px,0px);
 		}
-		.reminderfox-sendPlusTB3 { 
+		.reminderfox-sendPlusTB3 {
 		  list-style-image: url("chrome://reminderfox/skin/images/sendPlus.png");
 		   -moz-image-region: rect(0px,72px, 24px,48px);
 		}
-		.reminderfox-sendPlusTB3:hover { 
+		.reminderfox-sendPlusTB3:hover {
 		  list-style-image: url("chrome://reminderfox/skin/images/sendPlus.png");
 		   -moz-image-region: rect(24px,72px, 48px,48px);
 		}
 
 
 
-		
-		toolbar[iconsize="small"] .reminderfox-sendPlusTBird { 
+
+		toolbar[iconsize="small"] .reminderfox-sendPlusTBird {
 		  list-style-image: url("chrome://reminderfox/skin/images/sendPlusSmall.png");
 		   -moz-image-region: rect(0px,16px, 16px,0px);
 		}
-		toolbar[iconsize="small"] .reminderfox-sendPlusTBird:hover { 
+		toolbar[iconsize="small"] .reminderfox-sendPlusTBird:hover {
 		  list-style-image: url("chrome://reminderfox/skin/images/sendPlusSmall.png");
 		   -moz-image-region: rect(16px,16px, 32px,0px);
 		}
 
-		toolbar[iconsize="small"] .reminderfox-sendPlusTB3 { 
+		toolbar[iconsize="small"] .reminderfox-sendPlusTB3 {
 		  list-style-image: url("chrome://reminderfox/skin/images/sendPlusSmall.png");
 		   -moz-image-region: rect(0px,48px, 16px,32px);
 		}
-		toolbar[iconsize="small"] .reminderfox-sendPlusTB3:hover { 
+		toolbar[iconsize="small"] .reminderfox-sendPlusTB3:hover {
 		  list-style-image: url("chrome://reminderfox/skin/images/sendPlusSmall.png");
 		   -moz-image-region: rect(16px,48px, 32px,32px);
 		}
@@ -81,9 +77,9 @@ list-style-image: url("chrome://reminderfox/skin/images/foxy-head-16.png");
     position:absolute;
     margin-top: -2px;           /*   << change to position the height, but could influence the whole menu bar!  */
     margin-left: -2px;         /*   << change value to overlap/or not  */
-    margin-bottom: 5px;     
+    margin-bottom: 5px;
     padding:1px 4px 1px 4px;
-	font-weight:bold;      
+	font-weight:bold;
     font-size:0.75em;
     background-color:#FCFFBA;   /*   << could use a background image as well  */
     border-radius:50px;
