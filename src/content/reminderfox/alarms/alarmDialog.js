@@ -721,12 +721,11 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 		reminder = reminderfox.core.getSpecificTodoById(myAlarmId);
 	}
 
-//gWTESTalarm
-var msgText = "  reminderFox_performAlarmAction    reminder: " + reminder.summary + "  alarmAction: " + actionIndex
-reminderfox.util.Logger("Alert", msgText)
-
 	// mark reminder's last-acknowleged  (unless snooze was pressed)
-	if(reminder != null) {
+	if(reminder != null) {//gWTESTalarm
+        var msgText = "  reminderFox_performAlarmAction    reminder: " + reminder.summary + "  alarmAction: " + actionIndex
+        reminderfox.util.Logger("Alert", msgText)
+
 		var removed = false;
 		var completed = false;
 
