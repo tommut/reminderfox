@@ -125,6 +125,8 @@ reminderfox.consts.ALARMS_ENABLED_DEFAULT = true;
 reminderfox.consts.HIGHLIGHT_TODAYS_REMINDERS = "highlightTodaysReminders";
 reminderfox.consts.HIGHLIGHT_TODAYS_REMINDERS_DEFAULT = true;
 
+reminderfox.consts.ALARM_DELAY = "alarmPopupWindowDelay"; // make sure 500ms between each alarm, or mozilla creates a blank window
+reminderfox.consts.ALARM_DELAY_DEFAULT = 4000;  // make sure 500ms between each alarm, or mozilla creates a blank window
 
 reminderfox.consts.DEFAULT_TEXTSIZE = "default_TextSize";
 reminderfox.consts.DEFAULT_TEXTSIZE_DEFAULT = 14;
@@ -412,6 +414,7 @@ reminderfox.core.initUserPrefsArray= function(){
 
     reminderfox._prefsUser[reminderfox.consts.CALENDAR_MONTHS] = reminderfox._prefsTYPE.INT;
     reminderfox._prefsUser[reminderfox.consts.DEFAULT_TEXTSIZE] = reminderfox._prefsTYPE.INT;
+    reminderfox._prefsUser[reminderfox.consts.ALARM_DELAY] = reminderfox._prefsTYPE.INT;
     reminderfox._prefsUser[reminderfox.consts.CALENDAR_DAYPOPUP_DELAY] = reminderfox._prefsTYPE.INT;
     reminderfox._prefsUser[reminderfox.consts.SMARTFOXY] = reminderfox._prefsTYPE.INT;
     reminderfox._prefsUser[reminderfox.consts.SMARTFOXY_BAR] = reminderfox._prefsTYPE.CHAR;

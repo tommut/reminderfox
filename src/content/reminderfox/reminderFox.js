@@ -11,7 +11,6 @@ reminderfox.overlay.consts.ALERT_TEXT_MAX_LENGTH = 100;
 reminderfox.overlay.consts.MONTHLY_WILDCARD = "*";
 
 reminderfox.overlay.consts.HOUR_TIMEOUT = 1800000; // changed to half hour instead of 1 hour= 3600000  // dump: externalize this to a pref (read it first time only; then store it)
-reminderfox.overlay.consts.ALARM_DELAY = 4000; // make sure 500ms between each alarm, or mozilla creates a blank window
 
 // global vars
 reminderfox.overlay.alarmList = new Array();
@@ -27,6 +26,16 @@ reminderfox.overlay.lastHourlyTimeoutId = null;  // todo: cleanup
 
 reminderfox.overlay.timerObject = Components.classes['@mozilla.org/timer;1'].createInstance(Components.interfaces.nsITimer);
 reminderfox.overlay.alertTimerObject = Components.classes['@mozilla.org/timer;1'].createInstance(Components.interfaces.nsITimer);
+
+
+reminderfox.overlay.consts.ALARM_DELAY = null; // make sure at least 500ms between each alarm, or mozilla creates a blank window
+
+reminderfox.overlay.getAlarmDelay=function() {
+    if (!reminderfox.overlay.consts.ALARM_DELAY) {
+        reminderfox.overlay.consts.ALARM_DELAY = reminderfox.core.getPreferenceValue(reminderfox.consts.ALARM_DELAY, reminderfox.consts.ALARM_DELAY_DEFAULT);
+    }
+    return reminderfox.overlay.consts.ALARM_DELAY;
+}
 
 /**
  * Open the Reminderfox Add-Dialog with setting the [Add ] to 'reminders' or 'todos
@@ -559,10 +568,11 @@ reminderfox.overlay.showMissedAlarms= function( alarmInfos ) {
                                     // from the new window.  So we introduce a small second delay between opening each alarm - so if you have several alarms set to go off
                                     // at the same time, you will always see them properly and not get a blank window in one of them
                                     var time = new Date().getTime();
-//ALARM								reminderfox.core.logMessageLevel( "alarm: time: " + time + "; lastalarmtime" +reminderfox.overlay._lastAlarmTime + " ; " +  reminderfox.overlay.consts.ALARM_DELAY    , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
+//ALARM								reminderfox.core.logMessageLevel( "alarm: time: " + time + "; lastalarmtime" +reminderfox.overlay._lastAlarmTime + " ; " +  reminderfox.overlay.getAlarmDelay()    , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
                                     alarmInfo.alarmRecentReminder = reminderOrTodo;
+
                                     if ( alarmInfos.length > 1 ||  // if there's multiple reminders; continue in here.  Only if there is 1 reminder would we want to set the delay
-                                        (reminderfox.overlay._lastAlarmTime == null || (  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.consts.ALARM_DELAY) ) ) ) {
+                                        (reminderfox.overlay._lastAlarmTime == null || (  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) ) ) ) {
                                         reminderfox.overlay._lastAlarmTime = time;
 //ALARM										reminderfox.core.logMessageLevel( "alarm: opening alarm dialog: " + reminderOrTodo.summary   , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
                                         alarmArray[alarmArray.length] = alarmInfo;
@@ -572,7 +582,7 @@ reminderfox.overlay.showMissedAlarms= function( alarmInfos ) {
 
                                         //alert( "A2!" );
                                         oldestWindow.setTimeout(oldestWindow.reminderfox.overlay.showMissedAlarmsSnooze2,
-                                            reminderfox.overlay.consts.ALARM_DELAY,
+                                            reminderfox.overlay.getAlarmDelay(),
                                             alarmInfo.alarmSnoozeTime,
                                             alarmInfo.alarmRecentReminder.id,
                                             alarmInfo.alarmListName,
@@ -641,17 +651,17 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
         }
 
 //ALARM		reminderfox.core.logMessageLevel( "alarm2: ignoreCheck = " + ignoreCheck + "; time: " + time + "; lastalarmtime" +reminderfox.overlay._lastAlarmTime + " ; "
-//			+  reminderfox.overlay.consts.ALARM_DELAY + "; alarmArray.length = " + alarmArray.length +
-//			"(  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.consts.ALARM_DELAY) ) = " +
-//			(  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.consts.ALARM_DELAY) )    , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
+//			+  reminderfox.overlay.getAlarmDelay() + "; alarmArray.length = " + alarmArray.length +
+//			"(  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) ) = " +
+//			(  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) )    , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
 
 //ALARM		reminderfox.core.logMessageLevel(new Date()  + "alarm2: ignoreCheck = " + ignoreCheck + "; time: " + time + "; lastalarmtime" +reminderfox.overlay._lastAlarmTime + " ; "
-//			+  reminderfox.overlay.consts.ALARM_DELAY + "; alarmArray.length = " + alarmArray.length +
-//			"(  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.consts.ALARM_DELAY) ) = " +
-//			(  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.consts.ALARM_DELAY) )   , reminderfox.consts.LOG_LEVEL_DEBUG);  //TODO
+//			+  reminderfox.overlay.getAlarmDelay() + "; alarmArray.length = " + alarmArray.length +
+//			"(  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) ) = " +
+//			(  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) )   , reminderfox.consts.LOG_LEVEL_DEBUG);  //TODO
 
         if ( ignoreCheck || alarmArray.length > 1 ||  // if there's multiple reminders; continue in here.  Only if there is 1 reminder would we want to set the delay
-            (reminderfox.overlay._lastAlarmTime == null || (  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.consts.ALARM_DELAY) ) ) ) {
+            (reminderfox.overlay._lastAlarmTime == null || (  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) ) ) ) {
             reminderfox.overlay._lastAlarmTime = time;
             if (showAlarmsInTabs && topWindow) {
                 try {
@@ -764,7 +774,7 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
 
                     var text = alarmInfo.quickAlarmText;
                     var sTime = alarmInfo.alarmSnoozeTime;
-                    oldestWindow.setTimeout(function() { oldestWindow.reminderfox.overlay.showQuickAlarm(text,sTime) } , reminderfox.overlay.consts.ALARM_DELAY);
+                    oldestWindow.setTimeout(function() { oldestWindow.reminderfox.overlay.showQuickAlarm(text,sTime) } , reminderfox.overlay.getAlarmDelay());
                 }
                 else {
 
@@ -781,7 +791,7 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
                     //alert( "A4!" + alarmInfo.alarmSnoozeTime + " -- " +alarmInfo.alarmCurrentAlarmId + " __ " + nuller );
 
                     oldestWindow.setTimeout(oldestWindow.reminderfox.overlay.showMissedAlarmsSnooze2,
-                        reminderfox.overlay.consts.ALARM_DELAY,
+                        reminderfox.overlay.getAlarmDelay(),
                         st,
                         id1,
                         alarmInfo.alarmListName,
@@ -2527,7 +2537,7 @@ reminderfox.overlay.processQuickAlarms= function(returnMissed){
 
         if (!processed) {
             if (actualAlarmTime < 0) {
-                actualAlarmTime = 0 + (reminderfox.overlay.consts.ALARM_DELAY * delay);
+                actualAlarmTime = 0 + (reminderfox.overlay.getAlarmDelay() * delay);
                 delay++;
             }
 

@@ -1,8 +1,16 @@
 
 	Reminderfox  [2.1.5.1] release
-	   as of:    Wed, 26 Nov 2014 08:35:25 -0500 (EST)
-	'reminderfox_2.1.5.1_release_20141126_0835.xpi'   <'20141126_0835'>
+	   as of:    Wed, 26 Nov 2014 09:26:34 -0500 (EST)
+	'reminderfox_2.1.5.1_release_20141126_0926.xpi'   <'20141126_0926'>
 	
+
+2014-11-26
+Added new external preference per user request to control the delay in opening up multiple alarm dialogs if
+user preference is set to use multiple windows instead of a single tabbed dialog:
+ 	reminderfox.overlay.getAlarmDelay
+
+
+
 update  2014-04-15 ____version 2.1.5 (release) ____________________________________
 	calDAV updates/housekeeping
 

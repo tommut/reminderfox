@@ -42,6 +42,7 @@ pref("extensions.reminderFox.alertSliderMaxHeight", 134);
 pref("extensions.reminderFox.calendarSize", 1);
 pref("extensions.reminderFox.smartFoxy", 1);
 pref("extensions.reminderFox.statusTextMaxLength", 40);
+pref("extensions.reminderFox.alarmPopupWindowDelay", 4000);
 pref("extensions.reminderFox.alarmSoundPath", "");
 pref("extensions.reminderFox.categories", "");
 pref("extensions.reminderFox.defaultEdit", "reminders");
