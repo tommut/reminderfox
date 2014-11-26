@@ -701,6 +701,10 @@ reminderfox.util.escapeCommas= function (stringValue){
 	return (!stringValue) ? null : stringValue.replace(/,/g, "\\,");
 };
 
+reminderfox.util.escapeSemi= function (stringValue){
+	return (!stringValue) ? null : stringValue.replace(/;/g, "\\;");
+};
+
 
 /**
  *   break for long lines   RFC 2445 sec 4.1
@@ -1313,7 +1317,11 @@ reminderfox.util.pickFileICSfile= function (extension, xthis) {
 
 		var reminderEvents = new Array();
 		var reminderTodos = new Array();
-		reminderfox.core.readInRemindersAndTodosICSFromFile(reminderEvents, reminderTodos, file, false /*ignoreExtraInfoIfImportingAdditionalEvents*/, false /*setNewUID*/);
+		reminderfox.core.readInRemindersAndTodosICSFromFile(reminderEvents, reminderTodos, file, false /*ignoreExtraInfo IfImportingAdditionalEvents*/);
+		//gWCalDAV
+		// With CalDAV enabled, each event/todo connected to a CalDAV account will 
+		// be traced in  'reminderfox.calDAV.accounts' 
+		reminderfox.calDAV.accountsReadIn();
 
 		// check if we've successfully imported any reminders or todo events
 		var importedSuccess = reminderEvents.length !== 0;
@@ -1564,14 +1572,14 @@ reminderfox.util.PromptUser= function (msg, title, button0, button1, defaultButt
  */
 reminderfox.util.STACK= function (aDepth) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	let depth = aDepth || 10;
+	var depth = aDepth || 10;
 
-	let frame = Components.stack.caller.caller;
-	let stack = frame.filename + " # " + frame.lineNumber + "\n";
-	let frame = Components.stack.caller.caller.caller;
+	var frame = Components.stack.caller.caller;
+	var stack = frame.filename + " # " + frame.lineNumber + "\n";
+	var frame = Components.stack.caller.caller.caller;
 	if (aDepth === 0) return stack;
 
-	for (let i = 1; i <= depth && frame; i++) {
+	for (var i = 1; i <= depth && frame; i++) {
 		stack += (i + ": [" + frame.filename + " # " +
 			frame.lineNumber + "] " + frame.name + "\n");
 		if (!frame.filename) break;
@@ -2688,7 +2696,7 @@ reminderfox.calDAV.accountsActive = function (_calDAVaccounts) {
  *  @param {object} the CalDAVaccounts definition objects
  *  @param {string} thisFile, optional: a file/path, if null: the current .ics location is used
  */
-reminderfox.calDAV.accountsWriteOut= function (calDAVaccounts, thisFile) {
+reminderfox.calDAV.accountsWriteOut= function (calDAVaccounts) {
 //-------------------------------------------------------------
 	if (!calDAVaccounts) calDAVaccounts = {};
 
@@ -2698,7 +2706,7 @@ reminderfox.calDAV.accountsWriteOut= function (calDAVaccounts, thisFile) {
 	}
 
 	var outputStr = JSON.stringify (calDAVaccounts);
-	var file = reminderfox.calDAV.accountsFile(thisFile);
+	var file = reminderfox.calDAV.accountsFile();
 
 	reminderfox.calDAV.fileWriteOut (outputStr, file);
 	return rmFx_CalDAV_accounts;
@@ -2707,7 +2715,7 @@ reminderfox.calDAV.accountsWriteOut= function (calDAVaccounts, thisFile) {
 
 reminderfox.calDAV.fileWriteOut= function (outputStr, thisFile) {
 //-------------------------------------------------------------
-	var msg = "___ Reminderfox WriteOut ________ file: " + thisFile.path;
+	var msg = "\n___ Reminderfox WriteOut ________ file: " + thisFile.path;
 	reminderfox.util.Logger('calDAV',  msg);
 
 	var outputStream = Components.classes["@mozilla.org/network/file-output-stream;1"]

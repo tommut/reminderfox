@@ -350,6 +350,12 @@ reminderfox.mail.sendAsItIs = function (selcReminders, organizer, mode, reminder
  * @return
  */
 reminderfox.mail.sendEventNow = function (reminderToBeSend, todosToBeSend, methodTyp, fromAddress, attendees, selectedTyp) {
+		// setup for different invitation items ....
+			function addBody (option, optText) {
+				return ((option == null) || (option == ""))
+					? ""
+					: "\n" + optText + option;
+			}
 
 	var statusMsg = "";
 	if ((fromAddress != "") && (fromAddress != null)) {
@@ -432,12 +438,6 @@ reminderfox.mail.sendEventNow = function (reminderToBeSend, todosToBeSend, metho
 			+ '*  "' + reminderToBeSend[0].summary  + '"'
 			+ "\n" + reminderfox.string("rf.mail.ical.send.sentBy") + "  " + fromAddress + "\n";
 
-		// setup for different invitation items ....
-			function addBody (option, optText) {
-				return ((option == null) || (option == ""))
-					? ""
-					: "\n" + optText + option;
-			}
 		var priority = reminderToBeSend[0].priority;
 		var priorityStr = (priority == 1)
 			? reminderfox.string("rf.add.mail.message.priority")
@@ -1050,6 +1050,11 @@ if(!reminderfox.msgnr) reminderfox.msgnr={};
 	reminderfox.msgnr.Compose = function (subject, fromAddress,  toAddresses,
 				priority, body, footer, refID, iCalToEmailFile, methodTyp) {
 	// =========================================================================
+
+				function exHtml(xString){
+					return xString.replace(new RegExp(/</g),"&lt;").replace(new RegExp(/>/g),"&gt;")
+				}
+
 		if (reminderfox.util.messenger()) {
 			var fromId = reminderfox.msgnr.getIdentity (fromAddress);
 
@@ -1075,11 +1080,6 @@ if(!reminderfox.msgnr) reminderfox.msgnr={};
 
 			toAddresses = (toAddresses == "null") ? "" : toAddresses;
 			composeFields.to = toAddresses;
-
-				function exHtml(xString){
-					return xString.replace(new RegExp(/</g),"&lt;").replace(new RegExp(/>/g),"&gt;")
-				}
-
 			composeFields.subject = subject;
 			composeFields.body = exHtml(body + footer);
 			composeFields.priority = priority;

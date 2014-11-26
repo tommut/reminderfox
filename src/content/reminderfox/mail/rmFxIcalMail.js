@@ -245,16 +245,16 @@ reminderfox.iCal.getICS= function (_content, msgDetails, _attachmentName) {  // 
  */
 reminderfox.iCal.getMessageBody= function (aMessageHeader){
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	let messenger = Components.classes["@mozilla.org/messenger;1"]
+	var messenger = Components.classes["@mozilla.org/messenger;1"]
 		.createInstance(Components.interfaces.nsIMessenger);
-	let listener = Components.classes["@mozilla.org/network/sync-stream-listener;1"]
+	var listener = Components.classes["@mozilla.org/network/sync-stream-listener;1"]
 		.createInstance(Components.interfaces.nsISyncStreamListener);
-	let uri = aMessageHeader.folder.getUriForMsg(aMessageHeader);
+	var uri = aMessageHeader.folder.getUriForMsg(aMessageHeader);
 
 	messenger.messageServiceFromURI(uri)
 		.streamMessage(uri, listener, null, null, false, "");
 
-	let folder = aMessageHeader.folder;
+	var folder = aMessageHeader.folder;
 	return folder.getMsgTextFromStream(listener.inputStream,
 		aMessageHeader.Charset,
 		65536,
@@ -1344,7 +1344,8 @@ reminderfox.iCal.inviteStatus= function (currentReminder) {
 	if (currentORG.length == 0)  { return;}  // no ORGANIZER
 
 	var currentORGStr = currentORG.toUpperCase()+",";
-	var mailIDsStr = reminderfox.msgnr.myMailIDs().toUpperCase() + ",";
+	var mailIDsStr = reminderfox.msgnr.myMailIDs();
+		mailIDsStr = mailIDsStr.toUpperCase() + ",";
 	var fndIndex = currentORGStr.lastIndexOf( "MAILTO:" );
 	if (mailIDsStr.indexOf(currentORGStr.substring(fndIndex + 7)) == -1) {
 

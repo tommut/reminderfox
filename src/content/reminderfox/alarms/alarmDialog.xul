@@ -41,17 +41,17 @@
 	<!--script type="application/x-javascript" src="chrome://reminderfox/content/utils/rmFxUtils.js" /  duplicate -->
 	<script type="application/x-javascript" src="chrome://reminderfox/content/mail/rmFxMail.js" />
 
-	<!-- support CalDAV with alarm edit -->
-	<script type="application/x-javascript" src="chrome://reminderfox/content/caldav/calDAVrequester.js" />
-	<script type="application/x-javascript" src="chrome://reminderfox/content/caldav/calDAVcalls.js" />
-	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/HTTP.js" />
 
-
-	<keyset id="reminderFoxOptions-keys">
+    <!-- allow escape to dismiss window; but we don't want ENTER as that can be accidentally
+      input while typing something else when an alarm pops up -->
+    <keyset id="reminderFoxOptions-keys">
+		<key keycode="VK_ESCAPE" oncommand="reminderFox_alarmClosed()" />
+	</keyset>
+	<!-- keyset id="reminderFoxOptions-keys">
 		<key keycode="VK_ESCAPE" oncommand="reminderFox_alarmClosed()" />
 		<key keycode="VK_ENTER" oncommand="reminderFox_alarmChooseDone();" />
 		<key keycode="VK_RETURN" oncommand="reminderFox_alarmChooseDone();" />
-	</keyset>
+	</keyset-->
 
 	<tabbox id="tabbox" flex="1">
 		<arrowscrollbox id="arrowscrollbox" orient="horizontal">
@@ -109,7 +109,7 @@
 							<vbox>
 								<hbox align="center">
 									<button id="snoozeButton" label="&rf.alarm.button.snooze;"
-										oncommand="reminderFox_snooze();" />
+										oncommand="reminderFox_snooze();" default="true"/>
 									<menulist id="reminderFox-snoozeTime" editable="true"
 										oninput="reminderFox_snoozeTimeChanged();" oncommand="reminderFox_snoozeTimeChanged();">
 										<menupopup>
@@ -140,7 +140,7 @@
 											<hbox>							<!-- is24H will be set with JS -->
 												<spacer width="3px"/>
 												<timepicker id="timePickerCurrent" hideseconds="true"/>
-												<button label="&rf.ok;" id="okButton" default="true"
+												<button label="&rf.ok;" id="okButton"
 													oncommand="rmFx_datePickerQAclose();" />
 												<spacer width="3px"/>
 											</hbox>
@@ -159,7 +159,7 @@
 						<groupbox>
 							<vbox>
 								<hbox>
-									<menulist id="reminderFox-alarm-action" oncommand="reminderFox_actionChanged();">
+									<menulist id="reminderFox-alarm-action" oncommand="XreminderFox_actionChanged();">
 										<menupopup>
 											<menuitem label="&rf.alarm.button.acknowledge;" />
 											<menuitem label="&rf.alarm.button.complete;" />
@@ -167,7 +167,7 @@
 											<menuitem label="&rf.alarm.button.open;" />
 										</menupopup>
 									</menulist>
-									<button id="okButton" label="&rf.ok;" default="true"
+									<button id="okButton" label="&rf.ok;"
 										oncommand="reminderFox_alarmDone();" />
 								</hbox>
 							</vbox>
@@ -185,5 +185,10 @@
 	</tabbox>
 
 
+	<script type="application/x-javascript"><![CDATA[
+		function XreminderFox_actionChanged() {
+			reminderFox_actionChanged()
+		}
+	]]></script>
 
 </window>

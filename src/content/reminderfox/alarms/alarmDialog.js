@@ -3,7 +3,7 @@ var reminderFox_snoozed = false;
 var reminderFox_okayed = false;
 
 var reminderFox_reopeningWindow = false;
-
+/*--------  moved to reminderFox.Core.js
 const REMINDERFOX_ACTION_TYPE = {
 	ACKNOWLEDGE : 0,
 	COMPLETE : 1,
@@ -11,17 +11,11 @@ const REMINDERFOX_ACTION_TYPE = {
 	OPEN : 3,
 	SNOOZE : 4
 };
+------*/
+
 const MAX_TAB_TITLE_LENGTH = 30;
 var reminderAlarmArray = new Array();
 var reminderFox_QAcalendarOpened = false;
-
-//https://developer.mozilla.org/en-US/docs/Mozilla/JavaScript_code_modules/Using
-// trying to import js code with .utils.import -- fails for EXPORTED_SYMBOLS
-//Components.utils.import("resource://app/modules/gloda/mimemsg.js");
-//chrome://<yourextension>/content/<yourmodule>.jsm.
-//Components.utils.import("chrome://reminderfox/content/network/passwordManagerUtils.js")
-//Error: chrome://reminderfox/content/network/passwordManagerUtils.js - EXPORTED_SYMBOLS is not an array.
-
 
 function updateTimeUntil() {
 	//dump( "FOCUSE" );
@@ -584,6 +578,8 @@ function reminderFox_editReminderFromAlarm() {
 	// successful edit will set the .lastEvent -- so we can update the Alarm dialog 
 	if (reminderfox.core.lastEvent) {
 		var returnedSummary = reminderfox.core.lastEvent.summary;
+
+//gWTESTalarm
 		var msgLog = " Alarmed reminder was edited : " + returnedSummary;
 		reminderfox.util.Logger("Alert", msgLog);
 
@@ -725,6 +721,10 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 		reminder = reminderfox.core.getSpecificTodoById(myAlarmId);
 	}
 
+//gWTESTalarm
+var msgText = "  reminderFox_performAlarmAction    reminder: " + reminder.summary + "  alarmAction: " + actionIndex
+reminderfox.util.Logger("Alert", msgText)
+
 	// mark reminder's last-acknowleged  (unless snooze was pressed)
 	if(reminder != null) {
 		var removed = false;
@@ -764,7 +764,10 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 				var currentReminder = reminderAlarmArray[index].alarmRecentReminder;
 				var messageID = currentReminder.messageID;
 
-				if(currentReminder.recurrence.type == reminderfox.consts.RECURRENCE_MONTHLY_DATE || currentReminder.recurrence.type == reminderfox.consts.RECURRENCE_MONTHLY_DAY || currentReminder.recurrence.type == reminderfox.consts.RECURRENCE_WEEKLY || currentReminder.recurrence.type == reminderfox.consts.RECURRENCE_DAILY) {
+				if(currentReminder.recurrence.type == reminderfox.consts.RECURRENCE_MONTHLY_DATE 
+					|| currentReminder.recurrence.type == reminderfox.consts.RECURRENCE_MONTHLY_DAY 
+					|| currentReminder.recurrence.type == reminderfox.consts.RECURRENCE_WEEKLY 
+					|| currentReminder.recurrence.type == reminderfox.consts.RECURRENCE_DAILY) {
 
 					// prompt user...
 					var deleteRecurrenceOnly = true;
@@ -861,11 +864,13 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 
 			reminderfox.core.writeOutRemindersAndTodos(false);			// sync with alarm actions 
 
+			var recentReminder = reminderAlarmArray[index].alarmRecentReminder;
+
+			//sync with remote server
 			// this callback syncs the written changes to remote and does it in the background on the calling
 			// window (otherwise we have to keep this window open until the network function callback returns)
 			var tabList = document.getElementById("tabList");
 			var index = tabList.selectedIndex;
-			var recentReminder = reminderAlarmArray[index].alarmRecentReminder;
 			var syncCallback = reminderAlarmArray[index].synccallback;
 			if(syncCallback != null) {
 				var networkSync = reminderfox.consts.NETWORK_SYNCHRONIZE_DEFAULT;
@@ -879,6 +884,7 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 					syncCallback();
 				}
 			}
+
 		} else {
 			// if we just acknowledged the reminder, don't do anything.
 			reminderfox.core.writeOutRemindersAndTodos(false);		// if we just acknowledged the reminder, don't do anything.   ??
@@ -908,7 +914,7 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 		// if the edit window is open and we Acknowledge this alarm, we need to set the lastAck  for this reminder instnace
 		// in the editWindow as well, or it will still have the old value and overwrite the correct one when the edit
 		// window is closed...
-		var topWindow = reminderfox.util.getWindow("window:reminderFoxEdit");
+		var topWindow = reminderfox.util.getWindow("window:reminderFoxEdit");  // this is the MainDialog
 		if(topWindow) {
 			var editWindowReminder = null;
 			if(isReminder == "true" || isReminder == true) {
@@ -926,6 +932,8 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 				}
 				editWindowReminder = topWindow.reminderfox.core.getTodosById(myAlarmId, todos);
 			}
+
+			// if an event/todo found for 'myAlarmId' update on MainList
 			if(editWindowReminder != null) {
 				if(actionIndex != REMINDERFOX_ACTION_TYPE.SNOOZE && reminder.alarmLastAcknowledge != null) {
 					editWindowReminder.alarmLastAcknowledge = reminder.alarmLastAcknowledge;
@@ -1010,6 +1018,12 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 
 	if(!keepOpen) {
 		reminderFox_closeAlarmTab();
+	}
+
+	//sync with remote calendar	//gWTESTalarm with CalDAV
+	if(reminder.calDAVid != null) {
+		if (completed) reminder.completedDate = new Date();
+		reminderfox.core.CalDAVaction (reminder, actionIndex)
 	}
 }
 
@@ -1139,7 +1153,7 @@ function reminderFox_snooze() {
 					setSnoozeTime = 1000;
 				}
 
-				if(setSnoozeTime < 3600000) {// if snooze greater than an hour, ignore this; just let hourly process handle it
+				if(setSnoozeTime <= 3600000) {// if snooze greater than an hour, ignore this; just let hourly process handle it
 					var notes = null;
 					if(reminderAlarmArray[index].quickAlarmNotes != null && reminderAlarmArray[index].quickAlarmNotes.length > 0 && reminderAlarmArray[index].quickAlarmNotes != "null") {
 						notes = reminderAlarmArray[index].quickAlarmNotes.replace(new RegExp(/\n/g), "\\n");

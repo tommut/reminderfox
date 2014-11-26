@@ -172,6 +172,17 @@ reminderfox.abCard.bundle = document.getElementById("reminderfox_addressBook");
  * @param {string} op = Reminder|Copy
  */
 reminderfox.abCard.addReminder4Contact = function(op){
+
+		function getDetails (cCard, aItems) {
+			var items = aItems.split(',');
+			var aStr = "";
+			for (var i=0; i < items.length; i++) {
+				var w = reminderfox.abCard.cCardItem(cCard, items[i]);
+				if (w != "") aStr += w + " ";
+			}
+			return aStr;
+		}
+
 	//	--- get the Contact info
 	reminderfox.msgnr.whichMessenger();
 	reminderfox.abCard.selectedABURI = GetSelectedDirectory();
@@ -313,17 +324,6 @@ reminderfox.abCard.addReminder4Contact = function(op){
 			// --- add ABcard-items to rmFx-fields ---
 
 			// add address to 'Location' for search with Google Maps
-
-				function getDetails (cCard, aItems) {
-					var items = aItems.split(',');
-					var aStr = "";
-					for (var i=0; i < items.length; i++) {
-						var w = reminderfox.abCard.cCardItem(cCard, items[i]);
-						if (w != "") aStr += w + " ";
-					}
-					return aStr;
-				}
-
 			var workAddr = getDetails (reminderfox.abCard.cCard, 
 					"WorkAddress,WorkAddress2,WorkCity,WorkZipCode,WorkState,WorkCountry");
 			var homeAddr = getDetails (reminderfox.abCard.cCard, 
@@ -612,9 +612,9 @@ reminderfox.abCard.openABcard = function(event){
 		return;
 	}
 	/*----
-	 let allAddressBooks = abManager.directories;
+	 var allAddressBooks = abManager.directories;
 	 while (allAddressBooks.hasMoreElements()) {
-	 let addressBook = allAddressBooks.getNext();
+	 var addressBook = allAddressBooks.getNext();
 	 if (addressBook instanceof Components.interfaces.nsIAbDirectory) {
 //	 reminderfox.util.Logger('AB', "AB : " + abManager.getDirectory(addressBook.URI).URI
 //	 + " " + abManager.getDirectory(addressBook.URI).dirName);

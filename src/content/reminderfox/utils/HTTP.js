@@ -187,6 +187,23 @@ reminderfox.HTTP = {
 	 */
 	reminderfox.HTTP.JXONTree = function (oXMLParent) {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+			function parseText (sValue) {
+				if(/^\s*$/.test(sValue)) {
+					return null;
+				}
+				if(/^(?:true|false)$/i.test(sValue)) {
+					return sValue.toLowerCase() === "true";
+				}
+				if(isFinite(sValue)) {
+					return parseFloat(sValue);
+				}
+				if(isFinite(Date.parse(sValue))) {
+					return new Date(sValue);
+				}
+				return sValue;
+			};
+
 		var nAttrLen = 0, nLength = 0, sCollectedTxt = "";
 		if(oXMLParent.hasChildNodes()) {
 			for(var oNode, sProp, vContent, nItem = 0; nItem < oXMLParent.childNodes.length; nItem++) {
@@ -212,6 +229,7 @@ reminderfox.HTTP = {
 			}
 			if (sCollectedTxt != "") this.keyValue = parseText(sCollectedTxt);
 		}
+		try {
 		if(oXMLParent.hasAttributes()) {
 			var oAttrib;
 			this.keyAttributes = {};
@@ -220,22 +238,7 @@ reminderfox.HTTP = {
 				this.keyAttributes[oAttrib.name.toLowerCase()] = parseText(oAttrib.value.trim());
 			}
 		};
-
-			function parseText (sValue) {
-				if(/^\s*$/.test(sValue)) {
-					return null;
-				}
-				if(/^(?:true|false)$/i.test(sValue)) {
-					return sValue.toLowerCase() === "true";
-				}
-				if(isFinite(sValue)) {
-					return parseFloat(sValue);
-				}
-				if(isFinite(Date.parse(sValue))) {
-					return new Date(sValue);
-				}
-				return sValue;
-			};
+		} catch (ex) { /* no Attributes */}
 	}
 
 	/**

@@ -1734,7 +1734,7 @@ reminderfox.calendar.grid.Month= function(calndrGrid, currentDate, nMonth, numMo
 				var gDate = reminderfox.date.convertDate(gridDayNum);
 				var vbox = document.createElement("vbox");
 					vbox.setAttribute("class", "reminderfox-calendar-month-day-box-class");
-					vbox.setAttribute("nonheader", true);
+ 					vbox.setAttribute("nonheader", true);
 					// label (show the month day)
 					var alabel = document.createElement("label");
 					alabel.setAttribute("class", "reminderfox-calendar-month-day-number-class");

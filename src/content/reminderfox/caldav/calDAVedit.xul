@@ -78,6 +78,11 @@
 									urlDav="https://www.google.com"
 									type="VEVENT" />
 
+								<menuitem id="OC_local7" label="ownCloud 7 (local)"
+									urlServer="http://localhost" 
+									urlDav="http://localhost"
+									type="VEVENT" />
+
 								<menuitem id="OC_local" label="ownCloud (local)"
 									urlServer="http://localhost" 
 									urlDav="http://localhost"

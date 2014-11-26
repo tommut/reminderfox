@@ -71,7 +71,7 @@ reminderfoxX.XcalDAVhttp = function () {}
 		logMsg = 'CalDAV: HTTP sendContentToURL (' + call.ID + '):  [' + call.request + "|" + call.callback +"]"
 			+ "\n  url:"    + call.url 
 			+ "\n  login : " + call.username + "|" + call.password + "|";
-	//	reminderfox.util.Logger('calDAVhttp',logMsg)
+		reminderfox.util.Logger('calDAVhttp',logMsg)
 
 
 		if ((call.url) && (call.url.search('https://www.googleapis.com/caldav/v2/')) === 0) {
@@ -148,6 +148,8 @@ reminderfoxX.XcalDAVhttp = function () {}
 				+ "\n  content:\n" + call.body;
 			reminderfox.util.Logger('calDAVhttp', logMsg);
 
+	rmFX_GCal_SPDYset(call,  (call.request + "|" + call.callback +"]  (" + call.ID + ")" ))
+
 			var requester;
 			var currentApp = this;
 			this.inprogress = reminderfox.HTTP.call(call.method, urlstr, {
@@ -170,7 +172,53 @@ reminderfoxX.XcalDAVhttp = function () {}
 					},
 
 				onSuccess : function(status, xml, text, headers, statusText) {
+	rmFX_GCal_SPDYreset(call) 
 					caller[call.callback](status, xml, text, headers, statusText, call);
 					}
 			});
 	};
+
+
+/*
+ * gW 2014-10-24 
+ * SPDY handling with Google CalDAV handling
+ * See [Bug 1072525] Interfacing with Google DAV services over HTTP/2.0 Fails with "400 Bad Request"
+ *   https://bugzilla.mozilla.org/show_bug.cgi?id=1072525
+ * 
+ * call.Url : 
+ * https://www.googleapis.com/caldav/v2/gneandr%40googlemail.com/events/
+ * https://accounts.google.com/o/oauth2/token
+ * https://apidata.googleusercontent.com/caldav/v2/" + username,
+ * https://www.google.com/calendar/dav/{AccountLogin}/
+ */
+	function rmFX_GCal_SPDYset(call, aStatus) {
+
+	//	return;		//enable the return if SPDY handling Google/Mozilla works
+
+		if ((call.url.search('www.google.com') > -1) 
+			|| (call.url.search('www.googleapis.com') > -1)
+			|| (call.url.search('accounts.google.com') > -1)) {
+			var SPDYpref;
+			try {
+				SPDYpref = reminderfox._prefs.getBoolPref('network.http.spdy.enabled');
+				var msg = " ** SPDY setting: " + SPDYpref + "  status : " + aStatus 
+					+ "\n  call.url : " + call.url
+	//			reminderfox.util.Logger('alert', msg)
+				if (SPDYpref == true) {
+					reminderfox._prefs.setBoolPref('network.http.spdy.enabled', false);
+					call.spdy = false
+				}
+			} catch(e) {}
+		} else {
+			return
+		}
+	}
+
+	function rmFX_GCal_SPDYreset(call) {
+		try{
+			if ((!call.spdy)&&(call.spdy == false)) {
+				reminderfox._prefs.setBoolPref('network.http.spdy.enabled', true);
+				call.spdy = true
+			}
+		} catch (ex) {}
+	}

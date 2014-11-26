@@ -119,12 +119,12 @@ reminderfox.util.Logger('Alert', "Update check  remote|local: " + remoteStamp +"
 
 		function openAddonsMgr(aView) {
 
-			let winEnum = Components.classes['@mozilla.org/appshell/window-mediator;1']
+			var winEnum = Components.classes['@mozilla.org/appshell/window-mediator;1']
 				.getService(Components.interfaces.nsIWindowMediator)
 				.getXULWindowEnumerator(null);
 
 			while (winEnum.hasMoreElements())  {
-				let wndE = winEnum.getNext()
+				var wndE = winEnum.getNext()
 					.QueryInterface(Components.interfaces.nsIXULWindow)
 					.docShell.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
 					.getInterface(Components.interfaces.nsIDOMWindow);

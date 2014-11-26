@@ -61,7 +61,13 @@
 									</tr>
 
 									<tr>
-										<td valign='top' align='center' style="width: 5%;">
+										<td valign='center' align='center' style="width: 5%;">
+											<xsl:if test="calDAVid != ''">
+												<span><img align="bottom" alt="" src="file:icons/iCal.png" style="vertical-align:bottom"/>
+												<xsl:value-of select="calDAVid"/></span>
+												<br />
+											</xsl:if>
+
 											<xsl:if test="messageID = 'M'">
 												<img alt="" src="file:icons/mail.png" />
 												<br />
@@ -133,6 +139,22 @@
 											</xsl:if>
 										</td>
 									</tr>
+
+
+									<tr>
+										<td valign='top' align='center' style="width: 5%;">
+											<xsl:if test="categories != ''">
+												<img   alt="" src="file:icons/category.png"/>
+												<br/>
+											</xsl:if>
+										</td>
+										<td valign='top' >
+											<xsl:if test="categories != ''">
+												<xsl:value-of select="categories"/>
+											</xsl:if>
+										</td>
+									</tr>
+
 
 								</table>
 
@@ -189,7 +211,13 @@
 									</tr>
 
 									<tr>
-										<td valign='top' align='center' style="width: 5%;">
+										<td valign='center' align='center' style="width: 5%;">
+											<xsl:if test="calDAVid != ''">
+												<span><img align="bottom" alt="" src="file:icons/iCal.png" style="vertical-align:bottom"/>
+												<xsl:value-of select="calDAVid"/></span>
+												<br />
+											</xsl:if>
+
 											<xsl:if test="messageID = 'M'">
 												<img alt="" src="file:icons/mail.png" />
 												<br />
@@ -258,6 +286,20 @@
 										<td valign='top'>
 											<xsl:if test="location != ''">
 												<a href="http://maps.google.com/maps?q={location}"><xsl:value-of select="location"/></a>
+											</xsl:if>
+										</td>
+									</tr>
+
+									<tr>
+										<td valign='top' align='center' style="width: 5%;">
+											<xsl:if test="categories != ''">
+												<img   alt="" src="file:icons/category.png"/>
+												<br/>
+											</xsl:if>
+										</td>
+										<td valign='top' >
+											<xsl:if test="categories != ''">
+												<xsl:value-of select="categories"/>
 											</xsl:if>
 										</td>
 									</tr>
@@ -325,6 +367,13 @@
 
 									<tr>
 										<td valign='top' align='center' style="width: 5%;">
+
+											<xsl:if test="calDAVid != ''">
+												<span><img align="bottom" alt="" src="file:icons/iCal.png" style="vertical-align:bottom"/>
+												<xsl:value-of select="calDAVid"/></span>
+												<br />
+											</xsl:if>
+
 											<xsl:if test="messageID = 'M'">
 												<img alt="" src="file:icons/mail.png" />
 												<br />
@@ -396,6 +445,21 @@
 											</xsl:if>
 										</td>
 									</tr>
+
+									<tr>
+										<td valign='top' align='center' style="width: 5%;">
+											<xsl:if test="categories != ''">
+												<img   alt="" src="file:icons/category.png"/>
+												<br/>
+											</xsl:if>
+										</td>
+										<td valign='top' >
+											<xsl:if test="categories != ''">
+												<xsl:value-of select="categories"/>
+											</xsl:if>
+										</td>
+									</tr>
+
 
 								</table>
 

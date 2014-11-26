@@ -2144,7 +2144,6 @@ function createUIListItemReminder(baseReminder){
 			newMailLabel.setAttribute("src", reminderfox.consts.MAIL_IMAGE);
 		}
 
-//gWcalDAV column added   2012-12
 		var calDAVlabel = document.createElement("treecell");
 		newRow.appendChild(calDAVlabel);
 
@@ -2491,8 +2490,6 @@ function createUIListReminderItemSorted(reminder, todaysDate){
 		newMailLabel.setAttribute("src", reminderfox.consts.MAIL_IMAGE);
 	}
 
-
-//gWcalDAV column added   2012-12
 	var calDAVlabel = document.createElement("treecell");
 	newRow.appendChild(calDAVlabel);
 
@@ -2504,7 +2501,6 @@ function createUIListReminderItemSorted(reminder, todaysDate){
 		calDAVlabel.setAttribute("label", reminder.calDAVid);
 	}
 
-	//gWCategories
 	if (reminder.categories != null) {
 		catLabel.setAttribute("label", reminder.categories);
 
@@ -2884,8 +2880,6 @@ function createUIListItemTodo(todo, sort, todaysDate, addToArray){
 		newMailLabel.setAttribute("src", reminderfox.consts.MAIL_IMAGE);
 	}
 
-
-//gWcalDAV column added   2014-01
 	var calDAVlabel = document.createElement("treecell");
 	newRow.appendChild(calDAVlabel);
 
@@ -3126,7 +3120,6 @@ function createUIListItemTodoAtIndex(todo, index){
 	}
 
 
-//gWcalDAV column added   2014-01
 	var calDAVlabel = document.createElement("treecell");
 	newRow.appendChild(calDAVlabel);
 
@@ -4826,7 +4819,7 @@ function reminderOrTodoEdit(go4Reminder, isTodo, messageID){
  * Select a Reminder/Todo on Main List to be copied
  * New will be set for todays date
  */
-function copyReminderOrTodo(){					//gWXXX newAdd
+function copyReminderOrTodo(){
 	var thisReminder = reminderfox_isReminderTabSelected() ? getReminderForSelectedItem() : getTodoForSelectedItem();
 	if (thisReminder == null) return;
 
@@ -4907,7 +4900,7 @@ function userDeleteReminder(events) {		//gWCal
 };
 
 
-function userDeleteEvent(events){ 		//gW Cal
+function userDeleteEvent(events){ 		//gWCal
 	var deleteIt = false;
 	var deleteDate = new Date();
 
@@ -5076,7 +5069,7 @@ function userMoveReminderToTodo(event){
 }
 
 
-function userDeleteTodo(xEvent){		//gW Cal
+function userDeleteTodo(xEvent){		//gWCal
 
 	var selectedTodos = null;
 	if (xEvent && ((xEvent.tagName && xEvent.tagName == 'menuitem') || (xEvent.type && xEvent.type == 'keypress'))) {

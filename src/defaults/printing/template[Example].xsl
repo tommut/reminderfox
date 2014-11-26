@@ -116,6 +116,20 @@
 								</td>
 							</tr>
 
+							<tr>
+								<td valign='top' align='center' style="width: 5%;">
+									<xsl:if test="categories != ''">
+										<img   alt="" src="file:icons/category.png"/>
+										<br/>
+									</xsl:if>
+								</td>
+								<td valign='top' >
+									<xsl:if test="categories != ''">
+										<xsl:value-of select="categories"/>
+									</xsl:if>
+								</td>
+							</tr>
+
 						</table>
 
 					</td>
