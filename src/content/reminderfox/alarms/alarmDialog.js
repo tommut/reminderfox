@@ -580,8 +580,8 @@ function reminderFox_editReminderFromAlarm() {
 		var returnedSummary = reminderfox.core.lastEvent.summary;
 
 //gWTESTalarm
-		var msgLog = " Alarmed reminder was edited : " + returnedSummary;
-		reminderfox.util.Logger("Alert", msgLog);
+//		var msgLog = " Alarmed reminder was edited : " + returnedSummary;
+//		reminderfox.util.Logger("Alert", msgLog);
 
 		tabList.children[index].label=returnedSummary;
 		document.getElementById('reminderDescriptionText').value = returnedSummary
@@ -723,8 +723,8 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 
 	// mark reminder's last-acknowleged  (unless snooze was pressed)
 	if(reminder != null) {//gWTESTalarm
-        var msgText = "  reminderFox_performAlarmAction    reminder: " + reminder.summary + "  alarmAction: " + actionIndex
-        reminderfox.util.Logger("Alert", msgText)
+//        var msgText = "  reminderFox_performAlarmAction    reminder: " + reminder.summary + "  alarmAction: " + actionIndex
+//        reminderfox.util.Logger("Alert", msgText)
 
 		var removed = false;
 		var completed = false;

@@ -52,5 +52,5 @@
 				<em:maxVersion>5.0*</em:maxVersion>
 			</Description>
 		</em:targetApplication>
-	<em:updateURL/><em:updateKey/><em:hidden/></Description>
+	</Description>
 </RDF>
