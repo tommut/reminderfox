@@ -7,7 +7,7 @@ if (!reminderfox.core.method) reminderfox.core.method = "";
 
 
 // constants
-reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.1";		// update also install.rdf
+reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.1.1";		// update also install.rdf
 
 // ************************* for offical MOZILLA set to "release"  *****
 reminderfox.consts.SPECIAL_VERSION_DETAIL					= "wip";
@@ -3082,27 +3082,21 @@ reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, 
                 outputStr += "DTSTAMP" + separator + reminder.lastModified + newline;
             }
 
-//gWTEST   moved alarmLastAcknowledge and snoozeTime outside of valarm; GCal don't support it
-            if (reminder.alarmLastAcknowledge) {
-//gWTESTalarm
-//					outputStr += reminderfox.consts.REMINDER_FOX_EXTENDED + "LASTACK" + separator 
-//					+ reminder.alarmLastAcknowledge + " --> " + new Date(+reminder.alarmLastAcknowledge) +
-//					"  ::" + reminder.summary+ newline;
-                outputStr += reminderfox.consts.REMINDER_FOX_EXTENDED + "LASTACK" + separator
-                    + reminder.alarmLastAcknowledge + newline;
-            }
-            if (reminder.snoozeTime) {
-//gWTESTalarm
-                var x = reminder.snoozeTime.split(";")[0]
-//					outputStr += reminderfox.consts.REMINDER_FOX_EXTENDED + "SNOOZE-TIME" + separator 
-//					+ reminder.snoozeTime  + " --> " + new Date(+x) + 
-//					"  ::" + reminder.summary+ newline;
-                outputStr += reminderfox.consts.REMINDER_FOX_EXTENDED + "SNOOZE-TIME" + separator
-                    + (reminder.snoozeTime) + newline;
-                //			+ reminderfox.util.escapeSemi(reminder.snoozeTime) + newline;
-            }
 
             if (reminder.alarm) {
+                //gWTEST   moved alarmLastAcknowledge and snoozeTime outside of valarm block; GCal don't support it
+                if (reminder.alarmLastAcknowledge) {
+                    outputStr += reminderfox.consts.REMINDER_FOX_EXTENDED + "LASTACK" + separator
+                        + reminder.alarmLastAcknowledge + newline;
+                }
+                if (reminder.snoozeTime) {
+//gWTESTalarm
+                    var x = reminder.snoozeTime.split(";")[0]
+                    outputStr += reminderfox.consts.REMINDER_FOX_EXTENDED + "SNOOZE-TIME" + separator
+                        + (reminder.snoozeTime) + newline;
+                    //			+ reminderfox.util.escapeSemi(reminder.snoozeTime) + newline;
+                }
+
                 outputStr += "BEGIN:VALARM" + newline;
                 outputStr += "TRIGGER" + separator +
                     reminder.alarm +
@@ -3247,15 +3241,15 @@ reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, 
                 outputStr += reminderfox.consts.REMINDER_FOX_EXTENDED + "LISTID" + separator + n + newline;
             }
 
-//gWTEST  moved outside of VALARM; GCal don't support this inside
-            if (todo.alarmLastAcknowledge) {
-                outputStr += reminderfox.consts.REMINDER_FOX_EXTENDED + "LASTACK" + separator + todo.alarmLastAcknowledge + newline;
-            }
-            if (todo.snoozeTime) {
-                outputStr += reminderfox.consts.REMINDER_FOX_EXTENDED + "SNOOZE-TIME" + separator + todo.snoozeTime + newline;
-            }
-
             if (todo.alarm) {
+                //gWTEST  moved outside of VALARM; GCal don't support this inside
+                if (todo.alarmLastAcknowledge) {
+                    outputStr += reminderfox.consts.REMINDER_FOX_EXTENDED + "LASTACK" + separator + todo.alarmLastAcknowledge + newline;
+                }
+                if (todo.snoozeTime) {
+                    outputStr += reminderfox.consts.REMINDER_FOX_EXTENDED + "SNOOZE-TIME" + separator + todo.snoozeTime + newline;
+                }
+
                 outputStr += "BEGIN:VALARM" + newline;
                 outputStr += "TRIGGER" + separator + todo.alarm + newline;
                 outputStr += "ACTION" + separator + "DISPLAY" + newline;
@@ -4203,8 +4197,7 @@ reminderfox.core.readInReminderEvent= function(reminderEvent, index, readIn, rem
             reminderEvent.calDAVid = readIn.substring(colonIndex + 1);
         }
 
-        else
-        if (readIn.indexOf(reminderfox.consts.REMINDER_FOX_EXTENDED + "LASTACK") === 0) {
+        else if (readIn.indexOf(reminderfox.consts.REMINDER_FOX_EXTENDED + "LASTACK") === 0) {
             colonIndex = readIn.indexOf(":");
             while (colonIndex == -1) {
                 index++;
@@ -4214,8 +4207,7 @@ reminderfox.core.readInReminderEvent= function(reminderEvent, index, readIn, rem
             reminderEvent.alarmLastAcknowledge = readIn.substring(colonIndex + 1);
         }
 
-        else
-        if (readIn.indexOf(reminderfox.consts.REMINDER_FOX_EXTENDED + "SNOOZE-TIME") === 0) {
+        else if (readIn.indexOf(reminderfox.consts.REMINDER_FOX_EXTENDED + "SNOOZE-TIME") === 0) {
             colonIndex = readIn.indexOf(":");
             while (colonIndex == -1) {
                 index++;
@@ -4225,8 +4217,7 @@ reminderfox.core.readInReminderEvent= function(reminderEvent, index, readIn, rem
             reminderEvent.snoozeTime = readIn.substring(colonIndex + 1);
         }
 
-        else
-        if (readIn.indexOf("DTSTART") === 0 || readIn.indexOf("DTEND") === 0) {
+        else if (readIn.indexOf("DTSTART") === 0 || readIn.indexOf("DTEND") === 0) {
             var startDate = (readIn.indexOf("DTSTART") === 0);
             colonIndex = readIn.indexOf(":");
             while (colonIndex == -1) {
@@ -4360,14 +4351,17 @@ reminderfox.core.readInReminderEvent= function(reminderEvent, index, readIn, rem
                         // trigrel::   TRIGGER:-PT5M		(may contain TRIGGER;RELATED=END:PT5M .. ignored that for the moment )
                         reminderEvent.alarm = value;
                     }
-                    /*-------------
+                    /*-------------*/
+                    // these blocks are here just for backwards compatibility; lackack and snooze are
+                    // now stored outside of alerts for google cal, but we still need to be able to read them for
+                    // earlier reminders
                      if (reminderfox.consts.REMINDER_FOX_EXTENDED + "LASTACK" == item) {
-                     reminderEvent.alarmLastAcknowledge = value;
+                        reminderEvent.alarmLastAcknowledge = value;
                      }
                      if (reminderfox.consts.REMINDER_FOX_EXTENDED + "SNOOZE-TIME" == item) {
-                     reminderEvent.snoozeTime = value;
+                        reminderEvent.snoozeTime = value;
                      }
-                     -------*/
+                    /* -------*/
                 }
             }	else { // save these 'other' ALARM entries to extraString 
                 reminderEvent.extraInfo += "\\nBEGIN:VALARM";
@@ -4921,6 +4915,26 @@ reminderfox.core.readInReminderTodo= function(reminderTodo, index, readIn, remin
             }
             reminderTodo.calDAVid = readIn.substring(colonIndex + 1);
         }
+        else if (readIn.indexOf(reminderfox.consts.REMINDER_FOX_EXTENDED + "LASTACK") === 0) {
+            colonIndex = readIn.indexOf(":");
+            while (colonIndex == -1) {
+                index++;
+                index++;
+                readIn = remindersArray[index];
+                colonIndex = readIn.indexOf(":");
+            }
+            reminderTodo.alarmLastAcknowledge = readIn.substring(colonIndex + 1);
+        }
+
+        else if (readIn.indexOf(reminderfox.consts.REMINDER_FOX_EXTENDED + "SNOOZE-TIME") === 0) {
+            colonIndex = readIn.indexOf(":");
+            while (colonIndex == -1) {
+                index++;
+                readIn = remindersArray[index];
+                colonIndex = readIn.indexOf(":");
+            }
+            reminderTodo.snoozeTime = readIn.substring(colonIndex + 1);
+        }
 
         else
 //VALARM
@@ -5001,6 +5015,9 @@ reminderfox.core.readInReminderTodo= function(reminderTodo, index, readIn, remin
                         // trigrel::   TRIGGER:-PT5M		(may contain TRIGGER;RELATED=END:PT5M .. ignored that for the moment )
                         reminderTodo.alarm = value;
                     }
+                    // these blocks are here just for backwards compatibility; lackack and snooze are
+                    // now stored outside of alerts for google cal, but we still need to be able to read them for
+                    // earlier reminders
                     if (reminderfox.consts.REMINDER_FOX_EXTENDED + "LASTACK" == item) {
                         reminderTodo.alarmLastAcknowledge = value;
                     }
