@@ -218,8 +218,8 @@ reminderfox.overlay.processAlarm= function( recentReminderOrTodo, isReminder, li
 
 //ALARM		reminderfox.core.logMessageLevel( "ackdate: "  + recentReminderOrTodo.alarmLastAcknowledge + " less than: " + alarmTime , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
 //ALARM		reminderfox.core.logMessageLevel( "ackdate: "  + ackDate + " less than: " +alarmD , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
-
-        if ( recentReminderOrTodo.alarmLastAcknowledge != null  &&  // don't check alarms of old-style reminders (i.e. they have no ack)
+// TODO: tfm - changed to == null || ... in order to handle alarms where lastack was cleared
+        if ( recentReminderOrTodo.alarmLastAcknowledge == null ||  // don't check alarms of old-style reminders (i.e. they have no ack)
             recentReminderOrTodo.alarmLastAcknowledge < alarmTime ) {
             // this past alarm was never acknowledged; let's do it now
             timeDifference = 0;
@@ -580,7 +580,6 @@ reminderfox.overlay.showMissedAlarms= function( alarmInfos ) {
                                     else {
 //ALARM										reminderfox.core.logMessageLevel( "alarm: Setting time out..."   , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
 
-                                        //alert( "A2!" );
                                         oldestWindow.setTimeout(oldestWindow.reminderfox.overlay.showMissedAlarmsSnooze2,
                                             reminderfox.overlay.getAlarmDelay(),
                                             alarmInfo.alarmSnoozeTime,
@@ -2753,11 +2752,6 @@ reminderfox.overlay.start_postInit= function() {
                 // if this is the very first window, save out the reminders to backup file(s)
                 reminderfox.overlay.saveReminders();
 
-                // Show the alert slider when the reminders are first initialized.
-                // Only show if this is the oldest window (the first browser you opened).  That is,
-                // if you open a new window, we do not need to show the alert again.
-                window.setTimeout(function () {reminderfox.overlay.showAlertSlider()}, 10000);    // add a delay  5 secondofs to account for browser loading
-
                 // open the Agenda once after starting appl
                 // .... call the Agenda if user has set it in Options
                 var printAgenda = reminderfox.core.getPreferenceValue(reminderfox.consts.DEFAULT_PRINTAGENDA, false);
@@ -2772,20 +2766,8 @@ reminderfox.overlay.start_postInit= function() {
 
                 reminderfox.overlay.processQuickAlarms();
             }
-            else {
-                // the very first time, we'll just ...
-                // ... set the alert slider time to occur in the default amount of time after the first...
-//				var alert_timeout = reminderfox._prefsBranch.getIntPref(reminderfox.consts.ALERT_TIMEOUT_PREF);
-//				if ( alert_timeout > 0) {
-//					// convert from minutes to milliseconds
-//					alert_timeout = alert_timeout * 60000;
-//					//window.setTimeout(function() {reminderfox.overlay.showAlertSlider()}, alert_timeout);
-//					window.setInterval(reminderfox.overlay.showAlertSlider, alert_timeout);
-//
-//				}
-            }
 
-            reminderfox.overlay.showAlertSliderTimingFunction.notify(reminderfox.overlay.alertTimerObject); //this is how we start the timer, we start off by running the callback, then from there every 5 sec it will call
+            reminderfox.overlay.showAlertSliderTimingFunction.notify(reminderfox.overlay.alertTimerObject); //this is how we start the timer, we start off by running the callback, then from there every X specified minutes it will call
         }
     }
     // clear reminders from memory
