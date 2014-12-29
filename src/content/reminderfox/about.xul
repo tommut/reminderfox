@@ -33,7 +33,7 @@
 				<spacer width="20px" />
 				<text id="versionDetailLink" class="urlBold" hidden="true"
 					onclick="reminderfox.versionCompare.get();"
-					value="Update Check" tooltiptext="Check current installation status."/>
+					value="&rf.about.updatecheck.label;" tooltiptext="&rf.about.updatecheck.tooltip;"/>
 
 			</hbox>
 			<separator class="thin" />

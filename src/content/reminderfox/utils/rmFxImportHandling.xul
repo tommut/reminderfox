@@ -76,7 +76,7 @@
 
 				<label align="center" class="reminderfox-moreLabel" 
 					onclick="reminderfox.util.docRmFX('importingicalics');"
-					value="&rf.main.help.label; .." tooltiptext="Import iCal/ICS" />	<!-- //$$$_locale -->
+					value="&rf.main.help.label; ..." tooltiptext="Import iCal/ICS" />	<!-- //$$$_locale -->
 			</hbox>
 		</groupbox>
 
@@ -88,7 +88,7 @@
 			<spacer flex="1"/>
 				<label align="center" class="reminderfox-moreLabel" 
 					onclick="reminderfox.util.docRmFX('addsubscribe');"
-					value="&rf.main.help.label; .." tooltiptext="&rf.import.documentation;" />
+					value="&rf.main.help.label; ..." tooltiptext="&rf.import.documentation;" />
 			<spacer width="10px"/>
 		</hbox>
 		<grid vertical-align="top" height="270px">

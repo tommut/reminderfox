@@ -487,7 +487,7 @@
 								<menupopup id="exportXML-popup" onpopupshowing="reminderfox_PrintMenuSetup(this);">
 
 
-									<menuitem id="agendaXML" class="printXMLsystem" label="Agenda"
+									<menuitem id="agendaXML" class="printXMLsystem" label="&rf.add.reminders.context.print.agenda.label;"
 										value="Agenda.xsl" oncommand="reminderfox_xmlPrint(this, 'XPI');" />
 									<menuseparator class="printXMLsystem" />
 
@@ -676,14 +676,14 @@
 							<menu id="exportXML-todo" label="&rf.add.reminders.context.print.label;"
 								tooltiptext="&rf.add.reminders.context.print.ttt;">
 								<menupopup id="exportXML-todo-popup" onpopupshowing="reminderfox_PrintMenuSetup(this);">
-									<menuitem id="agendaXML" class="printXMLsystem" label="Agenda"
+									<menuitem id="agendaXML" class="printXMLsystem" label="&rf.add.reminders.context.print.agenda.label;"
 										value="Agenda.xsl" oncommand="reminderfox_xmlPrint(this, 'XPI');" />
 									<menuseparator class="printXMLsystem" />
 
 									<menuitem id="agendaXML1" class="printXMLsystem"
-										label="All Events" value="Events(All).xsl" oncommand="reminderfox_xmlPrint(this, 'XPI');" />
+										label="&rf.add.reminders.context.print.all;" value="Events(All).xsl" oncommand="reminderfox_xmlPrint(this, 'XPI');" />
 									<menuitem id="agendaXML2" class="printXMLsystem"
-										label="Selected Events" value="Events(Selected).xsl"
+										label="&rf.add.reminders.context.print.selected;" value="Events(Selected).xsl"
 										oncommand="reminderfox_xmlPrint(this, 'XPI');" />
 
 									<menuseparator class="printXMLsystem" />

@@ -4,7 +4,7 @@
 		<em:id>{ada4b710-8346-4b82-8199-5de2b400a6ae}</em:id>
 		<em:name>ReminderFox</em:name>
 		<em:version>2.1.5.1.1</em:version>
-		<em:description>Displays and manages reminders and ToDo's.  (CalDAVv2)</em:description>
+		<em:description>Displays and manages reminders and ToDos.</em:description>
 		<em:creator>Tom Mutdosch and Daniel Lee</em:creator>
 		<em:contributor>Guenter Wahl</em:contributor>
 		<em:iconURL>chrome://reminderfox/skin/images/foxy-head.png</em:iconURL>

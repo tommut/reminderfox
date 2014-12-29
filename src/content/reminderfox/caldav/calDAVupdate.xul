@@ -62,14 +62,14 @@
 				<button id="reminderFox_go4OptionSync" 
 					class="reminderfox-iconLabel"
 					oncommand="go4NextSync(true);"
-					label="Next Calendars" tooltiptext="Skip this Calendar, go for others."/>		<!-- //$$$locale -->
+					label="&rf.caldavupdate.next.calendars.label;" tooltiptext="&rf.caldavupdate.skip.this.calendar.tooltip;"/>
 
 				<spacer flex="1"/>
 
 				<button id="reminderFox_go4OptionSync" 
 					class="reminderfox-iconLabel"
 					oncommand="go4OptionSync(true);"
-					label="Configure Calendar" tooltiptext="Open 'Options/Sync' to correct Calendar setting."/><!-- //$$$locale -->
+					label="&rf.caldavupdate.configure.calendar.label;" tooltiptext="&rf.caldavupdate.open.options.sync.tooltip;"/>
 			</hbox>
 		</vbox>
 	</hbox>

@@ -35,7 +35,7 @@
 
 		<groupbox>
 			<caption flex="1">
-				<label value="Local Version" />
+				<label value="&rf.rmfxupdatexpi.local.version.value;" />
 			</caption>
 			<textbox id="localText" multiline="true" flex="1" rows="3"
 				readonly="true" />
@@ -43,7 +43,7 @@
 
 		<groupbox>
 			<caption flex="1">
-				<label value="Current Version" />
+				<label value="&rf.rmfxupdatexpi.current.version.value;" />
 			</caption>
 
 			<textbox id="remoteText" multiline="true" flex="1" rows="10"
@@ -56,9 +56,9 @@
 	<hbox>
 		<spacer flex="1" />
 		<label id="updateXPI" class="urlBold" 
-				value="Update Reminderfox"  tooltiptext="Drag this link to the 'Add-ons Manager' window. Allow downloading. On tab:'Extensions' scroll to Reminderfox and use 'Restart now' or 'Undo'." />		<!-- $$$_locale -->
+				value="&rf.rmfxupdatexpi.update.reminderfox.value;"  tooltiptext="&rf.rmfxupdatexpi.drag.link.to.addon.manager.tooltip;" />
 		<spacer flex="1" />
-		<button label="Close" oncommand="window.close()"/>
+		<button label="&rf.about.close.label;" oncommand="window.close()"/>
 		<spacer width="10px"/>
 	</hbox>
 
@@ -99,7 +99,7 @@ reminderfox.util.Logger('Alert', "Update check  remote|local: " + remoteStamp +"
 			} else {
 
 				var updateXPI = document.getElementById('updateXPI');
-				updateXPI.value = "Congratulation, up-to-date! No update required."
+				updateXPI.value = "Up-to-date! No update required."
 				updateXPI.tooltipText = "Thanks for checking."
 
 			}

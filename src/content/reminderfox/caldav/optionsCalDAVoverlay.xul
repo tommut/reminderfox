@@ -48,7 +48,7 @@
 						<label align="center" class="reminderfox-moreLabel" bold="true"
 							tooltiptext="&rf.caldav.desc6;"
 							onclick="reminderfox.util.docRmFX('remote-calendar-n/');" 
-							value="&rf.main.help.label; .." />
+							value="&rf.main.help.label; ..." />
 					</hbox>
 
 					<spacer height="10px" />
@@ -132,7 +132,7 @@
 								<spacer flex="1" />
 								<label align="center" class="reminderfox-moreLabel" bold="true"
 									onclick="reminderfox.util.docRmFX('remote-calendar-n/#configure');" 
-									value="&rf.main.help.label; .." tooltiptext="&rf.caldav.options.docu;"/>
+									value="&rf.main.help.label; ..." tooltiptext="&rf.caldav.options.docu;"/>
 							</hbox>
 						</vbox>
 

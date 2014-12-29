@@ -3,6 +3,15 @@
 ##  version.txt
 ##
 
+2014-12-29
+Externalized more strings.
+
+2014-12-22
+
+Fixed - was showing two alert sliders on startup
+Fixed - was not reading in alert/todo lastack on startup so alarms were not being fired (as they explicitly were
+ignored if missing last ack)
+
 2014-11-26
 Added new external preference per user request to control the delay in opening up multiple alarm dialogs if
 user preference is set to use multiple windows instead of a single tabbed dialog:

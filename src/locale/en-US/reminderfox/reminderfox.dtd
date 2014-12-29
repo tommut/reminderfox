@@ -41,6 +41,8 @@
 <!ENTITY rf.main.quickalarms.label          "Quick Alarms">
 <!ENTITY rf.main.showalerts.label          "Suspend Alerts and Alarms...">
 <!ENTITY rf.main.help.label          "Help">
+<!ENTITY rf.main.help.tooltip          "Customize the Main Dialog">
+<!ENTITY rf.main.tip.label          "Tip">
 <!ENTITY rf.main.addreminderforweb.label          "&rf.main.addReminder.label;">
 <!ENTITY rf.main.contextmenu.subscribe.label      "Subscribe or add with ReminderFox...">
 <!ENTITY rf.main.contextmenu.addremindercontact.label      "&rf.main.addReminder.label;">
@@ -71,7 +73,7 @@
 <!ENTITY rf.categories.tooltip.rmCatOK		"Save categories">
 <!ENTITY rf.categories.thisCat.Name 		"Name">
 
-<!ENTITY rf.options.categories.label  		"Categories"> 
+<!ENTITY rf.options.categories.label  		"Categories">
 
 <!ENTITY rf.options.categories.description1 "The Default Categories is a list of frequently used default categories that can be attached to your reminders.">
 
@@ -86,7 +88,7 @@
 <!ENTITY rf.categories.list.button.moveToDefault 		"Move to Default List">
 <!ENTITY rf.categories.tooltip.moveToDefault	"Move selected category to Default list">
 
-<!ENTITY rf.options.tags.label  		"Tags"> 
+<!ENTITY rf.options.tags.label  		"Tags">
 <!ENTITY rf.options.categories.description2 "This list displays any other non-default categories that some events are currently tagged with.">
 <!ENTITY rf.options.categories.description3 "You can move any existing tag to your Default Category list.">
 
@@ -155,6 +157,9 @@
 <!ENTITY rf.add.reminders.context.hidecompleteditems.label        "Hide completed items">
 <!ENTITY rf.add.reminders.context.print.label        "Print / View">
 <!ENTITY rf.add.reminders.context.print.ttt          "Select template for 'Print / View'">
+<!ENTITY rf.add.reminders.context.print.agenda.label          "Agenda">
+
+
 <!ENTITY rf.add.reminders.context.print.all "All Events">
 <!ENTITY rf.add.reminders.context.print.selected "Selected Events">
 <!ENTITY rf.add.reminders.context.print.installation "Installation Details">
@@ -170,8 +175,8 @@
 <!ENTITY rf.reminderoptions.addEvent          "Add Event">
 
 <!ENTITY rf.add.addReminder.addbutton.label        "&rf.add.reminders.context.add.label;">
-<!ENTITY rf.add.addReminder.revertbutton.label        "Undo">  
-<!ENTITY rf.add.addReminder.donebutton.label        "OK">     
+<!ENTITY rf.add.addReminder.revertbutton.label        "Undo">
+<!ENTITY rf.add.addReminder.donebutton.label        "OK">
 
 <!ENTITY rf.add.addReminder.downloadbutton.label        "Download">
 <!ENTITY rf.add.addReminder.uploadbutton.label          "Upload">
@@ -200,7 +205,7 @@
 
 
 <!-- about dialog -->
-<!ENTITY rf.about.homepage.label       "Home Page:">    
+<!ENTITY rf.about.homepage.label       "Home Page:">
 <!ENTITY rf.about.about.label          "&rf.main.about.label;">
 <!ENTITY rf.about.createdby.label          "Created By:">
 <!ENTITY rf.about.developers.label          "Lead Developer:">
@@ -208,6 +213,15 @@
 <!ENTITY rf.about.version.label          "version:">
 <!ENTITY rf.about.support.label          "Request support or send feedback to:">
 <!ENTITY rf.about.close.label          "Close">
+
+<!ENTITY rf.about.updatecheck.label "Update Check">
+<!ENTITY rf.about.updatecheck.tooltip "Check current installation status.">
+
+<!-- rmFxUpdateXPI -->
+<!ENTITY rf.rmfxupdatexpi.drag.link.to.addon.manager.tooltip "Drag this link to the 'Add-ons Manager' window. Allow downloading. On tab:'Extensions' scroll to Reminderfox and use 'Restart now' or 'Undo'.">
+<!ENTITY rf.rmfxupdatexpi.local.version.value "Local Version">
+<!ENTITY rf.rmfxupdatexpi.current.version.value "Current Version">
+<!ENTITY rf.rmfxupdatexpi.update.reminderfox.value "Update Reminderfox">
 
 
 <!ENTITY rf.msgid.title               "ReminderFox: Opening requested Message">
@@ -217,19 +231,19 @@
 
 <!-- New Reminder Options dialog -->
 <!ENTITY rf.reminderoptions.addEvent.window.title          "Add Event">
-<!ENTITY rf.reminderoptions.date.label       "Date:">    
-<!ENTITY rf.reminderoptions.date.start.label       "Start:"> 
-<!ENTITY rf.reminderoptions.date.end.label       "End:"> 
-<!ENTITY rf.reminderoptions.time.label       "Time:">    
-<!ENTITY rf.reminderoptions.time.allday.label       "All day">    
-<!ENTITY rf.reminderoptions.description.label       "Description:">    
-<!ENTITY rf.reminderoptions.repeat.label       "Repeat:">    
-<!ENTITY rf.reminderoptions.repeat.yearly.label       "Yearly">   
-<!ENTITY rf.reminderoptions.repeat.yearlyday.label       "Yearly by day">  
-<!ENTITY rf.reminderoptions.repeat.monthlydate.label       "Monthly">   
-<!ENTITY rf.reminderoptions.repeat.monthlyday.label       "Monthly by day">   
-<!ENTITY rf.reminderoptions.repeat.weekly.label       "Weekly">   
-<!ENTITY rf.reminderoptions.repeat.weeklyalternating.label       "Biweekly">  
+<!ENTITY rf.reminderoptions.date.label       "Date:">
+<!ENTITY rf.reminderoptions.date.start.label       "Start:">
+<!ENTITY rf.reminderoptions.date.end.label       "End:">
+<!ENTITY rf.reminderoptions.time.label       "Time:">
+<!ENTITY rf.reminderoptions.time.allday.label       "All day">
+<!ENTITY rf.reminderoptions.description.label       "Description:">
+<!ENTITY rf.reminderoptions.repeat.label       "Repeat:">
+<!ENTITY rf.reminderoptions.repeat.yearly.label       "Yearly">
+<!ENTITY rf.reminderoptions.repeat.yearlyday.label       "Yearly by day">
+<!ENTITY rf.reminderoptions.repeat.monthlydate.label       "Monthly">
+<!ENTITY rf.reminderoptions.repeat.monthlyday.label       "Monthly by day">
+<!ENTITY rf.reminderoptions.repeat.weekly.label       "Weekly">
+<!ENTITY rf.reminderoptions.repeat.weeklyalternating.label       "Biweekly">
 <!ENTITY rf.reminderoptions.repeat.daily.label       "Daily">
 <!ENTITY rf.reminderoptions.repeat.cusomt.label       "Click here for more repeat options...">
 
@@ -243,158 +257,161 @@
 <!ENTITY rf.reminderoptions.repeat.days.label       "days">
 <!ENTITY rf.reminderoptions.repeat.count.label       "Repeat count">
 
-<!ENTITY rf.reminderoptions.notify.label       "Show alarm popup">   
-<!ENTITY rf.reminderoptions.notify.minutes.label       "minutes">   
-<!ENTITY rf.reminderoptions.notify.hours.label       "hours">  
-<!ENTITY rf.reminderoptions.notify.days.label       "days">  
-<!ENTITY rf.reminderoptions.notify.before.label       "before event occurs.">   
-<!ENTITY rf.reminderoptions.options.important.label       "&rf.add.reminders.context.important.label;">  
-<!ENTITY rf.reminderoptions.options.remindUntilCompleted.label       "&rf.add.reminders.context.remindUntilCompleted.label;">  
+<!ENTITY rf.reminderoptions.notify.label       "Show alarm popup">
+<!ENTITY rf.reminderoptions.notify.minutes.label       "minutes">
+<!ENTITY rf.reminderoptions.notify.hours.label       "hours">
+<!ENTITY rf.reminderoptions.notify.days.label       "days">
+<!ENTITY rf.reminderoptions.notify.before.label       "before event occurs.">
+<!ENTITY rf.reminderoptions.options.important.label       "&rf.add.reminders.context.important.label;">
+<!ENTITY rf.reminderoptions.options.remindUntilCompleted.label       "&rf.add.reminders.context.remindUntilCompleted.label;">
 
-<!ENTITY rf.reminderoptions.location.label       "Location:">   
-<!ENTITY rf.reminderoptions.location.header       "Location">   
-<!ENTITY rf.reminderoptions.url.label      "URL:">  
-<!ENTITY rf.reminderoptions.search.anywhere.header       "Anywhere"> 
-<!ENTITY rf.reminderoptions.location.launch.tooltip      "Show map of location">  
-<!ENTITY rf.reminderoptions.url.launch.tooltip      "Launch URL">  
-<!ENTITY rf.reminderoptions.button.more     "More >>">  
+<!ENTITY rf.reminderoptions.location.label       "Location:">
+<!ENTITY rf.reminderoptions.location.header       "Location">
+<!ENTITY rf.reminderoptions.url.label      "URL:">
+<!ENTITY rf.reminderoptions.search.anywhere.header       "Anywhere">
+<!ENTITY rf.reminderoptions.location.launch.tooltip      "Show map of location">
+<!ENTITY rf.reminderoptions.url.launch.tooltip      "Launch URL">
+<!ENTITY rf.reminderoptions.button.more     "More >>">
 <!ENTITY rf.reminderoptions.tooltip.selectdate       "Select date">
 
 <!-- Alarm dialog -->
-<!ENTITY rf.alarm.dialog.title   "&rf.name; Alarm">    
-<!ENTITY rf.alarm.button.snooze   "Snooze">    
-<!ENTITY rf.alarm.button.acknowledge   "Acknowledge">    
-<!ENTITY rf.alarm.button.complete   "Mark as complete">    
-<!ENTITY rf.alarm.button.delete   "Delete">    
-<!ENTITY rf.alarm.button.open   "Open event...">    
+<!ENTITY rf.alarm.dialog.title   "&rf.name; Alarm">
+<!ENTITY rf.alarm.button.snooze   "Snooze">
+<!ENTITY rf.alarm.button.acknowledge   "Acknowledge">
+<!ENTITY rf.alarm.button.complete   "Mark as complete">
+<!ENTITY rf.alarm.button.delete   "Delete">
+<!ENTITY rf.alarm.button.open   "Open event...">
 <!ENTITY rf.alarm.snooze.minutes.label       "minutes">
 <!ENTITY rf.alarm.occursIn.label       "Occurs in:">
-<!ENTITY rf.alarm.snoozeUntil.label   "Snooze until:">   
+<!ENTITY rf.alarm.snoozeUntil.label   "Snooze until:">
 
 <!-- Suspend Alerts and Alarms dialog -->
-<!ENTITY rf.suspendalarms.dialog.title   "Suspend alerts and alarms">    
-<!ENTITY rf.suspendalarms.dialog.label  "Alerts and alarms will be suspended until resumed.">   
-<!ENTITY rf.suspendalarms.resume.label  "Automatically resume alerts and alarms in:">  
-<!ENTITY rf.suspendalarms.resume.time.info  "Resume at:">  
+<!ENTITY rf.suspendalarms.dialog.title   "Suspend alerts and alarms">
+<!ENTITY rf.suspendalarms.dialog.label  "Alerts and alarms will be suspended until resumed.">
+<!ENTITY rf.suspendalarms.resume.label  "Automatically resume alerts and alarms in:">
+<!ENTITY rf.suspendalarms.resume.time.info  "Resume at:">
 
-	
-<!-- Quick Alarm dialog --> 
-<!ENTITY rf.quickalarm.dialog.title   "Quick Alarm">    
+
+<!-- Quick Alarm dialog -->
+<!ENTITY rf.quickalarm.dialog.title   "Quick Alarm">
 <!ENTITY rf.quickalarm.notify.label      "&rf.reminderoptions.notify.label;">
-<!ENTITY rf.quickalarm.notify.fromnow      "from now">   
-<!ENTITY rf.quickalarm.alarmAt.label      "Alarm at:"> 
+<!ENTITY rf.quickalarm.notify.fromnow      "from now">
+<!ENTITY rf.quickalarm.alarmAt.label      "Alarm at:">
 
 
 <!-- Options dialog -->
 
 <!ENTITY rf.options.title.label "&rf.name; Options">
 <!ENTITY rf.options.tab.General "General">
+<!ENTITY rf.options.tab.Access "Access">
 <!ENTITY rf.options.tab.Dialog "Main Dialog">
 <!ENTITY rf.options.tab.reminderEdit "Reminder Dialog">
 <!ENTITY rf.options.tab.notifications "Notifications">
+<!ENTITY rf.options.tab.Sync "Sync">
 <!ENTITY rf.options.tab.alarms "Alarms">
 <!ENTITY rf.options.todoLists "Lists">
 
-<!ENTITY rf.options.addlist.label       "Add Custom List">   
-<!ENTITY rf.options.addlist.subscription.description      "You can subscribe to a calendar by specifying the calendar's URL.  That calendar will show up in your custom lists under the name you specify above.">   
+<!ENTITY rf.options.addlist.label       "Add Custom List">
+<!ENTITY rf.options.addlist.subscription.description      "You can subscribe to a calendar by specifying the calendar's URL.  That calendar will show up in your custom lists under the name you specify above.">
 <!ENTITY rf.options.addlist.subscription.url.label       "Subscription URL">
  <!ENTITY rf.options.addlist.subscription.label       "Subscription">
 
 <!ENTITY rf.options.labels.title       "Labels">
 
-<!ENTITY rf.options.display.label       "Display Preferences">    
+<!ENTITY rf.options.display.label       "Display Preferences">
 <!ENTITY rf.options.display.todaystatus.label       "Display today's reminders in status bar.">
-<!ENTITY rf.options.display.limiStatusLength.label       "Limit status text length to:">
-<!ENTITY rf.options.display.limiStatusCharacters.label       "characters">          
-<!ENTITY rf.options.display.remindersInTooltip.label       "Display reminders in tooltip.">    
-<!ENTITY rf.options.display.todosInTooltip.label       "Display ToDo's in tooltip.">  
-<!ENTITY rf.options.display.showForNext.label       "Show events occurring in the next">  
-<!ENTITY rf.options.display.showForNextUpcomingDays.label       "upcoming days.">  
-<!ENTITY rf.options.upcomingreminders.label       "Upcoming Reminders Label:"> 
-<!ENTITY rf.options.todaysreminders.label       "Today's Reminders Label:"> 
-<!ENTITY rf.options.upcomingreminders.label.customize       "Customize">  
-<!ENTITY rf.options.todaysreminders.label.customize       "&rf.options.upcomingreminders.label.customize;">  
-<!ENTITY rf.options.display.editOnClick.label       "On click of status icon, edit:">  
+<!ENTITY rf.options.display.limiStatusLength.label       "Today's reminders text length">
+<!ENTITY rf.options.display.limiStatusCharacters.label       "characters">
+<!ENTITY rf.options.display.remindersInTooltip.label       "Display reminders in tooltip.">
+<!ENTITY rf.options.display.todosInTooltip.label       "Display ToDo's in tooltip.">
+<!ENTITY rf.options.display.showForNext.label       "Show events occurring in the next">
+<!ENTITY rf.options.display.showForNextUpcomingDays.label       "upcoming days.">
+<!ENTITY rf.options.upcomingreminders.label       "Upcoming Reminders Label:">
+<!ENTITY rf.options.todaysreminders.label       "Today's Reminders Label:">
+<!ENTITY rf.options.upcomingreminders.label.customize       "Customize">
+<!ENTITY rf.options.todaysreminders.label.customize       "&rf.options.upcomingreminders.label.customize;">
+<!ENTITY rf.options.display.editOnClick.label       "On click of status icon, edit:">
 <!ENTITY rf.options.display.openOnClick.label       "On click of status icon, open:">
-<!ENTITY rf.options.display.editOnClickReminders.label       "&rf.add.tab.reminders.label;">  
-<!ENTITY rf.options.display.editOnClickTodos.label       "&rf.add.tab.todos.label;">  
+<!ENTITY rf.options.display.editOnClickReminders.label       "&rf.add.tab.reminders.label;">
+<!ENTITY rf.options.display.editOnClickTodos.label       "&rf.add.tab.todos.label;">
 <!ENTITY rf.options.display.openPrevious.label "Previous Tab">
-<!ENTITY rf.options.display.enableContextMenus.label       "Enable context menus for adding events for web pages and emails">  
+<!ENTITY rf.options.display.enableContextMenus.label       "Enable context menus for adding events for web pages and emails">
 <!ENTITY rf.options.display.placement.label       "Display Placement:">
-<!ENTITY rf.options.display.placement.toolbar.label       "Toolbar:">   
-<!ENTITY rf.options.display.placement.last.label       "Always Last">  
-<!ENTITY rf.options.display.placement.specificPosition.label       "Specific Position">  
+<!ENTITY rf.options.display.placement.toolbar.label       "Toolbar:">
+<!ENTITY rf.options.display.placement.last.label       "Always Last">
+<!ENTITY rf.options.display.placement.specificPosition.label       "Specific Position">
 
 <!ENTITY rf.printing.agenda "Agenda">
 <!ENTITY rf.printing.agenda.info "An Agenda can be printed from context menu on the ReminderFox List using 'Print/View'. To get it automatically use:">
 <!ENTITY rf.printing.agenda.openatstart "Show Agenda at start of the application.">
 
 <!ENTITY rf.options.display.listsetup.label  "List and Calendar Setup">
-<!ENTITY rf.options.display.singlemenu.label  "Use only single button bar">  
+<!ENTITY rf.options.display.singlemenu.label  "Use only single button bar">
 <!ENTITY rf.options.display.singlemenu.infoTTT  "All buttons will appear on a single top menu bar; the OK button will not be displayed">
 <!ENTITY rf.options.display.nummonthdisplayed  "Number of Calendar months displayed">
 <!ENTITY rf.options.display.nummonth.help "Select  1 or greater. Typical value is 3. A too great number of months degrades the performance!">
 <!ENTITY rf.options.display.menu.open "Open Reminders/Todos Menu on mouse hover">
 
-<!ENTITY rf.options.alert.label       "Show Alert Slider">  
-<!ENTITY rf.options.alert.display.label       "Display:">  
-<!ENTITY rf.options.alert.display.todaysandupcoming.label       "Show today's and upcoming reminders">  
-<!ENTITY rf.options.alert.display.todays.label       "Show only today's reminders">  
+<!ENTITY rf.options.alert.label       "Show Alert Slider">
+<!ENTITY rf.options.alert.display.label       "Display:">
+<!ENTITY rf.options.alert.display.todaysandupcoming.label       "Show today's and upcoming reminders">
+<!ENTITY rf.options.alert.display.todays.label       "Show only today's reminders">
 <!ENTITY rf.options.alert.display.upcoming.label       "Show only upcoming reminders">
-<!ENTITY rf.options.alert.showevery.label       "Show alert every">  
-<!ENTITY rf.options.alert.showeveryminutes.label       "minutes"> 
+<!ENTITY rf.options.alert.showevery.label       "Show alert every">
+<!ENTITY rf.options.alert.showeveryminutes.label       "minutes">
 <!ENTITY rf.options.alert.maxheight.label       "Maximum alert slider height:">
-<!ENTITY rf.options.alert.maxheightpixels.label       "pixels">  
-<!ENTITY rf.options.alert.keepopen.label       "Keep alert slider open">  
+<!ENTITY rf.options.alert.maxheightpixels.label       "pixels">
+<!ENTITY rf.options.alert.keepopen.label       "Keep alert slider open">
 <!ENTITY rf.options.alert.keepopen.for.label       "for">
-<!ENTITY rf.options.alert.keepopen.seconds.label       "seconds">    
-<!ENTITY rf.options.alert.keepopen.untilclicked.label       "until clicked">    
+<!ENTITY rf.options.alert.keepopen.seconds.label       "seconds">
+<!ENTITY rf.options.alert.keepopen.untilclicked.label       "until clicked">
 
 <!ENTITY rf.options.alarms.label       "Alarms">
 <!ENTITY rf.options.alarms.show.label       "Show multiple alarms using">
-<!ENTITY rf.options.alarms.show.tabs.label       "separate tabs in a single window">    
-<!ENTITY rf.options.alarms.show.windows.label       "a separate window for each alarm">    
+<!ENTITY rf.options.alarms.show.tabs.label       "separate tabs in a single window">
+<!ENTITY rf.options.alarms.show.windows.label       "a separate window for each alarm">
 
-<!ENTITY rf.options.sound.label       "Sounds"> 
-<!ENTITY rf.options.alarm.playsound.label       "Play sound for alarm popup notifications"> 
-<!ENTITY rf.options.alarm.resoundInterval.label       "Re-sound alarm popup sound every"> 
-<!ENTITY rf.options.alarm.resoundInterval.minutes.label       "&rf.options.alert.showeveryminutes.label;"> 
-<!ENTITY rf.options.alert.playsound.label       "Play sound for alert slider notifications"> 
-<!ENTITY rf.options.alarm.sound.default.label       "Default"> 
-<!ENTITY rf.options.alarm.sound.custom.label       "Custom .wav file"> 
+<!ENTITY rf.options.sound.label       "Sounds">
+<!ENTITY rf.options.alarm.playsound.label       "Play sound for alarm popup notifications">
+<!ENTITY rf.options.alarm.resoundInterval.label       "Re-sound alarm popup sound every">
+<!ENTITY rf.options.alarm.resoundInterval.minutes.label       "&rf.options.alert.showeveryminutes.label;">
+<!ENTITY rf.options.alert.playsound.label       "Play sound for alert slider notifications">
+<!ENTITY rf.options.alarm.sound.default.label       "Default">
+<!ENTITY rf.options.alarm.sound.custom.label       "Custom .wav file">
 
 
-<!ENTITY rf.options.list.calendar.label       "Calendar"> 
-<!ENTITY rf.options.list.calendar.size.label       "Calendar size"> 
-<!ENTITY rf.options.list.calendar.size.small.label       "Small"> 
-<!ENTITY rf.options.list.calendar.size.medium.label       "Medium"> 
-<!ENTITY rf.options.list.calendar.size.large.label       "Large"> 
+<!ENTITY rf.options.list.calendar.label       "Calendar">
+<!ENTITY rf.options.list.calendar.size.label       "Calendar size">
+<!ENTITY rf.options.list.calendar.size.small.label       "Small">
+<!ENTITY rf.options.list.calendar.size.medium.label       "Medium">
+<!ENTITY rf.options.list.calendar.size.large.label       "Large">
 <!ENTITY rf.options.list.startingday.label       "Starting day of week:">
-<!ENTITY rf.options.list.calendar.showWeekNumber.label       "Week numbers">  
+<!ENTITY rf.options.list.calendar.showWeekNumber.label       "Week numbers">
+<!ENTITY rf.options.list.calendar.showWeekNumber.none       "None">
 <!ENTITY rf.options.list.calendar.showWeekNumber.default       "Default">
-<!ENTITY rf.options.list.calendar.showWeekNumber.iso8601       "ISO 8601">  
-<!ENTITY rf.options.list.dateandtime.label       "Date and time"> 
-<!ENTITY rf.options.list.dateappearance.label       "Date appearance:"> 
-<!ENTITY rf.options.list.timeoptions.label       "Time style:"> 
+<!ENTITY rf.options.list.calendar.showWeekNumber.iso8601       "ISO 8601">
+<!ENTITY rf.options.list.dateandtime.label       "Date and time">
+<!ENTITY rf.options.list.dateappearance.label       "Date appearance:">
+<!ENTITY rf.options.list.timeoptions.label       "Time style:">
 <!ENTITY rf.options.list.24hour.label       "Use 24-hour time">
-<!ENTITY rf.options.list.highlighttodaysRemindres.label       "Highlight today's reminders in list">  
-<!ENTITY rf.options.list.repeating.label       "Repeating Reminders"> 
-<!ENTITY rf.options.list.repeating.show.label       "Show"> 
-<!ENTITY rf.options.list.repeating.all.label       "all"> 
-<!ENTITY rf.options.list.repeating.last.label       "last"> 
-<!ENTITY rf.options.list.repeating.next.label       "next"> 
-<!ENTITY rf.options.list.repeating.previous.label       "previous occurrences."> 
-<!ENTITY rf.options.list.repeating.upcoming.label       "upcoming occurrences."> 
+<!ENTITY rf.options.list.highlighttodaysRemindres.label       "Highlight today's reminders in list">
+<!ENTITY rf.options.list.repeating.label       "Repeating Reminders">
+<!ENTITY rf.options.list.repeating.show.label       "Show">
+<!ENTITY rf.options.list.repeating.all.label       "all">
+<!ENTITY rf.options.list.repeating.last.label       "last">
+<!ENTITY rf.options.list.repeating.next.label       "next">
+<!ENTITY rf.options.list.repeating.previous.label       "previous occurrences.">
+<!ENTITY rf.options.list.repeating.upcoming.label       "upcoming occurrences.">
 
-<!ENTITY rf.options.list.reminder.defaults.label       "Defaults"> 
-<!ENTITY rf.options.list.reminder.defaults.description.label       "Default options for new reminders and ToDo's"> 
-<!ENTITY rf.options.list.reminder.defaults.completed.hide.label       "Hide completed items by default"> 
-<!ENTITY rf.options.list.reminder.defaults.list.defaults.label       "List Defaults"> 
-<!ENTITY rf.options.list.reminder.defaults.filters.label       "Default filters"> 
+<!ENTITY rf.options.list.reminder.defaults.label       "Defaults">
+<!ENTITY rf.options.list.reminder.defaults.description.label       "Default options for new reminders and ToDo's">
+<!ENTITY rf.options.list.reminder.defaults.completed.hide.label       "Hide completed items by default">
+<!ENTITY rf.options.list.reminder.defaults.list.defaults.label       "List Defaults">
+<!ENTITY rf.options.list.reminder.defaults.filters.label       "Default filters">
 <!ENTITY rf.options.list.reminder.defaults.more.label       "Default 'More >>' items:">
-<!ENTITY rf.options.list.reminder.defaults.alarm.label       "Default alarm options">  
-<!ENTITY rf.options.list.reminder.defaults.alarm.action.label       "Default action">  
-<!ENTITY rf.options.list.reminder.defaults.filters.lastSelectedView.label       "Last selected View"> 
+<!ENTITY rf.options.list.reminder.defaults.alarm.label       "Default alarm options">
+<!ENTITY rf.options.list.reminder.defaults.alarm.action.label       "Default action">
+<!ENTITY rf.options.list.reminder.defaults.filters.lastSelectedView.label       "Last selected View">
 <!ENTITY rf.options.list.reminder.defaults.allevents "All Events">
 <!ENTITY rf.options.list.reminder.defaults.allupcomingevents "All upcoming Events">
 
@@ -402,72 +419,72 @@
 <!ENTITY rf.options.list.reminder.defaults.textSize.value "Size in px">
 <!ENTITY rf.options.list.reminder.defaults.textSizeTTT "This sets the standard text size. To control the 'Calendar' text size on the main dialog use [Cntrl] [+] to increase and [Cntrl] [-] to decrease.   [Cntrl] [#] resets to the standard text size.  To control the 'List' text size use [Alt] button instead.">
 
-<!ENTITY rf.moreoptions.list.reminder.more.header.label   "Default More Items" > 
+<!ENTITY rf.moreoptions.list.reminder.more.header.label   "Default More Items" >
 
-<!ENTITY rf.moreoptions.list.reminder.more.description.label       "List the items you want to show behind the [More >>] button by default in the Add/Edit Reminder window.  The items listed here will not show by default until you press the [More >>] button to display them.  They will then appear in the order they are listed here.  Specify the variables separated by a comma."> 
-<!ENTITY rf.moreoptions.list.reminder.more.location.label       "&rf.reminderoptions.location.header;"> 
-<!ENTITY rf.moreoptions.list.reminder.more.URL.label       "URL"> 
-<!ENTITY rf.moreoptions.list.reminder.more.category.label       "Category"> 
-<!ENTITY rf.moreoptions.list.reminder.more.repeat.label       "Repeat"> 
-<!ENTITY rf.moreoptions.list.reminder.more.alarm.label       "Alarm"> 
-<!ENTITY rf.moreoptions.list.reminder.more.priority.label "Priority"> 
-<!ENTITY rf.moreoptions.list.reminder.more.important.label       "Important"> 
-<!ENTITY rf.moreoptions.list.reminder.more.remindUntilComplete.label       "Remind Until Complete"> 
-<!ENTITY rf.moreoptions.list.reminder.more.showInTooltip.label       "Show in Tooltip"> 
-<!ENTITY rf.moreoptions.list.reminder.more.endDate.label       "End Date"> 
+<!ENTITY rf.moreoptions.list.reminder.more.description.label       "List the items you want to show behind the [More >>] button by default in the Add/Edit Reminder window.  The items listed here will not show by default until you press the [More >>] button to display them.  They will then appear in the order they are listed here.  Specify the variables separated by a comma.">
+<!ENTITY rf.moreoptions.list.reminder.more.location.label       "&rf.reminderoptions.location.header;">
+<!ENTITY rf.moreoptions.list.reminder.more.URL.label       "URL">
+<!ENTITY rf.moreoptions.list.reminder.more.category.label       "Category">
+<!ENTITY rf.moreoptions.list.reminder.more.repeat.label       "Repeat">
+<!ENTITY rf.moreoptions.list.reminder.more.alarm.label       "Alarm">
+<!ENTITY rf.moreoptions.list.reminder.more.priority.label "Priority">
+<!ENTITY rf.moreoptions.list.reminder.more.important.label       "Important">
+<!ENTITY rf.moreoptions.list.reminder.more.remindUntilComplete.label       "Remind Until Complete">
+<!ENTITY rf.moreoptions.list.reminder.more.showInTooltip.label       "Show in Tooltip">
+<!ENTITY rf.moreoptions.list.reminder.more.endDate.label       "End Date">
 <!ENTITY rf.options.customize "Customize">
 
 <!ENTITY rf.options.list.reminder.filters.allreminders.label       "Selected Year">
 <!ENTITY rf.options.list.reminder.filters.alltodos.label       "All ToDo's">
-<!ENTITY rf.options.list.reminder.filters.selectedmonth.label       "Selected Month"> 
-<!ENTITY rf.options.list.reminder.filters.selectedweek.label       "Selected Week"> 
-<!ENTITY rf.options.list.reminder.filters.selecteddaylabel       "Selected Day"> 
-<!ENTITY rf.options.list.reminder.filters.nextweek.label       "Next Week"> 
+<!ENTITY rf.options.list.reminder.filters.selectedmonth.label       "Selected Month">
+<!ENTITY rf.options.list.reminder.filters.selectedweek.label       "Selected Week">
+<!ENTITY rf.options.list.reminder.filters.selecteddaylabel       "Selected Day">
+<!ENTITY rf.options.list.reminder.filters.nextweek.label       "Next Week">
 <!ENTITY rf.options.list.reminder.filters.nexttwoweeks.label       "Next Two Weeks">
 <!ENTITY rf.options.list.reminder.filters.upcomingReminders.label       "All Upcoming Reminders">
-<!ENTITY rf.options.list.reminder.filters.upcomingTodos.label       "All Upcoming ToDo's">  
-<!ENTITY rf.options.list.reminder.filters.moreViews.label       "More Views...">  
+<!ENTITY rf.options.list.reminder.filters.upcomingTodos.label       "All Upcoming ToDo's">
+<!ENTITY rf.options.list.reminder.filters.moreViews.label       "More Views...">
 
 
-<!ENTITY rf.options.file.location.label       "Local ReminderFox File Location"> 
-<!ENTITY rf.options.file.location.usedefault.label       "Use Default Location"> 
+<!ENTITY rf.options.file.location.label       "Local ReminderFox File Location">
+<!ENTITY rf.options.file.location.usedefault.label       "Use Default Location">
 
-<!ENTITY rf.options.file.events.label     "ReminderFox Event File"> 
-<!ENTITY rf.options.file.note.label       "Note"> 
-<!ENTITY rf.options.file.note.unsaved     "There are unsaved events!"> 
-<!ENTITY rf.options.file.note.saveit      "Please save events before using this functions."> 
-<!ENTITY rf.options.file.note.retry       "[Save] and retry with 'Cntrl' 'r'"> 
+<!ENTITY rf.options.file.events.label     "ReminderFox Event File">
+<!ENTITY rf.options.file.note.label       "Note">
+<!ENTITY rf.options.file.note.unsaved     "There are unsaved events!">
+<!ENTITY rf.options.file.note.saveit      "Please save events before using this functions.">
+<!ENTITY rf.options.file.note.retry       "[Save] and retry with 'Cntrl' 'r'">
 
-<!ENTITY rf.options.importexport.description.label       "Import or export Reminders and ToDo's."> 
-<!ENTITY rf.options.importexport.import.label       "Import"> 
-<!ENTITY rf.options.importexport.export.label       "Export"> 
-<!ENTITY rf.options.importexportpreferences.label      "Import and export preferences"> 
+<!ENTITY rf.options.importexport.description.label       "Import or export Reminders and ToDo's.">
+<!ENTITY rf.options.importexport.import.label       "Import">
+<!ENTITY rf.options.importexport.export.label       "Export">
+<!ENTITY rf.options.importexportpreferences.label      "Import and export preferences">
 <!ENTITY rf.options.importexport.category.label       "Optionally you can set additional categories on each of your imported events.  This can aid in filtering and sorting.  For example, when importing a list of holidays, you could tag each of the events with 'holiday' and then quickly filter on that category to see a list of Holidays.">
 
 <!-- lists -->
-<!ENTITY rf.options.list.reminder.lists.label       "Lists"> 
-<!ENTITY rf.options.list.reminder.lists.manage.label       "Manage lists"> 
-<!ENTITY rf.options.list.reminder.lists.button.add.label       "&rf.add.addTodo.addbutton.label;"> 
-<!ENTITY rf.options.list.reminder.lists.button.remove.label       "Remove"> 
-<!ENTITY rf.options.list.reminder.lists.button.moveup.label       "Move Up"> 
-<!ENTITY rf.options.list.reminder.lists.button.movedown.label       "Move Down"> 
-<!ENTITY rf.options.list.reminder.lists.button.sortup.label       "Sort Up"> 
-<!ENTITY rf.options.list.reminder.lists.button.sortdown.label       "Sort Down"> 
+<!ENTITY rf.options.list.reminder.lists.label       "Lists">
+<!ENTITY rf.options.list.reminder.lists.manage.label       "Manage lists">
+<!ENTITY rf.options.list.reminder.lists.button.add.label       "&rf.add.addTodo.addbutton.label;">
+<!ENTITY rf.options.list.reminder.lists.button.remove.label       "Remove">
+<!ENTITY rf.options.list.reminder.lists.button.moveup.label       "Move Up">
+<!ENTITY rf.options.list.reminder.lists.button.movedown.label       "Move Down">
+<!ENTITY rf.options.list.reminder.lists.button.sortup.label       "Sort Up">
+<!ENTITY rf.options.list.reminder.lists.button.sortdown.label       "Sort Down">
 
 <!ENTITY rf.options.lists.description     "In addition to reminders and ToDo's, you can add additional lists that will show up as separate tabs.  You could keep lists like: Movies (for upcoming movie releases), Albums (for upcoming music releases), Groceries (to keep track of items you need), or anything else that you can  use a list for.  You can also subscribe to a remote calendar when adding a new list.">
 <!ENTITY rf.options.lists.nameError  "Name='ToDo's' or 'Reminders' and ',' or ':' are not allowed here!">
 <!ENTITY rf.options.lists.addedit  "Add/Edit User Lists">
 
 <!-- network -->
-<!ENTITY rf.options.synchronization.description.label       "Synchronization address"> 
+<!ENTITY rf.options.synchronization.description.label       "Synchronization address">
 <!ENTITY rf.options.synchronization.address.description     "Enter an FTP or WebDAV address for a remote ReminderFox file.">
 <!ENTITY rf.options.synchronization.address.example.description     "Example: ftp://www.mydomain.com/reminders.ics">
 
-<!ENTITY rf.options.synchronization.ftp.label   "ftp">      
+<!ENTITY rf.options.synchronization.ftp.label   "ftp">
 <!ENTITY rf.options.synchronization.http.label   "http">
 <!ENTITY rf.options.synchronization.https.label   "https">
-<!ENTITY rf.options.synchronization.delimiter.label      "://"> 
-<!ENTITY rf.options.synchronization.username.label      "Username:"> 
+<!ENTITY rf.options.synchronization.delimiter.label      "://">
+<!ENTITY rf.options.synchronization.username.label      "Username:">
 <!ENTITY rf.options.synchronization.password.label      "Password:">
 <!ENTITY rf.options.synchronization.import      "Import From Network">
 <!ENTITY rf.options.synchronization.export     "Export To Network">
@@ -582,7 +599,7 @@
 
 
 <!-- iCal Schedule  -->
-<!ENTITY rf.schedule.scheduleinfo  "Schedule"> 
+<!ENTITY rf.schedule.scheduleinfo  "Schedule">
 <!ENTITY rf.schedule.showall.attendees "Show All Attendees">
 <!ENTITY rf.schedule.organizer "Organizer">
 <!ENTITY rf.schedule.thisisme "My Participation">
@@ -709,6 +726,14 @@
 <!ENTITY rf.caldav.documentation.i "See '&rf.caldav.remoteCalendar;' Use and Setup in Documentation">
 <!ENTITY rf.caldav.serverselection "Select &rf.caldav.remoteCalendar;/Event Server from list">
 <!ENTITY rf.caldav.selectserver "Select &rf.caldav.remoteCalendar;">
+
+
+<!-- calDAVupdate -->
+<!ENTITY rf.caldavupdate.next.calendars.label "Next Calendars">
+<!ENTITY rf.caldavupdate.configure.calendar.label "Configure Calendar">
+<!ENTITY rf.caldavupdate.skip.this.calendar.tooltip "Skip this Calendar; proceed synchronizing with other calendars.">
+<!ENTITY rf.caldavupdate.open.options.sync.tooltip "Open 'Options/Sync' to update the Calendar setting.">
+
 <!--ENTITY rf.caldav.gcal.privat "Google Calendar Private (Events)"-->
 <!--ENTITY rf.caldav.gcal.group "Google Calendar Group (Events)"-->
 <!--ENTITY rf.caldav.oc.default "Default Calendar"-->
@@ -741,7 +766,7 @@
 <!ENTITY rf.caldav.definition.title  "&rf.caldav.remoteCalendar; Account Definition">
 <!ENTITY rf.caldav.desc1 "Reminderfox offers two methods to work with sync services:">
 <!ENTITY rf.caldav.desc2 "All Reminderfox events/todos are stored on the server as a single file">
-<!ENTITY rf.caldav.desc3 "Each single event/todo is stored separately; this allows services/devices to access the calendar details individually."> 
+<!ENTITY rf.caldav.desc3 "Each single event/todo is stored separately; this allows services/devices to access the calendar details individually.">
 <!ENTITY rf.caldav.desc4 "Some calendar services that have been tested with Reminderfox and are offered in the account definition dialog:">
 <!ENTITY rf.caldav.desc5 "See also the documentation for more details and how to configure.">
 <!ENTITY rf.caldav.desc6 "Open Remote Calendars (CalDAV Service) documentation">
@@ -816,10 +841,11 @@
 <!ENTITY rf.options.importExport "Import/Export">
 <!ENTITY rf.options.openFileDialog "Open dialog to import/export reminder data and preferences">
 <!ENTITY rf.options.file.recover "Restore from backup file">
-<!ENTITY rf.options.file.Pick "Pick a .bak file to restore reminders from a previous backup.">
+<!ENTITY rf.options.file.Pick "Pick a .bak or .ics file to restore reminders from a previous backup.">
 <!ENTITY rf.options.calendarDefaults "Calendar and Dates">
 <!ENTITY rf.options.documentation.Base "Open documentation for base calendar settings.">
 <!ENTITY rf.options.file.backup "Back up reminders to file">
+<!ENTITY rf.options.file.backup.tooltip "Save reminder data to backup location">
 <!ENTITY rf.options.alarms "Alarm Presets">
 <!ENTITY rf.options.alarm.dialogs "Alarm Dialogs">
 <!ENTITY rf.options.date.format "Date format">
@@ -827,13 +853,21 @@
 <!ENTITY rf.options.layout.Defaults "Layout Defaults">
 <!ENTITY rf.options.layout.help "See Reminder/Todo/Lists tab documentation">
 <!ENTITY rf.options.system.menu "Open Reminderfox with use of Main Menu and  Add-on Bar on the application (FX/TB) window">
+
+
+<!ENTITY rf.options.smartFoxy.display.label "Display Foxy Toolbar Icon">
 <!ENTITY rf.options.smartFoxy "Show Foxy badge and number of upcoming reminders">
 <!ENTITY rf.options.smartFoxy.none "Hide badge">
 <!ENTITY rf.options.smartFoxy.todays "Show number of reminders for today">
 <!ENTITY rf.options.smartFoxy.todaysUpcoming "Show number for today and upcoming days">
+<!ENTITY rf.options.smartFoxy.todaytext "Display text of today's reminders">
+
 <!ENTITY rf.options.smartFoxy.badge "The foxy icon contains a badge which displays the number of todays/upcoming reminders. The badge will be red if an important event occurs today.">
-<!ENTITY rf.options.bow "Display 'Bow' and text on statusbar">
+<!ENTITY rf.options.bow.description "Select on which toolbar to display">
+<!ENTITY rf.options.bow "Display bow icon and reminder text">
 <!ENTITY rf.options.bow.text "Limit text to">
+<!ENTITY rf.options.bow.position.label "Set position where to display on bar">
+
 
 <!ENTITY rf.options.bars "Enable Add-on Bar / StatusBar with showing 'Bow' status icon and Today's reminders.">
 <!ENTITY rf.options.printing "Printing">

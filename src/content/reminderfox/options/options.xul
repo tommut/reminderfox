@@ -69,13 +69,13 @@
 	<tabbox id="tabbox" flex="1">
 		<tabs>
 			<tab id="general" label="&rf.options.tab.General;" selected="true"   docu="#general"/>
-			<tab id="application" label="Access"  docu="#system"/>	<!-- host system set with JS -->
+			<tab id="application" label="&rf.options.tab.Access;"  docu="#system"/>	<!-- host system set with JS -->
 			<tab id="dialog" label="&rf.options.tab.Dialog;"  docu="#dialog"/>
 			<tab id="presets" label="&rf.options.tab.reminderEdit;"  docu="#addEdit"/>
 			<tab id="notifications" label="&rf.options.tab.notifications;" docu="#notifications"/>
 			<tab id="alarms" label="&rf.options.tab.alarms;" docu="#alarms"/>
 			<tab id="todoLists" label="&rf.options.todoLists;" docu="#lists"/>
-			<tab id="network" label="Sync"  docu="#sync"/>
+			<tab id="network" label="&rf.options.tab.Sync;"  docu="#sync"/>
 
 
 			<!--  tab removed, manage Categories is called also from popup menu -->
@@ -93,7 +93,7 @@
 							<spacer flex="1" />
 							<label align="center" class="reminderfox-moreLabel"  bold="true"
 								onclick="reminderfox.util.docRmFX('optionsdialog/#general' );" 
-								value="&rf.main.help.label; .." tooltiptext="&rf.options.dataLocations;" />
+								value="&rf.main.help.label; ..." tooltiptext="&rf.options.dataLocations;" />
 						</hbox>
 					</caption>
 
@@ -120,7 +120,7 @@
 						<text id="reminderFox_backup_reminders" 
 							disabled="false"  class="url" onmouseover="this.style.cursor='pointer';"
 							onclick="reminderFox_exportReminders(true);" 
-							value="&rf.options.file.backup;"  tooltiptext="Save reminder data to backup location"/> <!-- nls -->
+							value="&rf.options.file.backup;"  tooltiptext="&rf.options.file.backup.tooltip;"/>
 					</hbox>
 
 					<hbox>
@@ -142,7 +142,7 @@
 							<spacer flex="1" />
 							<label align="center" class="reminderfox-moreLabel"  bold="true"
 								onclick="reminderfox.util.docRmFX('optionsdialog/#defaultsCalendar');"
-								value="&rf.main.help.label; .." tooltiptext="&rf.options.documentation.Base;" />
+								value="&rf.main.help.label; ..." tooltiptext="&rf.options.documentation.Base;" />
 						</hbox>
 					</caption>
 
@@ -193,7 +193,7 @@
 								<hbox align="center">
 									<menulist id="reminderFox-weekNumberList">
 										<menupopup>
-											<menuitem label="none" selected="true" />
+											<menuitem label="&rf.options.list.calendar.showWeekNumber.none;" selected="true" />
 											<menuitem label="&rf.options.list.calendar.showWeekNumber.default;" />
 											<menuitem label="&rf.options.list.calendar.showWeekNumber.iso8601;" />
 										</menupopup>
@@ -227,7 +227,7 @@
 							<spacer flex="1" />
 							<label align="center" class="reminderfox-moreLabel" bold="true"
 								onclick="reminderfox.util.docRmFX('optionsDialog/#system');" 
-								value="&rf.main.help.label; .."  tooltiptext="&rf.options.system.menu;" />
+								value="&rf.main.help.label; ..."  tooltiptext="&rf.options.system.menu;" />
 						</hbox>
 					</caption>
 
@@ -241,7 +241,7 @@
 							<row align="center" valign="bottom">
 								<vbox>
 									<checkbox id="reminderFox-smartfoxy-control" oncommand="reminderFox_smartFoxyChanged()"
-										label="Display Foxy Toolbar Icon" /> <!-- dump $$$_locale -->
+										label="&rf.options.smartFoxy.display.label;" />
 									<description class="rmFx_descBox">&rf.options.smartFoxy;</description>
 								</vbox>
 
@@ -251,19 +251,19 @@
 											<menuitem label="&rf.options.smartFoxy.none;" value="0" />
 											<menuitem label="&rf.options.smartFoxy.todays;" value="1" />
 											<menuitem label="&rf.options.smartFoxy.todaysUpcoming;" value="2" />
-											<menuitem label="Display text of today's reminders" value="3" />
+											<menuitem label="&rf.options.smartFoxy.todaytext;" value="3" />
 										</menupopup>
 									</menulist>
 								</hbox>
 								<label align="center" class="reminderfox-moreLabel" bold="true" nopointer="true"
-									value="Tip"  tooltiptext="&rf.options.smartFoxy.badge;"/>
+									value="&rf.main.tip.label;"  tooltiptext="&rf.options.smartFoxy.badge;"/>
 							</row>
 
 							<row align="center" valign="bottom">
 								<vbox>
 									<checkbox id="reminderFox-bowText-control" oncommand="reminderFox_bowTextChanged(this)"
-									label="Display bow icon and reminder text"/>
-									<description class="rmFx_descBox">Select on which toolbar to display</description> <!-- dump -->
+									label="&rf.options.bow;"/>
+									<description class="rmFx_descBox">&rf.options.bow.description;</description>
 								</vbox>
 
 								<hbox>
@@ -274,7 +274,7 @@
 							</row>
 
 							<row align="center" valign="center">
-								<description class="rmFx_descBox">Set position where to display on bar</description>
+								<description class="rmFx_descBox">&rf.options.bow.position.label;</description>
 								<vbox>
 									<radiogroup id="reminderFox-group-position" onselect="reminderFox_groupPositionChanged()">
 										<row align="center">
@@ -295,7 +295,7 @@
 							</row>
 
 							<row align="center" valign="center">
-								<description class="rmFx_descBoxXXX">Today's reminders text length</description>
+								<description class="rmFx_descBoxXXX">&rf.options.display.limiStatusLength.label;</description>
 
 								<hbox align="center">
 									<label class="valid-label"
@@ -321,7 +321,7 @@
 							<spacer flex="1" />
 							<label align="center" class="reminderfox-moreLabel"  bold="true"
 								onclick="reminderfox.util.docRmFX('documentation-email-messages/');" 
-								value="&rf.main.help.label; .." tooltiptext="&rf.options.webMail.help;" />
+								value="&rf.main.help.label; ..." tooltiptext="&rf.options.webMail.help;" />
 						</hbox>
 					</caption>
 
@@ -341,7 +341,7 @@
 							<spacer flex="1" />
 							<label align="center" class="reminderfox-moreLabel"  bold="true"
 								onclick="reminderfox.util.docRmFX('printing-agenda-preview/');" 
-								value="&rf.main.help.label; .." tooltiptext="&rf.options.printing.agenda;" />
+								value="&rf.main.help.label; ..." tooltiptext="&rf.options.printing.agenda;" />
 						</hbox>
 					</caption>
 
@@ -381,7 +381,7 @@
 							<spacer flex="1" />
 							<label align="center" class="reminderfox-moreLabel" bold="true"
 								onclick="reminderfox.util.docRmFX('optionsdialog/#dialog');"
-								value="&rf.main.help.label; .." tooltiptext="Customize the Main Dialog" />
+								value="&rf.main.help.label; ..." tooltiptext="&rf.main.help.tooltip;" />
 						</hbox>
 					</caption>
 
@@ -545,7 +545,7 @@
 
 								<label align="center" class="reminderfox-moreLabel"  bold="true"
 									tooltiptext="&rf.options.list.reminder.defaults.textSizeTTT;"
-									value="&rf.main.help.label; .."  onclick="reminderfox.util.docRmFX('optionsdialog/#textSize');" />
+									value="&rf.main.help.label; ..."  onclick="reminderfox.util.docRmFX('optionsdialog/#textSize');" />
 
 							</row>
 
@@ -557,7 +557,7 @@
 
 								<label align="center" class="reminderfox-moreLabel"  bold="true" 
 									onclick="reminderfox.util.docRmFX('new-functions/#mainmenu')"
-									value="&rf.main.help.label; .."  tooltiptext="&rf.options.display.singlemenu.infoTTT;"/>
+									value="&rf.main.help.label; ..."  tooltiptext="&rf.options.display.singlemenu.infoTTT;"/>
 							</row>
 
 							<row align="center">
@@ -567,7 +567,7 @@
 								</hbox>
 								<label align="center" class="reminderfox-moreLabel" bold="true" 
 									onclick="reminderfox.util.docRmFX('new-functions/#RemindersTodosList')"
-									value="&rf.main.help.label; .."  tooltiptext="&rf.options.layout.help;"/>
+									value="&rf.main.help.label; ..."  tooltiptext="&rf.options.layout.help;"/>
 							</row>
 						</rows>
 
@@ -939,7 +939,7 @@
 		</hbox>
 
 		<hbox class="reminderFox-footer" align="center">
-			<button label="&rf.main.help.label; .." oncommand="reminderfox.util.docRmFX('optionsdialog')" />
+			<button label="&rf.main.help.label; ..." oncommand="reminderfox.util.docRmFX('optionsdialog')" />
 			<spacer class="reminderFox-btnspacer" flex="1" />
 			<button label="&rf.ok;" default="true"
 				oncommand="reminderFox_saveOptionsAndClose()" />

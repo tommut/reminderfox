@@ -874,9 +874,8 @@ function repopulateListForYear(oldYear, newYear){
 	selectCalendarSync = true;
 }
 
-function focusAddButton() { 
-	var desc = document.getElementById("reminderfox-calendar-add");
-	desc.focus();
+function focusAddButton() {
+	reminderfox.search.focusAddEvent();
 }
 
 

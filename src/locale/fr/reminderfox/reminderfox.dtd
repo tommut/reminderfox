@@ -11,16 +11,16 @@
 <!ENTITY rf.ok "OK">
 <!ENTITY rf.cancel "Annuler">
 <!ENTITY rf.apply "Appliquer">
-<!ENTITY rf.Add "Add">
-<!ENTITY rf.Close "Close">
-<!ENTITY rf.Paste "Paste">
-<!ENTITY rf.label.Copy "Copy">
-<!ENTITY rf.Browse "Browse">
-<!ENTITY rf.timeDateSelect "Select time and date">
+<!ENTITY rf.Add "Ajouter">
+<!ENTITY rf.Close "Fermer">
+<!ENTITY rf.Paste "Coller">
+<!ENTITY rf.label.Copy "Copier">
+<!ENTITY rf.Browse "Parcourir">
+<!ENTITY rf.timeDateSelect "Choisir date et horaire">
 <!ENTITY rf.button.browse "Parcourir…">
-<!ENTITY rf.documentation.previous "Previous Documentation Page">
-<!ENTITY rf.mainmenubar "Main Menubar">
-<!ENTITY rf.statusbar "Status-/Addon-Bar">
+<!ENTITY rf.documentation.previous "Page de documentation précédente">
+<!ENTITY rf.mainmenubar "Barre de menu principale">
+<!ENTITY rf.statusbar "Barre d'état/des modules">
 <!-- Categories -->
 <!ENTITY rf.main.tooltip.todaysreminders.label "Pense-bêtes du jour">
 <!ENTITY rf.main.tooltip.upcomingreminders.label "Pense-bêtes à venir">
@@ -161,7 +161,7 @@
 <!ENTITY rf.about.about.label "&rf.main.about.label;">
 <!ENTITY rf.about.createdby.label "Créée par :">
 <!ENTITY rf.about.developers.label "Développeurs :">
-<!ENTITY rf.about.contributor.label "Contributor:">
+<!ENTITY rf.about.contributor.label "Contributeur :">
 <!ENTITY rf.about.version.label "Version :">
 <!ENTITY rf.about.support.label "Actualités et support">
 <!ENTITY rf.about.close.label "Fermer">
@@ -231,12 +231,12 @@
 <!ENTITY rf.quickalarm.alarmAt.label "Alarme à :">
 <!-- Upload dialog -->
 <!ENTITY rf.options.title.label "Options de &rf.name;">
-<!ENTITY rf.options.tab.General "General">
-<!ENTITY rf.options.tab.Dialog "Main Dialog">
-<!ENTITY rf.options.tab.reminderEdit "Reminder Dialog">
+<!ENTITY rf.options.tab.General "Générales">
+<!ENTITY rf.options.tab.Dialog "Boîte de dialogue principale">
+<!ENTITY rf.options.tab.reminderEdit "Boîte de dialogue des pense-bêtes">
 <!ENTITY rf.options.tab.notifications "Notifications">
-<!ENTITY rf.options.tab.alarms "Alarms">
-<!ENTITY rf.options.todoLists "Lists">
+<!ENTITY rf.options.tab.alarms "Alarmes">
+<!ENTITY rf.options.todoLists "Listes">
 <!ENTITY rf.options.addlist.label "Ajouter une liste personnalisée">
 <!ENTITY rf.options.addlist.subscription.description "Vous pouvez vous abonner à un calendrier en spécifiant son URL.  Il sera affiché dans la liste personnalisée dont vous avez indiqué le nom ci-dessus.">
 <!ENTITY rf.options.addlist.subscription.url.label "URL d&apos;abonnement">
@@ -516,9 +516,9 @@
 <!ENTITY mail.send.reminder.invitation.reload "Courrielleur sélectionné. Utilisez le bouton Parcourir pour définir un nouvel emplacement.">
 <!ENTITY mail.send.reminder.invitation.attendees.tooltip "Participants (adresses courriel séparées par des virgules)">
 <!ENTITY mail.ical.selectReplyAttendee.description "L&apos;expéditeur de la [RÉPONSE] n&apos;est pas un participant à cette planification. Si la [RÉPONSE] provient d&apos;un participant listé, veuillez cliquer sur [OK], sinon, cliquez sur [ANNULER].">
-<!ENTITY mail.ical.Invit "Invite">
-<!ENTITY mail.ical.invitation.attendees "Add an attendant from Addressbook">
-<!ENTITY mail.ical.invitation.attendees.paste "Use [Paste] to add a valid E-Mail address from clipboard to 'moreAttendee'.">
+<!ENTITY mail.ical.Invit "Inviter">
+<!ENTITY mail.ical.invitation.attendees "Ajouter un collègue à partir du carnet d'adresses">
+<!ENTITY mail.ical.invitation.attendees.paste "Utiliser [Coller] pour ajouter une adresse de courrier électronique valide à partir du presse-paiers vers &quot;Plus de collègues&quot;.">
 <!ENTITY mail.send.withreminder.selection0 "Courriel sélectionné">
 <!ENTITY mail.send.withreminder.selection1 "Liste ReminderFox">
 <!ENTITY mail.send.withreminder.selection2 "Le courriel sélectionné est référencé dans les pense-bêtes ainsi :">
@@ -555,7 +555,7 @@
 <!ENTITY rf.views.datespan.years "Année(s)">
 <!ENTITY rf.calendar.year.previous "Previous Year">
 <!ENTITY rf.calendar.year.next "Next Year">
-<!ENTITY rf.add2Textbox.info1 "DoubleClick on a listbox row to add that item into the textbox at the cursor position">
+<!ENTITY rf.add2Textbox.info1 "Double-cliquez sur une ligne de la boîte pour ajouter dans la boîte de texte à la position du curseur">
 <!ENTITY rf.add2Textbox.info2 "… comment éditer la zone de texte">
 <!ENTITY rf.reminderImportwCategory "Paramètres d'importation et de catégorie du pense-bête">
 <!ENTITY rf.import.unsaved "Vous n'avez pas enregistré certains pense-bêtes. Veuillez enregistrer votre liste de pense-bêtes et importer à nouveau.">
@@ -628,7 +628,7 @@
 <!ENTITY rf.caldav.select.account "Choisir un compte CalDAV">
 <!--ENTITY rf.caldav.use.setup "See 'Configure Remote Calendar' in Documentation"-->
 <!ENTITY rf.caldav.add.calendar "Ajouter un nouveau calendrier">
-<!ENTITY rf.calDav.davFile "Reminderfox data is stored in ICS file, the Remote Calendar details in an extra file (with extension .ics.dav).">
+<!ENTITY rf.calDav.davFile "Les données de Reminderfox sont stockées dans un fichier ICS, les informations du calendrier distant dans un autre fichier (extension : .ics.dav).">
 <!ENTITY rf.caldav.color.reset "Réinitialiser la couleur de compte">
 <!ENTITY rf.caldav.color.preset "Modifier la couleur de calendrier définie">
 <!ENTITY rf.caldav.calendar.default "Calendrier distant par défaut lors de l'ajout d'évènements">
@@ -636,80 +636,80 @@
 <!ENTITY rf.caldav.calendar.activate "L'activation d'un '&rf.caldav.remoteCalendar;' enverra automatiquement les pense-bêtes nouveaux ou modifiés vers le système distant et synchronisera les pense-bêtes locaux avec les pense-bêtes distants. Voir davantage d'informations dans la documentation.">
 <!ENTITY rf.caldav.calendar.syncto "Synchroniser vers &rf.caldav.remoteCalendar;">
 <!-- CalDAVv2 -->
-<!ENTITY rf.help.docupages "Open documentation for detailed help pages.">
-<!ENTITY rf.caldav.google.request "Enter the Google account name and use [Request]. It opens a Google page to get a login token. Copy it and proceed here with [Paste].">
-<!ENTITY rf.caldav.account.example "See also examples:">
-<!ENTITY rf.caldav.google.request.requires "Google Authorisation Request -- Requires [Accept]">
-<!ENTITY rf.caldav.google.auth.token "Google Authorisation Token -- How to copy">
-<!ENTITY rf.caldav.select.calendar "Selected Calendar">
-<!ENTITY rf.caldav.calndr.name "Calendar Name">
-<!ENTITY rf.caldav.login.correct "Correct Login and ID required to add account.">
-<!ENTITY rf.caldav.account.color "Color">
-<!ENTITY rf.caldav.account.color.ttt "Set Color which is used for this account on the main dialog list.">
-<!ENTITY rf.caldav.options.docu "See Documentation for Remote Calendar setup">
+<!ENTITY rf.help.docupages "Ouvrir la documentation pour des pages d'aide détaillées.">
+<!ENTITY rf.caldav.google.request "Indiquer le nom de compte Google et utiliser [Requête]. Cela ouvre une page Google pour obtenir un mot d epasse de connexion. Le copier et procéder ici au [coller].">
+<!ENTITY rf.caldav.account.example "Voyez également des exemples :">
+<!ENTITY rf.caldav.google.request.requires "Requête d'autorisation Google -- Requiert [Accepter]">
+<!ENTITY rf.caldav.google.auth.token "Identifiant Google -- comment copier">
+<!ENTITY rf.caldav.select.calendar "Calendrier sélectionné">
+<!ENTITY rf.caldav.calndr.name "Nom du calendrier">
+<!ENTITY rf.caldav.login.correct "Mot de passe et ID corrects nécessaires pour ajouter un compte.">
+<!ENTITY rf.caldav.account.color "Couleur">
+<!ENTITY rf.caldav.account.color.ttt "Définir la couleur qui est utilisée pur ce compte dans la boîte de dialogue principale.">
+<!ENTITY rf.caldav.options.docu "Voir la documentation sur le paramétrage de calendrier distant">
 <!-- ...... ImportHandling ..... -->
-<!ENTITY rf.importing.title "Add/Subscribe with Reminderfox">
-<!ENTITY rf.import.linkTitle "Title/Link">
-<!ENTITY rf.import.reminders.link "Reminders with link:">
-<!ENTITY rf.import.reminders.found "found">
-<!ENTITY rf.import.reminders.imported "imported">
-<!ENTITY rf.import.reminders.existed "existed">
-<!ENTITY rf.import.documentation "See documentation Import/Subscription of reminders">
-<!ENTITY rf.import.howtohandle "How to handle the Import ?">
-<!ENTITY rf.import.add "Add">
-<!ENTITY rf.import.reminders.importing "With importing Reminders it can be added to the Reminderfox List.">
-<!ENTITY rf.import.import.added "Imported Events and ToDos will be added to Reminderfox. Duplicates can be ignored or only newer will be imported.">
-<!ENTITY rf.import.import.finished "Import finished">
-<!ENTITY rf.import.duplicates "Duplicates">
-<!ENTITY rf.import.ignore "Ignore">
-<!ENTITY rf.import.newer "Newer">
-<!ENTITY rf.import.newCalendar "New Calendar">
-<!ENTITY rf.import.newCalendar.path "New Calendar path">
-<!ENTITY rf.import.filePath "Change File path for the new Calendar if required.">
-<!ENTITY rf.import.new "New">
-<!ENTITY rf.import.subscribe "Subscribe">
-<!ENTITY rf.import.subscription.info "Build a Reminderfox User List linked to external event data. Changes on the external page will be shown on Reminderfox list.">
-<!ENTITY rf.import.subscription.list "Enter Subscription List name">
-<!ENTITY rf.import.category.setting "Category Setting">
-<!ENTITY rf.import.category.info "To all imported events and todos a selectable 'Category' attribute can added.">
-<!ENTITY rf.import.import.ics "With iCal/ICS importing a new Calendar is build.">
-<!ENTITY rf.import.import.calendar "The existing Calendar will be closed and saved.">
+<!ENTITY rf.importing.title "Ajouter/S'abonner avec Reminderfox">
+<!ENTITY rf.import.linkTitle "Titre / lien">
+<!ENTITY rf.import.reminders.link "Pense-bêtes avec lien :">
+<!ENTITY rf.import.reminders.found "trouvés">
+<!ENTITY rf.import.reminders.imported "importés">
+<!ENTITY rf.import.reminders.existed "existant">
+<!ENTITY rf.import.documentation "Voir la documentation sur l'importation/exportation des pense-bêtes">
+<!ENTITY rf.import.howtohandle "Comment traiter l'importation ?">
+<!ENTITY rf.import.add "Ajouter">
+<!ENTITY rf.import.reminders.importing "L'importation des pense-bêtes les ajoute à la liste Reminderfox.">
+<!ENTITY rf.import.import.added "Les évènements et tâches importés vont être ajoutés à Reminderfox. Les doublons peuvent être ignorés ou seuls les nouveaux vont être importés.">
+<!ENTITY rf.import.import.finished "Importation terminée">
+<!ENTITY rf.import.duplicates "Doublons">
+<!ENTITY rf.import.ignore "Ignorer">
+<!ENTITY rf.import.newer "Plus récent">
+<!ENTITY rf.import.newCalendar "Nouveau calendrier">
+<!ENTITY rf.import.newCalendar.path "Chemin du nouveau calendrier">
+<!ENTITY rf.import.filePath "Changer le chemin vers le fichier du nouveau calendrier si nécessaire.">
+<!ENTITY rf.import.new "Nouveau">
+<!ENTITY rf.import.subscribe "S'abonner">
+<!ENTITY rf.import.subscription.info "Génère une liste d'utilisateur Reminderfox associés à des données d'évènements externes. Les modifications faites sur la page externe seront visibles dans la liste Reminderfox.">
+<!ENTITY rf.import.subscription.list "Indiquer le nom de liste d'abonnement">
+<!ENTITY rf.import.category.setting "Paramétrage des catégories">
+<!ENTITY rf.import.category.info "Une catégorie peut être ajoutée à tout évènement ou tâche importée.">
+<!ENTITY rf.import.import.ics "En important iCal/ICS un nouveau calendrier est généré.">
+<!ENTITY rf.import.import.calendar "Le calendrier existant sera fermé et enregistré.">
 <!--   ....... Options ............. -->
-<!ENTITY rf.options.reminderfox "Reminderfox Data">
-<!ENTITY rf.options.dataLocations "Open documentation for Data Location and Import/Export reminders and 'Restore from Reminderfox backup'">
-<!ENTITY rf.options.browseICS "Browse for reminder (ICS) data file">
-<!ENTITY rf.options.importExport "Import/Export">
-<!ENTITY rf.options.openFileDialog "Open dialog to import/export reminder data and preferences">
-<!ENTITY rf.options.file.recover "Restore from Reminderfox backup file">
-<!ENTITY rf.options.file.Pick "Pick a .bak file and to [RESTORE] from a previous backup">
-<!ENTITY rf.options.calendarDefaults "Calendar Defaults">
-<!ENTITY rf.options.documentation.Base "Open documentation for base calendar settings.">
-<!ENTITY rf.options.file.backup "Backup reminders with date/time stamp">
-<!ENTITY rf.options.alarms "Alarm Presets">
-<!ENTITY rf.options.alarm.dialogs "Alarm Dialogs">
-<!ENTITY rf.options.date.format "Date format">
-<!ENTITY rf.options.date.edit "Edit Date format">
-<!ENTITY rf.options.layout.Defaults "Layout Defaults">
-<!ENTITY rf.options.layout.help "See Reminder/Todo/Lists tab documentation">
-<!ENTITY rf.options.system.menu "Open Reminderfox with use of Main Menu and  Add-on Bar on the application (FX/TB) window">
-<!ENTITY rf.options.smartFoxy "Show Foxy badge shows number of reminders.">
-<!ENTITY rf.options.smartFoxy.none "No, hide it">
-<!ENTITY rf.options.smartFoxy.todays "only today's">
-<!ENTITY rf.options.smartFoxy.todaysUpcoming "today's and upcoming (default)">
-<!ENTITY rf.options.smartFoxy.badge "Foxy has a badge showing the number of todays/upcoming reminders. The badge is red with important today's reminders.">
-<!ENTITY rf.options.bow "Display 'Bow' and text on statusbar">
-<!ENTITY rf.options.bow.text "Limit text to">
-<!ENTITY rf.options.bars "Enable Add-on Bar / StatusBar with showing 'Bow' status icon and Today's reminders.">
-<!ENTITY rf.options.printing "Printing">
-<!ENTITY rf.options.printing.agenda "Documentation for 'Printing' the Reminders and ToDo's and how to get a 'Daily Agenda'.">
-<!ENTITY rf.options.webMail "Reminders for WEB page and eMail">
-<!ENTITY rf.options.webMail.help "Use Reminderfox with WEB page details and E-Mail messages.  Reminderfox works with Thunderbird.">
-<!ENTITY rf.options.main "Main Dialog Preselections">
-<!ENTITY rf.options.main.ttt "Customize the Main Dialog">
-<!ENTITY rf.options.main.dialog.Preselections "Initial Selected List">
-<!ENTITY rf.options.addEdit "Add/Edit Dialog Presets">
-<!ENTITY rf.options.more "Edit the 'More &gt;&gt;' appearence">
-<!ENTITY rf.options.ttt "Foxy Tooltip">
-<!ENTITY rf.options.editTodays "Edit the 'Todays' labels">
-<!ENTITY rf.options.editUpcoming "Edit the 'Upcoming' labels">
-<!ENTITY rf.options.alertSlider "Foxy Alert Slider">
+<!ENTITY rf.options.reminderfox "Données Reminderfox">
+<!ENTITY rf.options.dataLocations "Ouvrir la documentation pour l'emplacement des données et l'import/export des pense-bêtes et « Rétablir à partir d'une sauvegarde Reminderfox »">
+<!ENTITY rf.options.browseICS "Rechercher le fichier de données des pense-bêtes (ICS)">
+<!ENTITY rf.options.importExport "Importer/exporter">
+<!ENTITY rf.options.openFileDialog "Ouvrir la boîte de dialogue d'import/export des données et préférences">
+<!ENTITY rf.options.file.recover "Rétablir à partir du fichier de sauvegarde Reminderfox">
+<!ENTITY rf.options.file.Pick "Choisissez un fichier .bak pour [RETABLIR] à partir d'une sauvegarde précédente">
+<!ENTITY rf.options.calendarDefaults "Réglages par défaut du calendrier">
+<!ENTITY rf.options.documentation.Base "Ouvrir la documentation pour les paramètres de base du calendrier.">
+<!ENTITY rf.options.file.backup "Sauvegarder les pense-bêtes avec l'horodatage">
+<!ENTITY rf.options.alarms "préréglages de l'alarme">
+<!ENTITY rf.options.alarm.dialogs "Boîtes de dialogues d'alarme">
+<!ENTITY rf.options.date.format "Format de date">
+<!ENTITY rf.options.date.edit "Modifier le format de date">
+<!ENTITY rf.options.layout.Defaults "Disposition par défaut">
+<!ENTITY rf.options.layout.help "Voir la documentation sur les penses-bêtes/tâches/listes">
+<!ENTITY rf.options.system.menu "Ouvrir Reminderfox en utilisant le menu principale et la barre des modules dans la fenêtre de l'application (FX/TB)">
+<!ENTITY rf.options.smartFoxy "Le badge Show Foxy affiche le nombre de pense-bêtes.">
+<!ENTITY rf.options.smartFoxy.none "Non, le masquer">
+<!ENTITY rf.options.smartFoxy.todays "juste ceux d'aujourd'hui">
+<!ENTITY rf.options.smartFoxy.todaysUpcoming "ceux d'aujourd'hui et à venir (par défaut)">
+<!ENTITY rf.options.smartFoxy.badge "Foxy comporte un badge affichant le nombre de pense-bêtes du jour ou à venir. Le badge est rouge et contient les pense-bêtes important du jour.">
+<!ENTITY rf.options.bow "Afficher les salutations et le texte dans la barre d'état">
+<!ENTITY rf.options.bow.text "Limiter le texte à">
+<!ENTITY rf.options.bars "La barre des modules ou d'état affiche l'icône d'état et les pense-bêtes du jour.">
+<!ENTITY rf.options.printing "Impression">
+<!ENTITY rf.options.printing.agenda "Documentation pour « Imprimer » les pense-bêtes et les tâches et comment obtenir un « Agenda quotidien ».">
+<!ENTITY rf.options.webMail "Pense-bêtes pour page Web et courriel">
+<!ENTITY rf.options.webMail.help "Utiliser Reminderfox avec des informations sur la page Web et les messages électroniques. Reminderfox fonctionne avec Thunderbird.">
+<!ENTITY rf.options.main "Présélections de la boîte de dialogue principale">
+<!ENTITY rf.options.main.ttt "Personnaliser la boîte de dialogue principale">
+<!ENTITY rf.options.main.dialog.Preselections "Liste sélectionné initialement">
+<!ENTITY rf.options.addEdit "Ajouter/modifier les données prédéfinies">
+<!ENTITY rf.options.more "Modiider l'apparence de « Plus &gt;&gt; »">
+<!ENTITY rf.options.ttt "Infobulle Foxy">
+<!ENTITY rf.options.editTodays "Éditer les étiquettes « d'aujourd'hui »">
+<!ENTITY rf.options.editUpcoming "Éditer les étiquettes « À venir »">
+<!ENTITY rf.options.alertSlider "Panneau d'alerte Foxy">
