@@ -468,7 +468,7 @@ function rmFx_CalDAV_ReminderDelete(reminder, caller, calDAVid2Delete) {
 		calDAVid2Delete = reminder.calDAVidOriginal;
 	} else {
 		if ((!reminder.calDAVid) || (reminder.calDAVid === "") 
-			|| (!reminderfox.calDAV.accounts[reminder.calDAVid].Active)){
+			|| (!reminderfox.calDAV.accounts[reminder.calDAVid] || (!reminderfox.calDAV.accounts[reminder.calDAVid].Active))){
 			 return;
 		}
 		if (reminder.calDAVidOriginal && (reminder.calDAVid != reminder.calDAVidOriginal)) {
