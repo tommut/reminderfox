@@ -5,7 +5,7 @@ if (!reminderfox.date)    reminderfox.date = {};
 if (!reminderfox.util)    reminderfox.util = {};
 if (!reminderfox.calDAV)    reminderfox.calDAV = {};
 
-	reminderfox.calDAV.colorMap = [];
+reminderfox.calDAV.colorMap = [];
 
 if(!reminderfox.msgnr) reminderfox.msgnr = {};
 if (!reminderfox.msgnr.name) reminderfox.msgnr.name = "";
@@ -1280,24 +1280,103 @@ reminderfox.util.fileCheck= function (filepath) {
 };
 
 
+
+
+
+reminderfox.util.reminderFox_filePickerExport= function  (aOpen, aWindow, defaultFileName) {
+	var reminderFox_nsIFilePicker = Components.interfaces.nsIFilePicker;
+	var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(reminderFox_nsIFilePicker);
+
+	picker.defaultExtension = "ics";
+	var filterCalendar    = reminderfox.string("rf.options.filepicker.filter.calendar");
+	var extensionCalendar = ".ics";
+
+	picker.appendFilter( filterCalendar, "*" + extensionCalendar );
+	if (defaultFileName != null) picker.defaultString = defaultFileName;
+
+	switch (aOpen) {
+		case 0:
+			picker.init(aWindow, reminderfox.string("rf.options.export.filepicker.title"),
+				reminderFox_nsIFilePicker.modeSave);
+			break
+		case 1:
+			picker.init(aWindow, reminderfox.string("rf.options.import.filepicker.title"),
+				reminderFox_nsIFilePicker.modeOpen);
+			break;
+	};
+
+
+	// get the file and its contents
+	var res = picker.show();
+	if(res == reminderFox_nsIFilePicker.returnCancel)
+		return null;
+	else
+		return picker.file;
+}
+
+/*
+ * Export (Backup) the current reminders/events
+ * @param {object} backup - if passed store to file with date/time stamp
+ */
+reminderfox.util.exportReminders= function (backup) {
+
+	var i;
+
+	var _reminderEvents = reminderfox.core.getReminderEvents();
+	var _todosArray = reminderfox.core.getReminderTodos();
+	//  ALL todos
+	var outputStr = reminderfox.core.constructReminderOutput(_reminderEvents, _todosArray, true);
+
+
+	//get file
+	if (backup) {
+		//get current store file name
+		var icsFile = reminderfox.core.getReminderStoreFile().leafName.replace(".ics", "")
+
+		var date = new Date()
+		var dateString = reminderfox.date.getDateAsString (date, 'format')
+		var file = reminderfox.util.reminderFox_filePickerExport(0, window, (icsFile + "_" + dateString + ".ics"));
+	} else {
+		var file = reminderfox.util.reminderFox_filePickerExport(0, window, reminderfox.core.getReminderStoreFile().leafName);
+	}
+	if(!file)
+		return;
+
+	if(file.exists() == false) {
+		file.create(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 420);
+	}
+
+	reminderfox.core.writeStringToFile(outputStr, file, true);
+
+	// show success message
+	var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
+	promptService.alert(window, reminderfox.string("rf.options.export.success.title"), reminderfox.string("rf.options.export.success.description"));
+}
+
+
 reminderfox.util.pickFileICSfile= function (extension, xthis) {
 //------------------------------------------------------------------------------
-	if(xthis.disabled) return;
+	if(xthis && xthis.disabled) return;
 
 	var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
 		.getService(Components.interfaces.nsIPromptService);
 
-	var file = reminderfox.util.pickFileLocationFile(extension, xthis.getAttribute("value") /*title*/);
+	var title = null;
+	if ( xthis ) {
+		title = xthis.getAttribute("value")
+	}
+	var file = reminderfox.util.pickFileLocationFile(extension, title /*title*/);
 	if (!file) return;  // cancel pressed -- no file selected
 
 	// var msg = ("New file location selected")
-	if (xthis.id == 'reminderFox_file_location_browse') {
+	if (xthis && xthis.id == 'reminderFox_file_location_browse') {
 		document.getElementById("reminderFox-file-location").value = file.path;
 		document.getElementById("reminderFox-apply").removeAttribute("disabled");
 	}
-
-	if (xthis.id == 'reminderFox_file_recover_browse') {
-
+	else {
+		reminderfox.core.logMessageLevel("filebrowse1: ", reminderfox.consts.LOG_LEVEL_INFO);
+	//if (!xthis || xthis.id == 'reminderFox_file_recover_browse') {
+		reminderfox.core.logMessageLevel("filebrowse2: ", reminderfox.consts.LOG_LEVEL_INFO)
 		// make sure they REAAAAALY want to overwrite
 		var msg = reminderfox.string("rf.options.import.overwrite.description") 
 			+ "\n\n File to restore: " + file.path;		//$$$_locale
@@ -1369,12 +1448,19 @@ reminderfox.util.pickFileLocationPicker= function (aWindow, extension, title) {
 	var cDir = Components.classes["@mozilla.org/file/local;1"]
 		.createInstance(Components.interfaces.nsIFile);
 
+	// if we're in options dialog, get current file value
 	var cLocation = document.getElementById("reminderFox-file-location");
-	cDir.initWithPath(cLocation.value);
-
+	if ( cLocation ) {
+		cDir.initWithPath(cLocation.value);
+	}
+	// otherwise, get stored reminder value
+	else {
+		var rmFx_icsFileLocationCurrent = reminderfox.core.getReminderStoreFile().path;
+		cDir.initWithPath( rmFx_icsFileLocationCurrent );
+	}
 	var reminderFox_nsIFilePicker = Components.interfaces.nsIFilePicker;
 	var filterCalendar    = reminderfox.string("rf.options.filepicker.filter.calendar");
-	var extensionCalendar = extension; 
+	var extensionCalendar = extension;
 
 	var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(reminderFox_nsIFilePicker);
 	picker.init(aWindow, title||reminderfox.string("rf.options.filelocation.filepicker.title"),

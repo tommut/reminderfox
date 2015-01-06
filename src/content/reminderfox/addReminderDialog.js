@@ -508,9 +508,24 @@ function rmFx_checkLoaded(){
 	}
 }
 
+function reminderFox_restoreFile() {
 
+	rmFx_mainDialogSaveAndClose(false);
+
+	reminderfox.core.logMessageLevel("restore1: ", reminderfox.consts.LOG_LEVEL_INFO);
+
+
+	reminderfox.util.pickFileICSfile('*.bak?; *.bak1; *.bak2; *.bak3; *.ics', null);
+	reminderfox.core.logMessageLevel("restore2: ", reminderfox.consts.LOG_LEVEL_INFO);
+
+	rmFx_mainDialogLoadReload();
+	reminderfox.core.logMessageLevel("restore3: ", reminderfox.consts.LOG_LEVEL_INFO);
+
+}
 function rmFx_mainDialogLoadReload() {
+	reminderfox.core.logMessageLevel("reload1: ", reminderfox.consts.LOG_LEVEL_INFO)
 	if (!reminderfox.core.checkModified ()) {
+		reminderfox.core.logMessageLevel("reload2: ", reminderfox.consts.LOG_LEVEL_INFO)
 		reminderfox.core.reminderFoxEvents = null;
 		reminderfox.core.reminderFoxTodosArray = null;
 
@@ -522,6 +537,7 @@ function rmFx_mainDialogLoadReload() {
 		reminderfox.calDAV.accounts = {};
 
 		rmFx_mainDialogLoad(true);
+		reminderfox.core.logMessageLevel("reload3: ", reminderfox.consts.LOG_LEVEL_INFO)
 	}
 }
 

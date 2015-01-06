@@ -119,7 +119,7 @@
 						<spacer width="180px"/>
 						<text id="reminderFox_backup_reminders" 
 							disabled="false"  class="url" onmouseover="this.style.cursor='pointer';"
-							onclick="reminderFox_exportReminders(true);" 
+							onclick="reminderfox.util.exportReminders(true);"
 							value="&rf.options.file.backup;"  tooltiptext="&rf.options.file.backup.tooltip;"/>
 					</hbox>
 
@@ -127,7 +127,8 @@
 						<spacer width="180px"/>
 						<text id="reminderFox_file_recover_browse" 
 							disabled="false"  class="url" onmouseover="this.style.cursor='pointer';"
-							onclick="reminderfox.util.pickFileICSfile('*.bak?; *.bak1; *.bak2; *.bak3; *.ics', this);" 
+							onclick="reminderfox.util.pickFileICSfile('*.bak?; *.bak1; *.bak2; *.bak3; *.ics', this); 	rmFx_mainDialogLoadReload();
+"
 							value="&rf.options.file.recover;"  tooltiptext="&rf.options.file.Pick;"/>
 					</hbox>
 
@@ -962,7 +963,7 @@
 					<button id="reminderFox_import_reminders" label="&rf.options.importexport.import.label;"
 						flex="1" oncommand="reminderfox.userIO.readICSfile();" />
 					<button id="reminderFox_export_reminders" label="&rf.options.importexport.export.label;"
-						flex="1" oncommand="reminderFox_exportReminders();" />
+						flex="1" oncommand="reminderfox.util.exportReminders();" />
 				</hbox>
 			</vbox>
 		</groupbox>

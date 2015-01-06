@@ -202,7 +202,7 @@
 <!ENTITY rf.add.addTodo.showInTooltip.label        "Show in tooltip">
 <!ENTITY rf.add.addTodo.important.label        "&rf.add.reminders.context.important.label;">
 
-
+<!ENTITY rf.add.file.menu.backup.title "Back up and restore">
 
 <!-- about dialog -->
 <!ENTITY rf.about.homepage.label       "Home Page:">
@@ -864,7 +864,7 @@
 
 <!ENTITY rf.options.smartFoxy.badge "The foxy icon contains a badge which displays the number of todays/upcoming reminders. The badge will be red if an important event occurs today.">
 <!ENTITY rf.options.bow.description "Select on which toolbar to display">
-<!ENTITY rf.options.bow "Display bow icon and reminder text">
+<!ENTITY rf.options.bow "Display reminder icon and text on statusbar">
 <!ENTITY rf.options.bow.text "Limit text to">
 <!ENTITY rf.options.bow.position.label "Set position where to display on bar">
 

@@ -1769,45 +1769,6 @@ function reminderFox_alarmSoundGroupPositionChanged() {
 }
 
 
-/*
- * Export (Backup) the current reminders/events
- * @param {object} backup - if passed store to file with date/time stamp
- */
-function reminderFox_exportReminders(backup) {
-	var i;
-
-	var _reminderEvents = reminderfox.core.getReminderEvents();
-	var _todosArray = reminderfox.core.getReminderTodos();
-	//  ALL todos
-	var outputStr = reminderfox.core.constructReminderOutput(_reminderEvents, _todosArray, true);
-
-
-	//get file
-	if (backup) {
-		//get current store file name
-		var icsFile = reminderfox.core.getReminderStoreFile().leafName.replace(".ics", "")
-
-		var date = new Date()
-		var dateString = reminderfox.date.getDateAsString (date, 'format')
-		var file = reminderFox_filePickerExport(0, window, (icsFile + "_" + dateString + ".ics"));
-	} else {
-		var file = reminderFox_filePickerExport(0, window, reminderfox.core.getReminderStoreFile().leafName);
-	}
-	if(!file)
-		return;
-
-	if(file.exists() == false) {
-		file.create(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 420);
-	}
-
-	reminderfox.core.writeStringToFile(outputStr, file, true);
-
-	// show success message
-	var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
-	promptService.alert(window, reminderfox.string("rf.options.export.success.title"), reminderfox.string("rf.options.export.success.description"));
-}
-
-
 function downloadReminders() {
 	reminderFox_saveNetworkOptions();
 	var options = {
@@ -1941,33 +1902,6 @@ function reminderFox_filePickerPreferences(aOpen, aWindow) {
 }
 
 
-function reminderFox_filePickerExport(aOpen, aWindow, defaultFileName) {
-
-	var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(reminderFox_nsIFilePicker);
-
-	picker.defaultExtension = "ics"; 
-	picker.appendFilter( filterCalendar, "*" + extensionCalendar );
-	if (defaultFileName != null) picker.defaultString = defaultFileName;
-
-	switch (aOpen) {
-		case 0:
-			picker.init(aWindow, reminderfox.string("rf.options.export.filepicker.title"), 
-				reminderFox_nsIFilePicker.modeSave);
-			break
-		case 1: 
-			picker.init(aWindow, reminderfox.string("rf.options.import.filepicker.title"), 
-				reminderFox_nsIFilePicker.modeOpen);
-			break;
-};
-
-
-	// get the file and its contents
-	var res = picker.show();
-	if(res == reminderFox_nsIFilePicker.returnCancel)
-		return null;
-	else
-		return picker.file;
-}
 
 
 function reminderFox_concat(c1, c2) {
@@ -1997,6 +1931,10 @@ function reminderFox_networkServerEnable(disable) {
 	}
 }
 
+function reminderFox_exportReminders() {
+	rmFx_mainDialogSaveAndClose(false);
+	reminderfox.util.pickFileICSfile('*.bak?; *.bak1; *.bak2; *.bak3; *.ics', this);
+}
 
 function reminderFox_ValidateSynchronization(disable) {
 //reminderfox.util.Logger('Alert',"   reminderFox_ValidateSynchronization    disable : " + disable)

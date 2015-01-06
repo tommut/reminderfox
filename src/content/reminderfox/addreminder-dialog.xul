@@ -216,6 +216,17 @@
 					onclick="reminderfox.util.launchHelp();reminderfox.calendar.ui.panelClose(); "
 					tooltiptext="&rf.calendar.menu.options.docu;" />
 
+				<menu id="backupMenu" label="&rf.add.file.menu.backup.title;">
+					<menupopup id="backupMenuPopup" >
+						<menuitem id="rmFxBackup" label="&rf.options.file.backup;"
+								  onclick="rmFx_mainDialogSaveAndClose(false); reminderfox.util.exportReminders(true);"
+								   tooltiptext="&rf.options.file.backup.tooltip;"/>
+						<menuitem label="&rf.options.file.recover;"
+								  onclick="reminderFox_restoreFile();"
+								   tooltiptext="&rf.options.file.Pick;"/>
+					</menupopup>
+				</menu>
+
 				<menuitem label="&rf.main.about.label;" id="calendar-foxy-contextmenu-gotoAbout"
 					onclick="reminderfox.overlay.openAboutReminderFoxDialog();reminderfox.calendar.ui.panelClose(); " />
 
