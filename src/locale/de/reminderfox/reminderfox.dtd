@@ -41,6 +41,8 @@
 <!ENTITY rf.main.quickalarms.label "Sofort Alarme">
 <!ENTITY rf.main.showalerts.label "Benachrichtigungen ein/aus">
 <!ENTITY rf.main.help.label "Hilfe">
+<!ENTITY rf.main.help.tooltip          "Hauptdialog anpassen">
+<!ENTITY rf.main.tip.label          "Tipp">
 <!ENTITY rf.main.addreminderforweb.label "Termin hinzufügen...">
 <!ENTITY rf.main.contextmenu.subscribe.label "Abonnement mit ReminderFox ...">
 <!ENTITY rf.main.contextmenu.addremindercontact.label "&rf.main.addReminder.label;">
@@ -155,6 +157,7 @@
 <!ENTITY rf.add.reminders.context.hidecompleteditems.label "Verberge erledigte Einträge">
 <!ENTITY rf.add.reminders.context.print.label "Drucken / Vorschau">
 <!ENTITY rf.add.reminders.context.print.ttt   "Vorlage wählen für 'Drucken / Vorschau'">
+<!ENTITY rf.add.reminders.context.print.agenda.label          "Agenda">
 <!ENTITY rf.add.reminders.context.print.all "Alle Ereignisse">
 <!ENTITY rf.add.reminders.context.print.selected "Ausgewählte Ereignisse">
 <!ENTITY rf.add.reminders.context.print.installation "Installation Details">
@@ -197,6 +200,7 @@
 <!ENTITY rf.add.addTodo.showInTooltip.label "Im Tooltip anzeigen">
 <!--ENTITY rf.add.addTodo.important.label "&rf.add.reminders.context.important.label;"-->
 
+<!ENTITY rf.add.file.menu.backup.title "Sicherung und Wiederherstellung">
 
 
 <!-- about dialog -->
@@ -208,7 +212,14 @@
 <!ENTITY rf.about.version.label "Version">
 <!ENTITY rf.about.support.label "Hilfe/Unterstützung">
 <!ENTITY rf.about.close.label "Schließen">
+<!ENTITY rf.about.updatecheck.label "Aktualisierungsprüfung">
+<!ENTITY rf.about.updatecheck.tooltip "Den aktuellen Installationsstatus prüfen.">
 
+<!-- rmFxUpdateXPI -->
+<!ENTITY rf.rmfxupdatexpi.drag.link.to.addon.manager.tooltip "Ziehen Sie diesen Link in das Fenster des 'Add-on Managers'. Erlauben Sie das Herunterladen. Scrollen Sie auf dem Reiter 'Erweiterungen' zu Reminderfox und verwenden Sie 'Jetzt neu starten' oder 'Rückgängig'.">
+<!ENTITY rf.rmfxupdatexpi.local.version.value "Lokale Version">
+<!ENTITY rf.rmfxupdatexpi.current.version.value "Aktuelle Version">
+<!ENTITY rf.rmfxupdatexpi.update.reminderfox.value "ReminderFox aktualisieren">
 
 <!ENTITY rf.msgid.title "ReminderFox: Gewählte E-Mail wird geöffnet">
 <!ENTITY rf.msgid.retry.label "Erneut versuchen">
@@ -289,9 +300,11 @@
 
 <!ENTITY rf.options.title.label "&rf.name;-Einstellungen">
 <!ENTITY rf.options.tab.General "Generelles">
+<!ENTITY rf.options.tab.Access "Zugriff">
 <!ENTITY rf.options.tab.Dialog "Hauptdialog">
 <!ENTITY rf.options.tab.reminderEdit "Erinnerungen">
 <!ENTITY rf.options.tab.notifications "Benachrichtigungen">
+<!ENTITY rf.options.tab.Sync "Sync">
 <!ENTITY rf.options.tab.alarms "Alarme">
 <!ENTITY rf.options.todoLists "Listen">
 
@@ -304,7 +317,7 @@
 
 <!--ENTITY rf.options.display.label "Anzeigeeinstellungen"-->
 <!ENTITY rf.options.display.todaystatus.label "Heutige Termine in der Statusleiste anzeigen.">
-<!--ENTITY rf.options.display.limiStatusLength.label "Statustext Länge begrenzen auf"-->
+<!ENTITY rf.options.display.limiStatusLength.label "Statustext Länge begrenzen auf">
 <!ENTITY rf.options.display.limiStatusCharacters.label "Zeichen">
 <!ENTITY rf.options.display.remindersInTooltip.label "Termine im Tooltip anzeigen.">
 <!ENTITY rf.options.display.todosInTooltip.label "Aufgaben im Tooltip anzeigen.">
@@ -371,6 +384,7 @@
 <!--ENTITY rf.options.list.calendar.size.large.label "Groß"-->
 <!ENTITY rf.options.list.startingday.label "Erster Tag der Woche">
 <!ENTITY rf.options.list.calendar.showWeekNumber.label "Wochennummerierung">
+<!ENTITY rf.options.list.calendar.showWeekNumber.none       "Keine">
 <!ENTITY rf.options.list.calendar.showWeekNumber.default "Grundeinstellung">
 <!ENTITY rf.options.list.calendar.showWeekNumber.iso8601 "ISO 8601">
 <!--ENTITY rf.options.list.dateandtime.label "Datum und Zeit"-->
@@ -709,6 +723,12 @@
 <!ENTITY rf.caldav.documentation.i "Siehe Dokumentation für das Aufsetzen eines Kontos">
 <!ENTITY rf.caldav.serverselection "Wähle einen Kalender Server aus der Liste">
 <!ENTITY rf.caldav.selectserver "Wähle Kalender Server">
+
+<!-- calDAVupdate -->
+<!ENTITY rf.caldavupdate.next.calendars.label "Nächste Kalender">
+<!ENTITY rf.caldavupdate.configure.calendar.label "Kalender konfigurieren">
+<!ENTITY rf.caldavupdate.skip.this.calendar.tooltip "Diesen Kalender überspringen, nach anderen suchen.">
+<!ENTITY rf.caldavupdate.open.options.sync.tooltip "'Einstellungen/Sync' öffnen, um Kalendereinstellung zu korrigieren.">
 <!--ENTITY rf.caldav.gcal.privat "Google Kalender Privat (Termine)"-->
 <!--ENTITY rf.caldav.gcal.group "Google Kalender Gruppen (Termine)"-->
 <!--ENTITY rf.caldav.oc.default "Standard Kalender"-->
@@ -820,7 +840,8 @@
 <!ENTITY rf.options.file.Pick "Eine .bak Datei suchen und anwenden zur Wiederherstellung einer vorherigen Sicherung.">
 <!ENTITY rf.options.calendarDefaults "Kalender Grundeinstellung">
 <!ENTITY rf.options.documentation.Base "Dokumentation zu den Grundeinstellungen für Kalender.">
-<!ENTITY rf.options.file.backup "Erinnerungen mit Datum/Zeitstempel sichern.">
+<!ENTITY rf.options.file.backup "Erinnerungen mit Datum/Zeitstempel sichern">
+<!ENTITY rf.options.file.backup.tooltip "Termindaten am Sicherungsort speichern">
 <!ENTITY rf.options.alarms "Alarm Einstellungen">
 <!ENTITY rf.options.alarm.dialogs "Alarm Dialog">
 <!ENTITY rf.options.date.format "Datumsformat">
@@ -828,13 +849,18 @@
 <!ENTITY rf.options.layout.Defaults "Layout Einstellungen">
 <!ENTITY rf.options.layout.help "Zur Dokumentation  Termine/Aufgaben/Listen">
 <!ENTITY rf.options.system.menu "Reminderfox öffnen mit dem Hauptmenü und der Statussymbol-Leiste der FX/TB Anwendungsfenster">
+<!ENTITY rf.options.smartFoxy.display.label "Foxy-Symbol anzeigen">
 <!ENTITY rf.options.smartFoxy "Foxy Badge zeigt Anzahl der heutigen und kommenden Termine an.">
 <!ENTITY rf.options.smartFoxy.none "Nein, verbergen">
 <!ENTITY rf.options.smartFoxy.todays "heutige">
 <!ENTITY rf.options.smartFoxy.todaysUpcoming "heutige und kommende (Grundeinstellung)">
+<!ENTITY rf.options.smartFoxy.todaytext "Text der heutigen Termine anzeigen">
 <!ENTITY rf.options.smartFoxy.badge "Foxy hat ein Badge das die Anzahl der heutigen/kommenden Termine anzeigt. Das Badge ist rot wenn wichtige Termine anstehen.">
 <!ENTITY rf.options.bow "Reminderfox 'Schleife' und Text auf der Statussymbol-Leiste anzeigen">
+<!ENTITY rf.options.bow.description "Symbolleiste für die Anzeige auswählen">
 <!ENTITY rf.options.bow.text "Begrenze Text auf">
+<!ENTITY rf.options.bow.position.label "Anzeigeposition auf Symbolleiste einstellen">
+
 
 <!ENTITY rf.options.bars "Add-on Leiste / Statusleiste einschalten um das 'Schleifen' Status Icon und heutige Termine anzuzeigen.">
 <!ENTITY rf.options.printing "Drucken">
