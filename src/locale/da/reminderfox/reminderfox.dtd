@@ -34,6 +34,8 @@
 <!ENTITY rf.main.quickalarms.label "Hurtig alarmer">
 <!ENTITY rf.main.showalerts.label "Suspender påmindelser/alarmer">
 <!ENTITY rf.main.help.label "Hjælp">
+<!ENTITY rf.main.help.tooltip "Customize the Main Dialog">
+<!ENTITY rf.main.tip.label "Tip">
 <!ENTITY rf.main.addreminderforweb.label "&rf.main.addReminder.label;">
 <!ENTITY rf.main.contextmenu.subscribe.label "Abonner med ReminderFox...">
 <!ENTITY rf.main.contextmenu.addremindercontact.label "&rf.main.addReminder.label;">
@@ -124,6 +126,7 @@
 <!ENTITY rf.add.reminders.context.hidecompleteditems.label "Skjul gennemførte emner">
 <!ENTITY rf.add.reminders.context.print.label "Udskriv/vis">
 <!ENTITY rf.add.reminders.context.print.ttt "Vælg skabelon til 'Udskriv/vis'">
+<!ENTITY rf.add.reminders.context.print.agenda.label "Agenda">
 <!ENTITY rf.add.reminders.context.print.all "Alle begivenheder">
 <!ENTITY rf.add.reminders.context.print.selected "Valgte begivenheder">
 <!ENTITY rf.add.reminders.context.print.installation "Installeringsdetaljer">
@@ -165,10 +168,17 @@
 <!ENTITY rf.about.version.label "version:">
 <!ENTITY rf.about.support.label "Nyheder og Support">
 <!ENTITY rf.about.close.label "Luk">
+<!ENTITY rf.about.updatecheck.label "Update Check">
+<!ENTITY rf.about.updatecheck.tooltip "Check current installation status.">
+<!-- Alarm dialog -->
+<!ENTITY rf.rmfxupdatexpi.drag.link.to.addon.manager.tooltip "Drag this link to the 'Add-ons Manager' window. Allow downloading. On tab:'Extensions' scroll to Reminderfox and use 'Restart now' or 'Undo'.">
+<!ENTITY rf.rmfxupdatexpi.local.version.value "Local Version">
+<!ENTITY rf.rmfxupdatexpi.current.version.value "Current Version">
+<!ENTITY rf.rmfxupdatexpi.update.reminderfox.value "Update Reminderfox">
 <!ENTITY rf.msgid.title "ReminderFox: Åbner ønskede meddelelse">
 <!ENTITY rf.msgid.retry.label "Prøv igen">
 <!ENTITY rf.msgid.description "ThunderBird kunne ikke åbne denne meddelelse. Prøv igen.">
-<!-- Alarm dialog -->
+<!-- Quick Alarm dialog -->
 <!ENTITY rf.reminderoptions.addEvent.window.title "Tilføj begivenhed">
 <!ENTITY rf.reminderoptions.date.label "Dato:">
 <!ENTITY rf.reminderoptions.date.start.label "Start:">
@@ -209,7 +219,7 @@
 <!ENTITY rf.reminderoptions.url.launch.tooltip "Åbn URL">
 <!ENTITY rf.reminderoptions.button.more "Mere &gt;&gt;">
 <!ENTITY rf.reminderoptions.tooltip.selectdate "Vælg dato">
-<!-- Quick Alarm dialog -->
+<!-- Options dialog -->
 <!ENTITY rf.alarm.dialog.title "&rf.name; alarm">
 <!ENTITY rf.alarm.button.snooze "Udsæt">
 <!ENTITY rf.alarm.button.acknowledge "Bekræft">
@@ -219,22 +229,24 @@
 <!ENTITY rf.alarm.snooze.minutes.label "minutter">
 <!ENTITY rf.alarm.occursIn.label "Sker om:">
 <!ENTITY rf.alarm.snoozeUntil.label "Udsæt til:">
-<!-- Options dialog -->
+<!-- lists -->
 <!ENTITY rf.suspendalarms.dialog.title "Suspender">
 <!ENTITY rf.suspendalarms.dialog.label "Alarmer og påmindelser suspenderes til de genaktiveres.">
 <!ENTITY rf.suspendalarms.resume.label "Genaktiver automatisk om:">
 <!ENTITY rf.suspendalarms.resume.time.info "Genaktiveringstid:">
-<!-- lists -->
+<!-- network -->
 <!ENTITY rf.quickalarm.dialog.title "Hurtig alarm">
 <!ENTITY rf.quickalarm.notify.label "&rf.reminderoptions.notify.label;">
 <!ENTITY rf.quickalarm.notify.fromnow "fra nu">
 <!ENTITY rf.quickalarm.alarmAt.label "Alarm:">
-<!-- network -->
+<!-- Upload dialog -->
 <!ENTITY rf.options.title.label "&rf.name; indstillinger">
 <!ENTITY rf.options.tab.General "Generelt">
+<!ENTITY rf.options.tab.Access "Access">
 <!ENTITY rf.options.tab.Dialog "Overordnet">
 <!ENTITY rf.options.tab.reminderEdit "Påmindelser">
 <!ENTITY rf.options.tab.notifications "Notifikationer">
+<!ENTITY rf.options.tab.Sync "Sync">
 <!ENTITY rf.options.tab.alarms "Alarmer">
 <!ENTITY rf.options.todoLists "Lister">
 <!ENTITY rf.options.addlist.label "Tilføj tilpasset liste">
@@ -304,6 +316,7 @@
 <!ENTITY rf.options.list.calendar.size.large.label "Stor">
 <!ENTITY rf.options.list.startingday.label "Første ugedag:">
 <!ENTITY rf.options.list.calendar.showWeekNumber.label "Ugenumre">
+<!ENTITY rf.options.list.calendar.showWeekNumber.none "None">
 <!ENTITY rf.options.list.calendar.showWeekNumber.default "Standard">
 <!ENTITY rf.options.list.calendar.showWeekNumber.iso8601 "ISO 8601">
 <!ENTITY rf.options.list.dateandtime.label "Dato og tid">
@@ -367,7 +380,7 @@
 <!ENTITY rf.options.importexport.export.label "Eksport">
 <!ENTITY rf.options.importexportpreferences.label "Importer/eksporter indstillinger">
 <!ENTITY rf.options.importexport.category.label "Du kan angive yderligere kategorier på dine importerede begivenheder. Det kan hjælpe med filtrering og sortering. Hvis du f.eks ved import af en liste med feriedage, markerer begivenhederne med 'Ferie' kan du derefter filtrere med kategorien og fremkalde en liste med disse feriedage.">
-<!-- Upload dialog -->
+<!-- Download dialog -->
 <!ENTITY rf.options.list.reminder.lists.label "Lister">
 <!ENTITY rf.options.list.reminder.lists.manage.label "Administrer lister">
 <!ENTITY rf.options.list.reminder.lists.button.add.label "&rf.add.addTodo.addbutton.label;">
@@ -379,7 +392,7 @@
 <!ENTITY rf.options.lists.description "Ud over påmindelser og opgaver kan du tilføje yderligere lister der vises som separate faneblade. Du kan tilføje lister som: Film (kommende premierer), Album (kommende udgivelser), Indkøbsseddel og hvad du ellers kan bruge en liste til.">
 <!ENTITY rf.options.lists.nameError "Navne='ToDo's', 'Reminders', ',' eller ':' er ugyldige her!">
 <!ENTITY rf.options.lists.addedit "Tilføj/rediger lister">
-<!-- Download dialog -->
+<!-- Upcoming Reminders Label Options dialog -->
 <!ENTITY rf.options.synchronization.description.label "Synkroniseringsadresse">
 <!ENTITY rf.options.synchronization.address.description "Indtast FTP eller WebDAV adresse for en ekstern reminderFox fil.">
 <!ENTITY rf.options.synchronization.address.example.description "Eksempel: ftp://www.mydomain.com/reminders.ics">
@@ -394,11 +407,11 @@
 <!ENTITY rf.options.synchronization.label "Synkronisering">
 <!ENTITY rf.options.synchronization.auto.label "Synkroniser automatisk påmindelser med netværk">
 <!ENTITY rf.options.synchronization.auto.description "Vælg denne mulighed for automatisk at holde dine lokale og eksterne påmindelser synkroniseret.">
-<!-- Upcoming Reminders Label Options dialog -->
-<!ENTITY rf.upload.tile.label "Opload">
 <!-- Calendar -->
-<!ENTITY rf.download.tile.label "Download">
+<!ENTITY rf.upload.tile.label "Opload">
 <!-- Time names -->
+<!ENTITY rf.download.tile.label "Download">
+<!-- Month Names -->
 <!ENTITY rf.upcoming.label.options.title.label "Påmindelsers titelformat">
 <!ENTITY rf.upcoming.label.options.label "Titel">
 <!ENTITY rf.upcoming.label.reminder.description "Beskrivelse af påmindelsen">
@@ -415,13 +428,13 @@
 <!ENTITY rf.upcoming.label.days.until "Antal dage tilbage til påmindelsen">
 <!ENTITY rf.upcoming.label.column.variable "Variabel">
 <!ENTITY rf.upcoming.label.column.description "Beskrivelse">
-<!-- Month Names -->
+<!-- Day short names -->
 <!ENTITY calendar.week.number.label "Uge">
 <!ENTITY calendar.year.previous "Forrige år">
 <!ENTITY calendar.year.next "Næste år">
 <!ENTITY calendar.month.previous "Forrige måned">
 <!ENTITY calendar.month.next "Næste måned">
-<!-- Day short names -->
+<!-- iCal Schedule  -->
 <!ENTITY time.0 "00:00">
 <!ENTITY time.1 "01:00">
 <!ENTITY time.2 "02:00">
@@ -446,7 +459,7 @@
 <!ENTITY time.21 "21:00">
 <!ENTITY time.22 "22:00">
 <!ENTITY time.23 "23:00">
-<!-- iCal Schedule  -->
+<!-- Invitation, MAIL and ADDRESSBOOK -->
 <!ENTITY month.1 "Januar">
 <!ENTITY month.2 "Februar">
 <!ENTITY month.3 "Marts">
@@ -471,7 +484,7 @@
 <!ENTITY month.10.MMM "Okt">
 <!ENTITY month.11.MMM "Nov">
 <!ENTITY month.12.MMM "Dec">
-<!-- Invitation, MAIL and ADDRESSBOOK -->
+<!-- Views -->
 <!ENTITY day.1.DDD "Søn">
 <!ENTITY day.2.DDD "Man">
 <!ENTITY day.3.DDD "Tir">
@@ -525,7 +538,7 @@
 <!ENTITY mail.send.withreminder.selection3 "Vælg en påmindelse og tryk">
 <!ENTITY mail.send.withreminder.replyAttendee "Planlægning/invitation - Vælg deltagere">
 <!ENTITY mail.send.reminder.reference.title "Påmindelse referenceliste">
-<!-- Views -->
+<!-- CalDAV -->
 <!ENTITY rf.views.title "ReminderFox - Rediger Vis">
 <!ENTITY rf.views.label "Rediger Vis">
 <!ENTITY rf.views.view.header "Vis">
@@ -580,31 +593,36 @@
 <!ENTITY rf.calendar.layout.ListCalendar "Liste og kalender">
 <!ENTITY rf.calendar.layout.List "Liste">
 <!ENTITY rf.calendar.layout.Calendar "Kalender">
-<!-- CalDAV -->
+<!--ENTITY rf.caldav.gcal.privat "Google Calendar Private (Events)"-->
 <!ENTITY rf.caldav.remoteCalendar "Ekstern kalender">
 <!ENTITY rf.caldav.dialog.title "&rf.caldav.remoteCalendar; kontoindstillinger">
 <!ENTITY rf.caldav.documentation.i "Hjælp til '&rf.caldav.remoteCalendar;'">
 <!ENTITY rf.caldav.serverselection "Vælg &rf.caldav.remoteCalendar;/server fra liste">
 <!ENTITY rf.caldav.selectserver "Vælg &rf.caldav.remoteCalendar;">
-<!--ENTITY rf.caldav.gcal.privat "Google Calendar Private (Events)"-->
 <!--ENTITY rf.caldav.gcal.group "Google Calendar Group (Events)"-->
+<!ENTITY rf.caldavupdate.next.calendars.label "Next Calendars">
+<!ENTITY rf.caldavupdate.configure.calendar.label "Configure Calendar">
+<!ENTITY rf.caldavupdate.skip.this.calendar.tooltip "Skip this Calendar; proceed synchronizing with other calendars.">
+<!ENTITY rf.caldavupdate.open.options.sync.tooltip "Open 'Options/Sync' to update the Calendar setting.">
 <!--ENTITY rf.caldav.oc.default "Default Calendar"-->
 <!--ENTITY rf.caldav.oc.additional "Additional Calendar"-->
 <!--ENTITY rf.caldav.valid.account "Replace with valid Remote Calendar account ID - see also (I)"-->
-<!ENTITY rf.caldav.valid.calendar "Erstat med gyldigt Ekstern kalender ID -- se også (I)">
 <!--ENTITY rf.caldav.account.letter "'Calendar_ID' letter; by default the first character from 'Calendar Account Name' or from 'Calendar_ID' box with user entry."-->
+<!--ENTITY rf.caldav.delete.this.account "Delete this account"-->
+<!ENTITY rf.caldav.valid.calendar "Erstat med gyldigt Ekstern kalender ID -- se også (I)">
+<!--ENTITY rf.caldav.sync.docu "See the documentation about"-->
 <!ENTITY rf.caldav.account.userletter "'Kalender_ID' felt; angiv et 'Kalender_ID' bogstav">
 <!ENTITY rf.caldav.account.name "Som standard bruges første bogstav i 'Ekstern kalenders kontonavn' som 'Kalender_ID'.">
 <!ENTITY rf.caldav.pw "Vis/skjul kodeord">
 <!ENTITY rf.caldav.check.account "Kontroller konto">
 <!ENTITY rf.caldav.delete.account "Aktiver for at slette denne konto">
-<!--ENTITY rf.caldav.delete.this.account "Delete this account"-->
+<!--ENTITY rf.caldav.enable.account "Enable Account"-->
 <!ENTITY rf.caldav.sync.support "Synk &rf.caldav.remoteCalendar;/CalDAV">
 <!ENTITY rf.caldav.sync.setup "Opsæt/rediger synk">
 <!ENTITY rf.caldav.sync.help "Hjælp til synk">
 <!ENTITY rf.caldav.sync.help.status "Læs om Reminderfox og eksterne kalendere.">
 <!ENTITY rf.caldav.sync.all "Synk alle 'Aktive' &rf.caldav.remoteCalendar; konti">
-<!--ENTITY rf.caldav.sync.docu "See the documentation about"-->
+<!--ENTITY rf.caldav.use.setup "See 'Configure Remote Calendar' in Documentation"-->
 <!ENTITY rf.caldav.sync.about "Om synk">
 <!ENTITY rf.caldav.remote.server "Eksterne servere (FTP/HTTP)">
 <!ENTITY rf.caldav.calendars "Eksterne kalendere">
@@ -621,12 +639,12 @@
 <!ENTITY rf.caldav.desc6 "Åben hjælp til Eksterne kalendere (CalDAV)">
 <!ENTITY rf.caldav.desc7 "Bemærk">
 <!ENTITY rf.caldav.desc8 "Aktivering af &rf.caldav.remoteCalendar; deaktiverer den eksterne server og dens indstillinger.">
-<!--ENTITY rf.caldav.enable.account "Enable Account"-->
+<!-- CalDAVv2 -->
 <!ENTITY rf.caldav.nodefault "Ingen (brug lokal kalender)">
 <!ENTITY rf.caldav.select.default.account "Ekstern standardkalender til begivenheder">
 <!ENTITY rf.caldav.change.default.account "Vælg ekstern standardkalender">
 <!ENTITY rf.caldav.select.account "Vælg en CalDAV konto">
-<!--ENTITY rf.caldav.use.setup "See 'Configure Remote Calendar' in Documentation"-->
+<!-- ...... ImportHandling ..... -->
 <!ENTITY rf.caldav.add.calendar "Tilføj ny kalender">
 <!ENTITY rf.calDav.davFile "Reminderfox gemmer data i  en ICS fil, og eksterne kalenderdata gemmes i en seperat fil (.ics.dav).">
 <!ENTITY rf.caldav.color.reset "Nulstil kontofarve">
@@ -635,7 +653,7 @@
 <!ENTITY rf.caldav.calendar.setup "Opsæt/rediger kalender">
 <!ENTITY rf.caldav.calendar.activate "Aktivering af '&rf.caldav.remoteCalendar;' sender automatisk nye/ændrede påmindelser til serveren, og synkroniserer med de lokale påmindelser. Se mere i hjælp.">
 <!ENTITY rf.caldav.calendar.syncto "Synk med &rf.caldav.remoteCalendar;">
-<!-- CalDAVv2 -->
+<!--   ....... Options ............. -->
 <!ENTITY rf.help.docupages "Åben hjælpesider.">
 <!ENTITY rf.caldav.google.request "Angiv Google brugernavn og send forespørgsel. Det åbner siden med nøglen, som kopieres og indsættes her.">
 <!ENTITY rf.caldav.account.example "Se eksempler:">
@@ -685,6 +703,7 @@
 <!ENTITY rf.options.calendarDefaults "Kalenderstandarder">
 <!ENTITY rf.options.documentation.Base "Hjælp til grundliggende kalenderindstillinger.">
 <!ENTITY rf.options.file.backup "Backup påmindelser m. dato/tid">
+<!ENTITY rf.options.file.backup.tooltip "Save reminder data to backup location">
 <!ENTITY rf.options.alarms "Alarmer">
 <!ENTITY rf.options.alarm.dialogs "Alarmdialoger">
 <!ENTITY rf.options.date.format "Datoformat">
@@ -692,13 +711,17 @@
 <!ENTITY rf.options.layout.Defaults "Layoutstandarder">
 <!ENTITY rf.options.layout.help "Hjælp til påmindelser/opgaver/lister">
 <!ENTITY rf.options.system.menu "Åben Reminderfox fra hovedmenuen og tilføjelseslinien i programvinduet">
+<!ENTITY rf.options.smartFoxy.display.label "Display Foxy Toolbar Icon">
 <!ENTITY rf.options.smartFoxy "Foxy popup viser antal påmindelser.">
 <!ENTITY rf.options.smartFoxy.none "Nej, skjul dem">
 <!ENTITY rf.options.smartFoxy.todays "kun dagens">
 <!ENTITY rf.options.smartFoxy.todaysUpcoming "dagens og kommende (standard)">
+<!ENTITY rf.options.smartFoxy.todaytext "Display text of today's reminders">
 <!ENTITY rf.options.smartFoxy.badge "Foxy har et popup der viser dagens/kommende påmindelser. Dagens vigtige emner vises med rødt.">
+<!ENTITY rf.options.bow.description "Select on which toolbar to display">
 <!ENTITY rf.options.bow "Vis sløjfe og tekst på statuslinie">
 <!ENTITY rf.options.bow.text "Begræns tekst til">
+<!ENTITY rf.options.bow.position.label "Set position where to display on bar">
 <!ENTITY rf.options.bars "Aktiver statusliniens sløjfeikon m. dagens påmindelser.">
 <!ENTITY rf.options.printing "Udskrivning">
 <!ENTITY rf.options.printing.agenda "Hjælp til udskrift af påmindelser og opgaver og aktuel dagsorden.">

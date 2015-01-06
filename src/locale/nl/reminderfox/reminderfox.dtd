@@ -34,6 +34,8 @@
 <!ENTITY rf.main.quickalarms.label "Snelle alarmen">
 <!ENTITY rf.main.showalerts.label "Waarschuwingen en alarmen uitstellen…">
 <!ENTITY rf.main.help.label "Help">
+<!ENTITY rf.main.help.tooltip "Het hoofdvenster aanpassen">
+<!ENTITY rf.main.tip.label "Tip">
 <!ENTITY rf.main.addreminderforweb.label "&rf.main.addReminder.label;">
 <!ENTITY rf.main.contextmenu.subscribe.label "Abonneren met ReminderFox…">
 <!ENTITY rf.main.contextmenu.addremindercontact.label "&rf.main.addReminder.label;">
@@ -124,6 +126,7 @@
 <!ENTITY rf.add.reminders.context.hidecompleteditems.label "&rf.options.list.reminder.defaults.completed.hide.label;">
 <!ENTITY rf.add.reminders.context.print.label "Afdrukken / Weergave">
 <!ENTITY rf.add.reminders.context.print.ttt "Selecteer sjabloon voor ‘Afdrukken / Weergave’">
+<!ENTITY rf.add.reminders.context.print.agenda.label "Agenda">
 <!ENTITY rf.add.reminders.context.print.all "Alle gebeurtenissen">
 <!ENTITY rf.add.reminders.context.print.selected "Geselecteerde gebeurtenissen">
 <!ENTITY rf.add.reminders.context.print.installation "Installatiedetails">
@@ -165,10 +168,17 @@
 <!ENTITY rf.about.version.label "versie:">
 <!ENTITY rf.about.support.label "Nieuws en ondersteuning">
 <!ENTITY rf.about.close.label "Sluiten">
+<!ENTITY rf.about.updatecheck.label "Controle op updates">
+<!ENTITY rf.about.updatecheck.tooltip "Huidige installatiestatus controleren.">
+<!-- Quick Alarm dialog -->
+<!ENTITY rf.rmfxupdatexpi.drag.link.to.addon.manager.tooltip "Sleep deze koppeling naar de add-onbeheerder. Geef toestemming voor downloaden. Scroll naar ReminderFox op het tabblad ‘Extensies’ en gebruik ‘Nu herstarten’ of ‘Ongedaan maken’.">
+<!ENTITY rf.rmfxupdatexpi.local.version.value "Lokale versie">
+<!ENTITY rf.rmfxupdatexpi.current.version.value "Huidige versie">
+<!ENTITY rf.rmfxupdatexpi.update.reminderfox.value "ReminderFox bijwerken">
 <!ENTITY rf.msgid.title "ReminderFox: aangevraagd bericht openen">
 <!ENTITY rf.msgid.retry.label "Opnieuw proberen">
 <!ENTITY rf.msgid.description "Thunderbird kan dit bericht niet laden. Probeer het a.u.b. opnieuw.">
-<!-- Quick Alarm dialog -->
+<!-- Options dialog -->
 <!ENTITY rf.reminderoptions.addEvent.window.title "Gebeurtenis toevoegen">
 <!ENTITY rf.reminderoptions.date.label "Datum:">
 <!ENTITY rf.reminderoptions.date.start.label "Start:">
@@ -209,7 +219,7 @@
 <!ENTITY rf.reminderoptions.url.launch.tooltip "URL starten">
 <!ENTITY rf.reminderoptions.button.more "Meer &gt;&gt;">
 <!ENTITY rf.reminderoptions.tooltip.selectdate "Datum selecteren">
-<!-- Options dialog -->
+<!-- lists -->
 <!ENTITY rf.alarm.dialog.title "&rf.name; alarm">
 <!ENTITY rf.alarm.button.snooze "Sluimeren">
 <!ENTITY rf.alarm.button.acknowledge "Bevestigen">
@@ -219,22 +229,24 @@
 <!ENTITY rf.alarm.snooze.minutes.label "minuten">
 <!ENTITY rf.alarm.occursIn.label "Gebeurt over:">
 <!ENTITY rf.alarm.snoozeUntil.label "Uitstellen tot:">
-<!-- lists -->
+<!-- network -->
 <!ENTITY rf.suspendalarms.dialog.title "Meldingen en alarmen uitstellen">
 <!ENTITY rf.suspendalarms.dialog.label "Meldingen en alarmen worden uitgesteld tot hervatting.">
 <!ENTITY rf.suspendalarms.resume.label "Meldingen en alarmen automatisch hervatten over:">
 <!ENTITY rf.suspendalarms.resume.time.info "Hervatten om:">
-<!-- network -->
+<!-- Upload dialog -->
 <!ENTITY rf.quickalarm.dialog.title "Snel alarm">
 <!ENTITY rf.quickalarm.notify.label "&rf.reminderoptions.notify.label;">
 <!ENTITY rf.quickalarm.notify.fromnow "vanaf nu">
 <!ENTITY rf.quickalarm.alarmAt.label "Alarm om:">
-<!-- Upload dialog -->
+<!-- Download dialog -->
 <!ENTITY rf.options.title.label "&rf.name; opties">
 <!ENTITY rf.options.tab.General "Algemeen">
+<!ENTITY rf.options.tab.Access "Toegang">
 <!ENTITY rf.options.tab.Dialog "Hoofdvenster">
 <!ENTITY rf.options.tab.reminderEdit "Herinneringsvenster">
 <!ENTITY rf.options.tab.notifications "Notificaties">
+<!ENTITY rf.options.tab.Sync "Sync">
 <!ENTITY rf.options.tab.alarms "Alarmen">
 <!ENTITY rf.options.todoLists "Lijsten">
 <!ENTITY rf.options.addlist.label "Aangepaste lijst toevoegen">
@@ -304,6 +316,7 @@
 <!ENTITY rf.options.list.calendar.size.large.label "Groot">
 <!ENTITY rf.options.list.startingday.label "Eerste dag van de week:">
 <!ENTITY rf.options.list.calendar.showWeekNumber.label "Weeknummers weergeven">
+<!ENTITY rf.options.list.calendar.showWeekNumber.none "Geen">
 <!ENTITY rf.options.list.calendar.showWeekNumber.default "Standaard">
 <!ENTITY rf.options.list.calendar.showWeekNumber.iso8601 "ISO 8601">
 <!ENTITY rf.options.list.dateandtime.label "Datum en tijd">
@@ -367,7 +380,7 @@
 <!ENTITY rf.options.importexport.export.label "Exporteren">
 <!ENTITY rf.options.importexportpreferences.label "Voorkeuren im- en exporteren">
 <!ENTITY rf.options.importexport.category.label "Optioneel kunt aanvullende categorieën instellen voor elke van de door u geïmporteerde gebeurtenissen. Dit kan helpen bij het filteren en sorteren. U kunt bijvoorbeeld bij importeren van een lijst met vakantiedagen elk van deze gebeurtenissen labellen als ‘vakantie’ en vervolgens snel op die categorie filteren om een lijst met vakantiedagen te zien.">
-<!-- Download dialog -->
+<!-- Upcoming Reminders Label Options dialog -->
 <!ENTITY rf.options.list.reminder.lists.label "Lijsten">
 <!ENTITY rf.options.list.reminder.lists.manage.label "Lijsten beheren">
 <!ENTITY rf.options.list.reminder.lists.button.add.label "&rf.add.addTodo.addbutton.label;">
@@ -379,7 +392,7 @@
 <!ENTITY rf.options.lists.description "Naast herinneringen en ToDo’s kunt u ook aanvullende lijsten toevoegen, die in aparte tabbladen worden getoond. U kunt lijsten bijhouden als: Films (voor aankomende filmreleases), Albums (voor aankomende muziekreleases), Boodschappen (om de dingen die u nodig hebt bij te houden), of iets anders waarvoor u een lijst kunt gebruiken.">
 <!ENTITY rf.options.lists.nameError "Naam=‘ToDo’s’ or ‘Herinneringen’ en ‘,’ of ‘:’ zijn hier niet toegestaan!">
 <!ENTITY rf.options.lists.addedit "Gebruikerslijsten toevoegen/bewerken">
-<!-- Upcoming Reminders Label Options dialog -->
+<!-- Calendar -->
 <!ENTITY rf.options.synchronization.description.label "Adres voor synchronisatie">
 <!ENTITY rf.options.synchronization.address.description "Voer een FTP- of WebDAV-adres van een ReminderFox-bestand op een andere computer in">
 <!ENTITY rf.options.synchronization.address.example.description "Voorbeeld: ftp://www.mijndomein.nl/reminders.ics">
@@ -394,11 +407,11 @@
 <!ENTITY rf.options.synchronization.label "Synchroniseren">
 <!ENTITY rf.options.synchronization.auto.label "Herinneringen automatisch met het netwerk synchroniseren">
 <!ENTITY rf.options.synchronization.auto.description "Kies deze optie om automatisch herinneringen met andere computers te synchroniseren.">
-<!-- Calendar -->
-<!ENTITY rf.upload.tile.label "Uploaden">
 <!-- Time names -->
-<!ENTITY rf.download.tile.label "Downloaden">
+<!ENTITY rf.upload.tile.label "Uploaden">
 <!-- Month Names -->
+<!ENTITY rf.download.tile.label "Downloaden">
+<!-- Day short names -->
 <!ENTITY rf.upcoming.label.options.title.label "Opties voor herinneringslabels">
 <!ENTITY rf.upcoming.label.options.label "Label">
 <!ENTITY rf.upcoming.label.reminder.description "De omschrijving van de herinnering">
@@ -415,13 +428,13 @@
 <!ENTITY rf.upcoming.label.days.until "Het aantal dagen tot aan de herinnering">
 <!ENTITY rf.upcoming.label.column.variable "Variabele">
 <!ENTITY rf.upcoming.label.column.description "Omschrijving">
-<!-- Day short names -->
+<!-- iCal Schedule  -->
 <!ENTITY calendar.week.number.label "WK">
 <!ENTITY calendar.year.previous "Vorig jaar">
 <!ENTITY calendar.year.next "Volgend jaar">
 <!ENTITY calendar.month.previous "Vorige maand">
 <!ENTITY calendar.month.next "Volgende maand">
-<!-- iCal Schedule  -->
+<!-- Invitation, MAIL and ADDRESSBOOK -->
 <!ENTITY time.0 "0:00">
 <!ENTITY time.1 "1:00">
 <!ENTITY time.2 "2:00">
@@ -446,7 +459,7 @@
 <!ENTITY time.21 "21:00">
 <!ENTITY time.22 "22:00">
 <!ENTITY time.23 "23:00">
-<!-- Invitation, MAIL and ADDRESSBOOK -->
+<!-- Views -->
 <!ENTITY month.1 "januari">
 <!ENTITY month.2 "februari">
 <!ENTITY month.3 "maart">
@@ -525,7 +538,7 @@
 <!ENTITY mail.send.withreminder.selection3 "Selecteer een herinnering en druk op">
 <!ENTITY mail.send.withreminder.replyAttendee "Agenda/Uitnodiging - Selectie van aanwezige">
 <!ENTITY mail.send.reminder.reference.title "Herinnering referentielijst">
-<!-- Views -->
+<!-- CalDAV -->
 <!ENTITY rf.views.title "ReminderFox - ‘Beeld’ bewerken">
 <!ENTITY rf.views.label "‘Beeld’en bewerken">
 <!ENTITY rf.views.view.header "‘Beeld’en">
@@ -580,31 +593,36 @@
 <!ENTITY rf.calendar.layout.ListCalendar "Lijst en kalender">
 <!ENTITY rf.calendar.layout.List "Lijst">
 <!ENTITY rf.calendar.layout.Calendar "Kalender">
-<!-- CalDAV -->
+<!--ENTITY rf.caldav.gcal.privat "Google Calendar Private (Events)"-->
 <!ENTITY rf.caldav.remoteCalendar "Agenda op server">
 <!ENTITY rf.caldav.dialog.title "&rf.caldav.remoteCalendar; - Accountbehandeling">
 <!ENTITY rf.caldav.documentation.i "Lees Gebruik en Instellingen van ‘&rf.caldav.remoteCalendar;’ in de documentatie">
 <!ENTITY rf.caldav.serverselection "Selecteer &rf.caldav.remoteCalendar;/Gebeurtenissenserver in lijst">
 <!ENTITY rf.caldav.selectserver "Selecteer &rf.caldav.remoteCalendar;">
-<!--ENTITY rf.caldav.gcal.privat "Google Calendar Private (Events)"-->
 <!--ENTITY rf.caldav.gcal.group "Google Calendar Group (Events)"-->
+<!ENTITY rf.caldavupdate.next.calendars.label "Volgende kalenders">
+<!ENTITY rf.caldavupdate.configure.calendar.label "Kalender instellen">
+<!ENTITY rf.caldavupdate.skip.this.calendar.tooltip "Deze kalender overslaan; overige kalenders synchroniseren.">
+<!ENTITY rf.caldavupdate.open.options.sync.tooltip "Open ‘Opties/Sync’ om de Kalenderinstellingen bij te werken.">
 <!--ENTITY rf.caldav.oc.default "Default Calendar"-->
 <!--ENTITY rf.caldav.oc.additional "Additional Calendar"-->
 <!--ENTITY rf.caldav.valid.account "Replace with valid Remote Calendar account ID - see also (I)"-->
-<!ENTITY rf.caldav.valid.calendar "Vervangen door geldig Serveragenda-ID (zie ook (I)">
 <!--ENTITY rf.caldav.account.letter "'Calendar_ID' letter; by default the first character from 'Calendar Account Name' or from 'Calendar_ID' box with user entry."-->
+<!--ENTITY rf.caldav.delete.this.account "Delete this account"-->
+<!ENTITY rf.caldav.valid.calendar "Vervangen door geldig Serveragenda-ID (zie ook (I)">
+<!--ENTITY rf.caldav.sync.docu "See the documentation about"-->
 <!ENTITY rf.caldav.account.userletter "‘Calendar_ID’-veld; voor een door de gebruiker opgegeven ‘Calendar_ID’-letter in">
 <!ENTITY rf.caldav.account.name "De eerste letter van ‘Serveragenda-accountnaam’ zal standaard worden gebruikt voor ‘Calendar_ID’.">
 <!ENTITY rf.caldav.pw "Wachtwoord weergeven/verbergen">
 <!ENTITY rf.caldav.check.account "Account controleren">
 <!ENTITY rf.caldav.delete.account "Inschakelen om deze account te verwijderen">
-<!--ENTITY rf.caldav.delete.this.account "Delete this account"-->
+<!--ENTITY rf.caldav.enable.account "Enable Account"-->
 <!ENTITY rf.caldav.sync.support "&rf.caldav.remoteCalendar;/CalDAV synchroniseren">
 <!ENTITY rf.caldav.sync.setup "Instellen/bewerken synchronisatie">
 <!ENTITY rf.caldav.sync.help "Hulp bij eerste synchronisatie">
 <!ENTITY rf.caldav.sync.help.status "Lees details over hoe ReminderFox kan worden ingesteld met serveragenda’s.">
 <!ENTITY rf.caldav.sync.all "Alle ‘actieve’ &rf.caldav.remoteCalendar;-accounts synchroniseren">
-<!--ENTITY rf.caldav.sync.docu "See the documentation about"-->
+<!--ENTITY rf.caldav.use.setup "See 'Configure Remote Calendar' in Documentation"-->
 <!ENTITY rf.caldav.sync.about "Over synchronisatie">
 <!ENTITY rf.caldav.remote.server "Servers (FTP/HTTP)">
 <!ENTITY rf.caldav.calendars "Serveragenda’s">
@@ -621,12 +639,12 @@
 <!ENTITY rf.caldav.desc6 "Documentatie serveragenda’s (CalDAV-service) openen">
 <!ENTITY rf.caldav.desc7 "Belangrijke opmerking">
 <!ENTITY rf.caldav.desc8 "Door een &rf.caldav.remoteCalendar; in te schakelen worden ‘Server’ en bijbehorende instellingen uitgeschakeld.">
-<!--ENTITY rf.caldav.enable.account "Enable Account"-->
+<!-- CalDAVv2 -->
 <!ENTITY rf.caldav.nodefault "Geen (lokale agenda gebruiken)">
 <!ENTITY rf.caldav.select.default.account "Standaard serveragenda bij toevoegen gebeurtenissen">
 <!ENTITY rf.caldav.change.default.account "Selecteer standaard serveragenda">
 <!ENTITY rf.caldav.select.account "Selecteer een CalDAV-account">
-<!--ENTITY rf.caldav.use.setup "See 'Configure Remote Calendar' in Documentation"-->
+<!-- ...... ImportHandling ..... -->
 <!ENTITY rf.caldav.add.calendar "Nieuwe agenda toevoegen">
 <!ENTITY rf.calDav.davFile "ReminderFox-gegevens worden in een ICS-bestand opgeslagen, de details van de serverkalender in een extra bestand (met de extensie .ics.dav).">
 <!ENTITY rf.caldav.color.reset "Accountkleur resetten">
@@ -635,7 +653,7 @@
 <!ENTITY rf.caldav.calendar.setup "Agendadetails instellen/bewerken">
 <!ENTITY rf.caldav.calendar.activate "Door een ‘&rf.caldav.remoteCalendar;’ te activeren worden nieuwe of bewerkte herinneringen automatisch naar het serversysteem gestuurd en worden lokale en server-herinneringen gesynchroniseerd. Lees voor details de documentatie.">
 <!ENTITY rf.caldav.calendar.syncto "Synchroniseren met &rf.caldav.remoteCalendar;">
-<!-- CalDAVv2 -->
+<!--   ....... Options ............. -->
 <!ENTITY rf.help.docupages "Documentatie voor gedetailleerde hulppagina’s openen.">
 <!ENTITY rf.caldav.google.request "Voer de Google-accountnaam in en gebruik [Aanvragen]. Dit opent een Google-pagina waar u een aanmeldtoken kunt opvragen. Kopieer dit en ga hier met [Plakken] verder.">
 <!ENTITY rf.caldav.account.example "Zie ook voorbeelden:">
@@ -685,6 +703,7 @@
 <!ENTITY rf.options.calendarDefaults "Standaardinstellingen kalender">
 <!ENTITY rf.options.documentation.Base "Documentatie voor basis-kalenderinstellingen openen.">
 <!ENTITY rf.options.file.backup "Back-up met datum/tijd van herinneringen maken">
+<!ENTITY rf.options.file.backup.tooltip "Herninneringsgegevens op back-uplocatie opslaan.">
 <!ENTITY rf.options.alarms "Alarminstellingen">
 <!ENTITY rf.options.alarm.dialogs "Alarmdialoogvensters">
 <!ENTITY rf.options.date.format "Datumopmaak">
@@ -692,13 +711,17 @@
 <!ENTITY rf.options.layout.Defaults "Standaardopmaak">
 <!ENTITY rf.options.layout.help "Zie de documentatie over Herinneringen/ToDo/Lijsten-tabbladen">
 <!ENTITY rf.options.system.menu "ReminderFox openen met hoofdmenu en add-onbalk in het venster van de toepassing (FX/TB)">
+<!ENTITY rf.options.smartFoxy.display.label "Foxy-werkbalkpictogram weergeven">
 <!ENTITY rf.options.smartFoxy "Foxy-badge met aantal herinneringen weergeven.">
 <!ENTITY rf.options.smartFoxy.none "Nee, verbergen">
 <!ENTITY rf.options.smartFoxy.todays "alleen van vandaag">
 <!ENTITY rf.options.smartFoxy.todaysUpcoming "vandaag en toekomstig (standaard)">
+<!ENTITY rf.options.smartFoxy.todaytext "Tekst van herinneringen van vandaag weergeven">
 <!ENTITY rf.options.smartFoxy.badge "Foxy heeft een badge met het aantal herinneringen van vandaag en in de nabije toekomst. De badge is rood als er vandaag belangrijke herinneringen zijn.">
+<!ENTITY rf.options.bow.description "Selecteer werkbalk voor weergave">
 <!ENTITY rf.options.bow "‘Boog’ en tekst in statusbalk weergeven">
 <!ENTITY rf.options.bow.text "Tekst beperken tot">
+<!ENTITY rf.options.bow.position.label "Positie op balk instellen">
 <!ENTITY rf.options.bars "Weergave statuspictogram ‘Boog’ en herinneringen van vandaag in add-onbalk / statusbalk inschakelen.">
 <!ENTITY rf.options.printing "Afdrukken">
 <!ENTITY rf.options.printing.agenda "Documentatie voor het afdrukken van Herinneringen en ToDo’s en hoe u een ‘Dagelijkse agenda’ kunt krijgen.">

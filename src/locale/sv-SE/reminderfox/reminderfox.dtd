@@ -34,6 +34,8 @@
 <!ENTITY rf.main.quickalarms.label "Snabbalarm">
 <!ENTITY rf.main.showalerts.label "Pausa aviseringar och alarm">
 <!ENTITY rf.main.help.label "Hjälp">
+<!ENTITY rf.main.help.tooltip "Customize the Main Dialog">
+<!ENTITY rf.main.tip.label "Tip">
 <!ENTITY rf.main.addreminderforweb.label "&rf.main.addReminder.label;">
 <!ENTITY rf.main.contextmenu.subscribe.label "Prenumerera med ReminderFox…">
 <!ENTITY rf.main.contextmenu.addremindercontact.label "&rf.main.addReminder.label;">
@@ -124,6 +126,7 @@
 <!ENTITY rf.add.reminders.context.hidecompleteditems.label "Dölj slutförda objekt">
 <!ENTITY rf.add.reminders.context.print.label "Skriv ut/Visa">
 <!ENTITY rf.add.reminders.context.print.ttt "Välj mall för &quot;Skriv ut/Visa&quot;">
+<!ENTITY rf.add.reminders.context.print.agenda.label "Agenda">
 <!ENTITY rf.add.reminders.context.print.all "Alla händelser">
 <!ENTITY rf.add.reminders.context.print.selected "Markerade händelser">
 <!ENTITY rf.add.reminders.context.print.installation "Installationsinformation">
@@ -165,10 +168,17 @@
 <!ENTITY rf.about.version.label "version:">
 <!ENTITY rf.about.support.label "Nyheter och support">
 <!ENTITY rf.about.close.label "Stäng">
+<!ENTITY rf.about.updatecheck.label "Update Check">
+<!ENTITY rf.about.updatecheck.tooltip "Check current installation status.">
+<!-- Snabbalarm dialog -->
+<!ENTITY rf.rmfxupdatexpi.drag.link.to.addon.manager.tooltip "Drag this link to the 'Add-ons Manager' window. Allow downloading. On tab:'Extensions' scroll to Reminderfox and use 'Restart now' or 'Undo'.">
+<!ENTITY rf.rmfxupdatexpi.local.version.value "Local Version">
+<!ENTITY rf.rmfxupdatexpi.current.version.value "Current Version">
+<!ENTITY rf.rmfxupdatexpi.update.reminderfox.value "Update Reminderfox">
 <!ENTITY rf.msgid.title "ReminderFox: Öppnar det begärda meddelandet">
 <!ENTITY rf.msgid.retry.label "Försök igen">
 <!ENTITY rf.msgid.description "Thunderbird kunde inte läsa in detta meddelande.  Försök igen.">
-<!-- Snabbalarm dialog -->
+<!-- Options dialog -->
 <!ENTITY rf.reminderoptions.addEvent.window.title "Lägg till händelse">
 <!ENTITY rf.reminderoptions.date.label "Datum:">
 <!ENTITY rf.reminderoptions.date.start.label "Börjar:">
@@ -209,7 +219,7 @@
 <!ENTITY rf.reminderoptions.url.launch.tooltip "Öppna URL">
 <!ENTITY rf.reminderoptions.button.more "Fler &gt;&gt;">
 <!ENTITY rf.reminderoptions.tooltip.selectdate "Välj datum">
-<!-- Options dialog -->
+<!-- lists -->
 <!ENTITY rf.alarm.dialog.title "&rf.name;-alarm">
 <!ENTITY rf.alarm.button.snooze "Viloläge">
 <!ENTITY rf.alarm.button.acknowledge "Bekräfta">
@@ -219,22 +229,24 @@
 <!ENTITY rf.alarm.snooze.minutes.label "minuter">
 <!ENTITY rf.alarm.occursIn.label "Inträffar om:">
 <!ENTITY rf.alarm.snoozeUntil.label "Viloläge t.o.m.:">
-<!-- lists -->
+<!-- network -->
 <!ENTITY rf.suspendalarms.dialog.title "Pausa aviseringar och alarm">
 <!ENTITY rf.suspendalarms.dialog.label "Aviseringar och alarm kommer att vara pausade tills dess de återupptas.">
 <!ENTITY rf.suspendalarms.resume.label "Återuppta aviseringar och alarm automatiskt om:">
 <!ENTITY rf.suspendalarms.resume.time.info "Återuppta kl.:">
-<!-- network -->
+<!-- Upload dialog -->
 <!ENTITY rf.quickalarm.dialog.title "Snabbalarm">
 <!ENTITY rf.quickalarm.notify.label "&rf.reminderoptions.notify.label;">
 <!ENTITY rf.quickalarm.notify.fromnow "fr.o.m. nu">
 <!ENTITY rf.quickalarm.alarmAt.label "Alarmtid:">
-<!-- Upload dialog -->
+<!-- Download dialog -->
 <!ENTITY rf.options.title.label "Inställningar för &rf.name;">
 <!ENTITY rf.options.tab.General "Allmänt">
+<!ENTITY rf.options.tab.Access "Access">
 <!ENTITY rf.options.tab.Dialog "Huvuddialogfönster">
 <!ENTITY rf.options.tab.reminderEdit "Påminnelsedialogfönster">
 <!ENTITY rf.options.tab.notifications "Aviseringar">
+<!ENTITY rf.options.tab.Sync "Sync">
 <!ENTITY rf.options.tab.alarms "Alarm">
 <!ENTITY rf.options.todoLists "Listor">
 <!ENTITY rf.options.addlist.label "Lägg till egen lista">
@@ -304,6 +316,7 @@
 <!ENTITY rf.options.list.calendar.size.large.label "Stor">
 <!ENTITY rf.options.list.startingday.label "Första dagen i veckan:">
 <!ENTITY rf.options.list.calendar.showWeekNumber.label "Visa veckonummer">
+<!ENTITY rf.options.list.calendar.showWeekNumber.none "None">
 <!ENTITY rf.options.list.calendar.showWeekNumber.default "Standard">
 <!ENTITY rf.options.list.calendar.showWeekNumber.iso8601 "ISO 8601">
 <!ENTITY rf.options.list.dateandtime.label "Datum och tid">
@@ -367,7 +380,7 @@
 <!ENTITY rf.options.importexport.export.label "Exportera">
 <!ENTITY rf.options.importexportpreferences.label "Importera och exportera inställningar">
 <!ENTITY rf.options.importexport.category.label "Du kan om du vill ange flera kategorier för varje importerad händelse.  Det kan underlätta vid filtrering och sortering.  Om du t.ex. importerar en lista över helgdagar, kan du etikettera alla händelser med &quot;helgdag&quot; och sedan snabbt filtrera efter den kategorin för att se en lista över helgdagar.">
-<!-- Download dialog -->
+<!-- Upcoming reminders Label Options dialog -->
 <!ENTITY rf.options.list.reminder.lists.label "Listor">
 <!ENTITY rf.options.list.reminder.lists.manage.label "Hantera listor">
 <!ENTITY rf.options.list.reminder.lists.button.add.label "&rf.add.addTodo.addbutton.label;">
@@ -379,7 +392,7 @@
 <!ENTITY rf.options.lists.description "Förutom påminnelser och att göra-poster, kan du lägga till ytterligare listor som kommer att visas som separata flikar.  Du kan t.ex. ha listor som: Filmer (för kommande filmpremiärer), Album (för kommande skivutgåvor), Handla (för att hålla reda på matinköp) eller något annat som passar som en lista.  Du kan även börja prenumerera på en fjärrkalender när du lägger till en ny lista.">
 <!ENTITY rf.options.lists.nameError "Namn=&quot;Att göra&quot;, &quot;Påminnelser&quot;, kommatecken (,) och kolon (:) tillåts inte här!">
 <!ENTITY rf.options.lists.addedit "Lägg till/Redigera användarlistor">
-<!-- Upcoming reminders Label Options dialog -->
+<!-- Calendar -->
 <!ENTITY rf.options.synchronization.description.label "Synkroniseringsadress">
 <!ENTITY rf.options.synchronization.address.description "Ange en FTP- eller WebDAV-adress för en ReminderFox-fjärrfil.">
 <!ENTITY rf.options.synchronization.address.example.description "Exempel: ftp://www.mindoman.com/paminnelser.ics">
@@ -394,11 +407,11 @@
 <!ENTITY rf.options.synchronization.label "Synkronisering">
 <!ENTITY rf.options.synchronization.auto.label "Synkronisera automatiskt påminnelser med nätverk">
 <!ENTITY rf.options.synchronization.auto.description "Välj detta alternativ för att automatiskt hålla dina fjärr- och lokala påminnelser synkroniserade.">
-<!-- Calendar -->
-<!ENTITY rf.upload.tile.label "Överför">
 <!-- Time names -->
-<!ENTITY rf.download.tile.label "Hämta">
+<!ENTITY rf.upload.tile.label "Överför">
 <!-- Month Names -->
+<!ENTITY rf.download.tile.label "Hämta">
+<!-- Day short names -->
 <!ENTITY rf.upcoming.label.options.title.label "Etikettalternativ">
 <!ENTITY rf.upcoming.label.options.label "Etikett">
 <!ENTITY rf.upcoming.label.reminder.description "Beskrivning av påminnelsen">
@@ -415,13 +428,13 @@
 <!ENTITY rf.upcoming.label.days.until "Antal dagar som återstår till påminnelsen">
 <!ENTITY rf.upcoming.label.column.variable "Variabel">
 <!ENTITY rf.upcoming.label.column.description "Beskrivning">
-<!-- Day short names -->
+<!-- iCal Schedule  -->
 <!ENTITY calendar.week.number.label "v.">
 <!ENTITY calendar.year.previous "Föregående år">
 <!ENTITY calendar.year.next "Nästa år">
 <!ENTITY calendar.month.previous "Föregående månad">
 <!ENTITY calendar.month.next "Nästa månad">
-<!-- iCal Schedule  -->
+<!-- Invitation, MAIL and ADDRESSBOOK -->
 <!ENTITY time.0 "12:00 f.m.">
 <!ENTITY time.1 "1:00 f.m.">
 <!ENTITY time.2 "2:00 f.m.">
@@ -446,7 +459,7 @@
 <!ENTITY time.21 "9:00 e.m.">
 <!ENTITY time.22 "10:00 e.m.">
 <!ENTITY time.23 "11:00 e.m.">
-<!-- Invitation, MAIL and ADDRESSBOOK -->
+<!-- Views -->
 <!ENTITY month.1 "januari">
 <!ENTITY month.2 "februari">
 <!ENTITY month.3 "mars">
@@ -471,7 +484,7 @@
 <!ENTITY month.10.MMM "OKT">
 <!ENTITY month.11.MMM "NOV">
 <!ENTITY month.12.MMM "DEC">
-<!-- Views -->
+<!-- Invitation, MAIL and ADDRESSBOOK -->
 <!ENTITY day.1.DDD "SÖN">
 <!ENTITY day.2.DDD "MÅN">
 <!ENTITY day.3.DDD "TIS">
@@ -486,7 +499,7 @@
 <!ENTITY day.5.name "torsdag">
 <!ENTITY day.6.name "fredag">
 <!ENTITY day.7.name "lördag">
-<!-- Invitation, MAIL and ADDRESSBOOK -->
+<!-- Views -->
 <!ENTITY rf.schedule.scheduleinfo "Schema">
 <!ENTITY rf.schedule.showall.attendees "Visa alla deltagare">
 <!ENTITY rf.schedule.organizer "Organisatör">
@@ -525,7 +538,7 @@
 <!ENTITY mail.send.withreminder.selection3 "Markera en påminnelse och klicka">
 <!ENTITY mail.send.withreminder.replyAttendee "Schema/Inbjudan - Val av deltagare">
 <!ENTITY mail.send.reminder.reference.title "Påminnelsereferenslista">
-<!-- Views -->
+<!-- CalDAV -->
 <!ENTITY rf.views.title "ReminderFox - Vyredigeraren">
 <!ENTITY rf.views.label "Redigera vyer">
 <!ENTITY rf.views.view.header "Vyer">
@@ -580,31 +593,36 @@
 <!ENTITY rf.calendar.layout.ListCalendar "Lista och kalender">
 <!ENTITY rf.calendar.layout.List "Lista">
 <!ENTITY rf.calendar.layout.Calendar "Kalender">
-<!-- CalDAV -->
+<!--ENTITY rf.caldav.gcal.privat "Google Kalender privat (händelser)"-->
 <!ENTITY rf.caldav.remoteCalendar "Fjärrkalender">
 <!ENTITY rf.caldav.dialog.title "Hantera fjärrkalenderkonto">
 <!ENTITY rf.caldav.documentation.i "Läs dokumentationen om användning och konfiguration av fjärrkalendrar">
 <!ENTITY rf.caldav.serverselection "Välj fjärrkalender-/händelseserver ur listan">
 <!ENTITY rf.caldav.selectserver "Välj fjärrkalender">
-<!--ENTITY rf.caldav.gcal.privat "Google Kalender privat (händelser)"-->
 <!--ENTITY rf.caldav.gcal.group "Google Kalender grupp (händelser)"-->
+<!ENTITY rf.caldavupdate.next.calendars.label "Next Calendars">
+<!ENTITY rf.caldavupdate.configure.calendar.label "Configure Calendar">
+<!ENTITY rf.caldavupdate.skip.this.calendar.tooltip "Skip this Calendar; proceed synchronizing with other calendars.">
+<!ENTITY rf.caldavupdate.open.options.sync.tooltip "Open 'Options/Sync' to update the Calendar setting.">
 <!--ENTITY rf.caldav.oc.default "Standardkalender"-->
 <!--ENTITY rf.caldav.oc.additional "Ytterligare kalender"-->
 <!--ENTITY rf.caldav.valid.account "Ersätt med giltigt konto-ID för fjärrkalender - se även (I)"-->
-<!ENTITY rf.caldav.valid.calendar "Ersätt med giltigt fjärrkalender-ID -- se även (I)">
 <!--ENTITY rf.caldav.account.letter "&quot;Calendar_ID&quot;-bokstav; som standard det första tecknet i &quot;Kalenderkontonamn&quot; eller rutan &quot;Calendar_ID&quot; med användardefinierad indata."-->
+<!--ENTITY rf.caldav.delete.this.account "Ta bort detta konto"-->
+<!ENTITY rf.caldav.valid.calendar "Ersätt med giltigt fjärrkalender-ID -- se även (I)">
+<!--ENTITY rf.caldav.sync.docu "Läs dokumentationen om"-->
 <!ENTITY rf.caldav.account.userletter "&quot;Calendar_ID&quot;-rutan: Ange en användardefinierad &quot;Calendar_ID&quot;-bokstav">
 <!ENTITY rf.caldav.account.name "Fjärrkalenderkontonamnets initialbokstav kommer som standard att användas som &quot;Calendar_ID&quot;.">
 <!ENTITY rf.caldav.pw "Visa/Dölj lösenord">
 <!ENTITY rf.caldav.check.account "Kontrollera konto">
 <!ENTITY rf.caldav.delete.account "Aktivera för att ta bort detta konto">
-<!--ENTITY rf.caldav.delete.this.account "Ta bort detta konto"-->
+<!--ENTITY rf.caldav.enable.account "Aktivera konto"-->
 <!ENTITY rf.caldav.sync.support "Synkronisera fjärrkalender/CalDAV">
 <!ENTITY rf.caldav.sync.setup "Konfigurera/Redigera synkronisering">
 <!ENTITY rf.caldav.sync.help "Hjälp om synkronisering">
 <!ENTITY rf.caldav.sync.help.status "Läs om hur du konfigurerar ReminderFox med fjärrkalendrar.">
 <!ENTITY rf.caldav.sync.all "Synkronisera alla aktiva fjärrkalenderkonton">
-<!--ENTITY rf.caldav.sync.docu "Läs dokumentationen om"-->
+<!--ENTITY rf.caldav.use.setup "Läs &quot;Configure Remote Calendar&quot; i dokumentationen"-->
 <!ENTITY rf.caldav.sync.about "Om synkronisering">
 <!ENTITY rf.caldav.remote.server "Fjärrservrar (FTP/HTTP)">
 <!ENTITY rf.caldav.calendars "Fjärrkalendrar">
@@ -621,12 +639,12 @@
 <!ENTITY rf.caldav.desc6 "Öppna dokumentationen om fjärrkalendrar (CalDAV-tjänst)">
 <!ENTITY rf.caldav.desc7 "Viktigt meddelande">
 <!ENTITY rf.caldav.desc8 "Aktivering av en fjärrkalender, vilken som helst, kommer att inaktivera fjärrservern och dess inställningar.">
-<!--ENTITY rf.caldav.enable.account "Aktivera konto"-->
+<!-- CalDAVv2 -->
 <!ENTITY rf.caldav.nodefault "Ingen (använd lokal kalender)">
 <!ENTITY rf.caldav.select.default.account "Standardfjärrkalender när händelser läggs till">
 <!ENTITY rf.caldav.change.default.account "Välj standardfjärrkalender">
 <!ENTITY rf.caldav.select.account "Välj ett CalDAV-konto">
-<!--ENTITY rf.caldav.use.setup "Läs &quot;Configure Remote Calendar&quot; i dokumentationen"-->
+<!-- ...... ImportHandling ..... -->
 <!ENTITY rf.caldav.add.calendar "Lägg till ny kalender">
 <!ENTITY rf.calDav.davFile "ReminderFox data lagras i en ICS-fil, fjärrkalenderinformationen i en annan fil (med filtillägget .ics.dav).">
 <!ENTITY rf.caldav.color.reset "Återställ kontofärg">
@@ -635,7 +653,7 @@
 <!ENTITY rf.caldav.calendar.setup "Konfigurera/Redigera kalenderinformation">
 <!ENTITY rf.caldav.calendar.activate "Vid aktivering av en fjärrkalender skickas automatiskt nya och redigerade påminnelser till fjärrsystemet för synkronisering med eventuella fjärrpåminnelser. Läs mer i dokumentationen.">
 <!ENTITY rf.caldav.calendar.syncto "Synkronisera till fjärrkalender">
-<!-- CalDAVv2 -->
+<!--   ....... Options ............. -->
 <!ENTITY rf.help.docupages "Öppna dokumentationen om detaljerade hjälpsidor.">
 <!ENTITY rf.caldav.google.request "Ange namnet på Google-kontot och använd [Begäran]. Det öppnar en Google-sida där du kan hämta ett inloggningstoken. Kopiera det och [Klistra in] det här.">
 <!ENTITY rf.caldav.account.example "Några exempel:">
@@ -685,6 +703,7 @@
 <!ENTITY rf.options.calendarDefaults "Kalenderstandarder">
 <!ENTITY rf.options.documentation.Base "Öppna dokumentationen om grundläggande kalenderinställningar.">
 <!ENTITY rf.options.file.backup "Säkerhetskopiera påminnelser med datum- och tidsstämpel">
+<!ENTITY rf.options.file.backup.tooltip "Save reminder data to backup location">
 <!ENTITY rf.options.alarms "Alarmförval">
 <!ENTITY rf.options.alarm.dialogs "Alarmdialogfönster">
 <!ENTITY rf.options.date.format "Datumformat">
@@ -692,13 +711,17 @@
 <!ENTITY rf.options.layout.Defaults "Layoutstandarder">
 <!ENTITY rf.options.layout.help "Läs dokumentationen om fliken Påminnelse/Att göra/Listor">
 <!ENTITY rf.options.system.menu "Öppna ReminderFox via huvudmenyn och tilläggsfältet">
+<!ENTITY rf.options.smartFoxy.display.label "Display Foxy Toolbar Icon">
 <!ENTITY rf.options.smartFoxy "Foxy-skylten visar antalet påminnelser.">
 <!ENTITY rf.options.smartFoxy.none "Nej, dölj skylten">
 <!ENTITY rf.options.smartFoxy.todays "Endast dagens">
 <!ENTITY rf.options.smartFoxy.todaysUpcoming "Dagens och kommande (standard)">
+<!ENTITY rf.options.smartFoxy.todaytext "Display text of today's reminders">
 <!ENTITY rf.options.smartFoxy.badge "Foxy har en skylt som visar antalet påminnelser, för dagen och kommande. Skylten visar dagens viktiga påminnelser i rött.">
+<!ENTITY rf.options.bow.description "Select on which toolbar to display">
 <!ENTITY rf.options.bow "Visa ikon och text i statusfältet">
 <!ENTITY rf.options.bow.text "Begränsa text till">
+<!ENTITY rf.options.bow.position.label "Set position where to display on bar">
 <!ENTITY rf.options.bars "Aktivera visning av en ikon med dagens  påminnelser i tilläggsfältet/statusfältet.">
 <!ENTITY rf.options.printing "Utskrift">
 <!ENTITY rf.options.printing.agenda "Dokumentation om utskrift av påminnelser och att göra-poster, samt hur du skapar ett dagsschema.">

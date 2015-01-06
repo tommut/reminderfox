@@ -34,6 +34,8 @@
 <!ENTITY rf.main.quickalarms.label "빠른 알람">
 <!ENTITY rf.main.showalerts.label "경보 보이기">
 <!ENTITY rf.main.help.label "도움말">
+<!ENTITY rf.main.help.tooltip "Customize the Main Dialog">
+<!ENTITY rf.main.tip.label "Tip">
 <!ENTITY rf.main.addreminderforweb.label "기념일 추가...">
 <!ENTITY rf.main.contextmenu.subscribe.label "ReminderFox로 구독...">
 <!ENTITY rf.main.contextmenu.addremindercontact.label "&rf.main.addReminder.label;">
@@ -124,6 +126,7 @@
 <!ENTITY rf.add.reminders.context.hidecompleteditems.label "완료된 항목 숨기기">
 <!ENTITY rf.add.reminders.context.print.label "인쇄/보기">
 <!ENTITY rf.add.reminders.context.print.ttt "'인쇄/보기'를 위한 템플릿 선택">
+<!ENTITY rf.add.reminders.context.print.agenda.label "Agenda">
 <!ENTITY rf.add.reminders.context.print.all "All Events">
 <!ENTITY rf.add.reminders.context.print.selected "Selected Events">
 <!ENTITY rf.add.reminders.context.print.installation "Installation Details">
@@ -165,10 +168,17 @@
 <!ENTITY rf.about.version.label "버전:">
 <!ENTITY rf.about.support.label "새로운 소식과 지원">
 <!ENTITY rf.about.close.label "닫기">
+<!ENTITY rf.about.updatecheck.label "Update Check">
+<!ENTITY rf.about.updatecheck.tooltip "Check current installation status.">
+<!-- Quick Alarm dialog -->
+<!ENTITY rf.rmfxupdatexpi.drag.link.to.addon.manager.tooltip "Drag this link to the 'Add-ons Manager' window. Allow downloading. On tab:'Extensions' scroll to Reminderfox and use 'Restart now' or 'Undo'.">
+<!ENTITY rf.rmfxupdatexpi.local.version.value "Local Version">
+<!ENTITY rf.rmfxupdatexpi.current.version.value "Current Version">
+<!ENTITY rf.rmfxupdatexpi.update.reminderfox.value "Update Reminderfox">
 <!ENTITY rf.msgid.title "ReminderFox: 요청된 메세지 여는 중">
 <!ENTITY rf.msgid.retry.label "재시도">
 <!ENTITY rf.msgid.description "ThunderBird가 이 메세지를 불러오는데 실패했습니다. 다시 시도하세요.">
-<!-- Quick Alarm dialog -->
+<!-- Options dialog -->
 <!ENTITY rf.reminderoptions.addEvent.window.title "사건 추가">
 <!ENTITY rf.reminderoptions.date.label "날짜:">
 <!ENTITY rf.reminderoptions.date.start.label "시작:">
@@ -209,7 +219,7 @@
 <!ENTITY rf.reminderoptions.url.launch.tooltip "URL 실행">
 <!ENTITY rf.reminderoptions.button.more "그 밖에 &gt;&gt;">
 <!ENTITY rf.reminderoptions.tooltip.selectdate "날짜 선택">
-<!-- Options dialog -->
+<!-- lists -->
 <!ENTITY rf.alarm.dialog.title "&rf.name; 알람">
 <!ENTITY rf.alarm.button.snooze "스누즈">
 <!ENTITY rf.alarm.button.acknowledge "반응">
@@ -219,22 +229,24 @@
 <!ENTITY rf.alarm.snooze.minutes.label "분">
 <!ENTITY rf.alarm.occursIn.label "남은 시간：">
 <!ENTITY rf.alarm.snoozeUntil.label "스누즈 기한：">
-<!-- lists -->
+<!-- network -->
 <!ENTITY rf.suspendalarms.dialog.title "경고 및 알람 중지">
 <!ENTITY rf.suspendalarms.dialog.label "재개될때까지 경고와 알람을 중지합니다.">
 <!ENTITY rf.suspendalarms.resume.label "자동으로 경고와 알람을 재개:">
 <!ENTITY rf.suspendalarms.resume.time.info "재개 대기 시간:">
-<!-- network -->
+<!-- Upload dialog -->
 <!ENTITY rf.quickalarm.dialog.title "빠른 알람">
 <!ENTITY rf.quickalarm.notify.label "&rf.reminderoptions.notify.label;">
 <!ENTITY rf.quickalarm.notify.fromnow "지금으로 부터">
 <!ENTITY rf.quickalarm.alarmAt.label "알람 시각：">
-<!-- Upload dialog -->
+<!-- Download dialog -->
 <!ENTITY rf.options.title.label "&rf.name; 선택사항">
 <!ENTITY rf.options.tab.General "General">
+<!ENTITY rf.options.tab.Access "Access">
 <!ENTITY rf.options.tab.Dialog "Main Dialog">
 <!ENTITY rf.options.tab.reminderEdit "Reminder Dialog">
 <!ENTITY rf.options.tab.notifications "Notifications">
+<!ENTITY rf.options.tab.Sync "Sync">
 <!ENTITY rf.options.tab.alarms "Alarms">
 <!ENTITY rf.options.todoLists "Lists">
 <!ENTITY rf.options.addlist.label "사용자 목록 추가">
@@ -304,6 +316,7 @@
 <!ENTITY rf.options.list.calendar.size.large.label "크게">
 <!ENTITY rf.options.list.startingday.label "주의 시작일:">
 <!ENTITY rf.options.list.calendar.showWeekNumber.label "몇번째 주(週)인지 표시">
+<!ENTITY rf.options.list.calendar.showWeekNumber.none "None">
 <!ENTITY rf.options.list.calendar.showWeekNumber.default "기본값">
 <!ENTITY rf.options.list.calendar.showWeekNumber.iso8601 "ISO 8601">
 <!ENTITY rf.options.list.dateandtime.label "날짜와 시간">
@@ -367,7 +380,7 @@
 <!ENTITY rf.options.importexport.export.label "내보내기">
 <!ENTITY rf.options.importexportpreferences.label "불러오기 및 내보내기 환경설정">
 <!ENTITY rf.options.importexport.category.label "불러온 이벤트에 새로운 분류를 설정할 수가 있습니다. 필터링과 정렬은 도움이 될겁니다. 예를 들면, 휴일의 목록을 불러올 때는 각각의 이벤트에 「휴일」이라고 하는 분류를 설정하는 것으로, 필터를 걸치면 곧바로 휴일 목록을 볼 수가 있습니다.">
-<!-- Download dialog -->
+<!-- Upcoming Reminders Label Options dialog -->
 <!ENTITY rf.options.list.reminder.lists.label "목록">
 <!ENTITY rf.options.list.reminder.lists.manage.label "목록 관리">
 <!ENTITY rf.options.list.reminder.lists.button.add.label "&rf.add.addTodo.addbutton.label;">
@@ -379,7 +392,7 @@
 <!ENTITY rf.options.lists.description "기념일과 할 일들 이외에, 분리된 탭에 나타낼 별도의 목록을 추가할 수 있습니다.(곧 출시될 영화를 기다리기 위한)영화, (곧 출시될 음악을 기다리기 위한)앨범, (필요한 항목의 흔적을 남기기위한)식료품과 같은 목록을 지니거나 다른 것을 위해 목록을 사용할 수 있습니다.">
 <!ENTITY rf.options.lists.nameError "이름='ToDo's'또는'Reminders'및','또는':'를 허용하지 않습니다.">
 <!ENTITY rf.options.lists.addedit "사용자 목록 추가/편집">
-<!-- Upcoming Reminders Label Options dialog -->
+<!-- Calendar -->
 <!ENTITY rf.options.synchronization.description.label "주소 동기화">
 <!ENTITY rf.options.synchronization.address.description "원격 ReminderFox 파일을 위한 FTP 또는 WebDAV 주소 입력.">
 <!ENTITY rf.options.synchronization.address.example.description "예: ftp://www.mydomain.com/reminders.ics">
@@ -394,11 +407,11 @@
 <!ENTITY rf.options.synchronization.label "동기화">
 <!ENTITY rf.options.synchronization.auto.label "네트워크를 통한 기념일 자동 동기화">
 <!ENTITY rf.options.synchronization.auto.description "지역/원격 기념일을 동기화하도록 자동으로 유지시키기 위해 선택사항을 선택하십시오.">
-<!-- Calendar -->
-<!ENTITY rf.upload.tile.label "업로드">
 <!-- Time names -->
-<!ENTITY rf.download.tile.label "다운로드">
+<!ENTITY rf.upload.tile.label "업로드">
 <!-- Month Names -->
+<!ENTITY rf.download.tile.label "다운로드">
+<!-- Day short names -->
 <!ENTITY rf.upcoming.label.options.title.label "기념일 제목 선택사항">
 <!ENTITY rf.upcoming.label.options.label "제목">
 <!ENTITY rf.upcoming.label.reminder.description "기념일 설명">
@@ -415,13 +428,13 @@
 <!ENTITY rf.upcoming.label.days.until "통보하기까지 남은 일수">
 <!ENTITY rf.upcoming.label.column.variable "변수">
 <!ENTITY rf.upcoming.label.column.description "설명">
-<!-- Day short names -->
+<!-- iCal Schedule  -->
 <!ENTITY calendar.week.number.label "WK">
 <!ENTITY calendar.year.previous "이전 해">
 <!ENTITY calendar.year.next "다음 해">
 <!ENTITY calendar.month.previous "이전 달">
 <!ENTITY calendar.month.next "다음 달">
-<!-- iCal Schedule  -->
+<!-- Invitation, MAIL and ADDRESSBOOK -->
 <!ENTITY time.0 "오전 12:00">
 <!ENTITY time.1 "오전 1:00">
 <!ENTITY time.2 "오전 2:00">
@@ -446,7 +459,7 @@
 <!ENTITY time.21 "오후 9:00">
 <!ENTITY time.22 "오후 10:00">
 <!ENTITY time.23 "오후 11:00">
-<!-- Invitation, MAIL and ADDRESSBOOK -->
+<!-- Views -->
 <!ENTITY month.1 "1월">
 <!ENTITY month.2 "2월">
 <!ENTITY month.3 "3월">
@@ -525,7 +538,7 @@
 <!ENTITY mail.send.withreminder.selection3 "통보 일정을 1개 선택해 눌러 주세요">
 <!ENTITY mail.send.withreminder.replyAttendee "일정/초대 - 출석자 선택">
 <!ENTITY mail.send.reminder.reference.title "기념일 참고 목록">
-<!-- Views -->
+<!-- CalDAV -->
 <!ENTITY rf.views.title "ReminderFox - 'View' Editor">
 <!ENTITY rf.views.label "Edit 'View's">
 <!ENTITY rf.views.view.header "'View's">
@@ -580,31 +593,36 @@
 <!ENTITY rf.calendar.layout.ListCalendar "목록과 달력">
 <!ENTITY rf.calendar.layout.List "목록">
 <!ENTITY rf.calendar.layout.Calendar "달력">
-<!-- CalDAV -->
+<!--ENTITY rf.caldav.gcal.privat "Google Calendar Private (Events)"-->
 <!ENTITY rf.caldav.remoteCalendar "Remote Calendar">
 <!ENTITY rf.caldav.dialog.title "&rf.caldav.remoteCalendar; Account Handling">
 <!ENTITY rf.caldav.documentation.i "See '&rf.caldav.remoteCalendar;' Use and Setup in Documentation">
 <!ENTITY rf.caldav.serverselection "Select &rf.caldav.remoteCalendar;/Event Server from list">
 <!ENTITY rf.caldav.selectserver "Select &rf.caldav.remoteCalendar;">
-<!--ENTITY rf.caldav.gcal.privat "Google Calendar Private (Events)"-->
 <!--ENTITY rf.caldav.gcal.group "Google Calendar Group (Events)"-->
+<!ENTITY rf.caldavupdate.next.calendars.label "Next Calendars">
+<!ENTITY rf.caldavupdate.configure.calendar.label "Configure Calendar">
+<!ENTITY rf.caldavupdate.skip.this.calendar.tooltip "Skip this Calendar; proceed synchronizing with other calendars.">
+<!ENTITY rf.caldavupdate.open.options.sync.tooltip "Open 'Options/Sync' to update the Calendar setting.">
 <!--ENTITY rf.caldav.oc.default "Default Calendar"-->
 <!--ENTITY rf.caldav.oc.additional "Additional Calendar"-->
 <!--ENTITY rf.caldav.valid.account "Replace with valid Remote Calendar account ID - see also (I)"-->
-<!ENTITY rf.caldav.valid.calendar "Replace with valid Remote Calendar ID -- see also (I)">
 <!--ENTITY rf.caldav.account.letter "'Calendar_ID' letter; by default the first character from 'Calendar Account Name' or from 'Calendar_ID' box with user entry."-->
+<!--ENTITY rf.caldav.delete.this.account "Delete this account"-->
+<!ENTITY rf.caldav.valid.calendar "Replace with valid Remote Calendar ID -- see also (I)">
+<!--ENTITY rf.caldav.sync.docu "See the documentation about"-->
 <!ENTITY rf.caldav.account.userletter "'Calendar_ID' box; enter an user defined 'Calendar_ID' letter">
 <!ENTITY rf.caldav.account.name "'Remote Calendar Account Name'  first letter will be used for 'Calendar_ID' per default.">
 <!ENTITY rf.caldav.pw "Show/Hide password">
 <!ENTITY rf.caldav.check.account "Check Account">
 <!ENTITY rf.caldav.delete.account "Enable to delete this account">
-<!--ENTITY rf.caldav.delete.this.account "Delete this account"-->
+<!--ENTITY rf.caldav.enable.account "Enable Account"-->
 <!ENTITY rf.caldav.sync.support "Sync &rf.caldav.remoteCalendar;/CalDAV">
 <!ENTITY rf.caldav.sync.setup "Sync Setup/Edit">
 <!ENTITY rf.caldav.sync.help "Sync first Help">
 <!ENTITY rf.caldav.sync.help.status "Read details how to setup Reminderfox with Remote Calendars.">
 <!ENTITY rf.caldav.sync.all "Sync All 'Active' &rf.caldav.remoteCalendar; Accounts">
-<!--ENTITY rf.caldav.sync.docu "See the documentation about"-->
+<!--ENTITY rf.caldav.use.setup "See 'Configure Remote Calendar' in Documentation"-->
 <!ENTITY rf.caldav.sync.about "About Sync">
 <!ENTITY rf.caldav.remote.server "Remote Servers (FTP/HTTP)">
 <!ENTITY rf.caldav.calendars "Remote Calendars">
@@ -621,12 +639,12 @@
 <!ENTITY rf.caldav.desc6 "Open Remote Calendars (CalDAV Service) documentation">
 <!ENTITY rf.caldav.desc7 "Important Note">
 <!ENTITY rf.caldav.desc8 "Enabling any &rf.caldav.remoteCalendar; will disable the 'Remote Server' and its settings.">
-<!--ENTITY rf.caldav.enable.account "Enable Account"-->
+<!-- CalDAVv2 -->
 <!ENTITY rf.caldav.nodefault "None (use Local Calendar)">
 <!ENTITY rf.caldav.select.default.account "Default Remote Calendar when adding events">
 <!ENTITY rf.caldav.change.default.account "Select Default Remote Calendar">
 <!ENTITY rf.caldav.select.account "Select a CalDAV Account">
-<!--ENTITY rf.caldav.use.setup "See 'Configure Remote Calendar' in Documentation"-->
+<!-- ...... ImportHandling ..... -->
 <!ENTITY rf.caldav.add.calendar "Add new Calendar">
 <!ENTITY rf.calDav.davFile "Reminderfox data is stored in ICS file, the Remote Calendar details in an extra file (with extension .ics.dav).">
 <!ENTITY rf.caldav.color.reset "Reset account color">
@@ -635,7 +653,7 @@
 <!ENTITY rf.caldav.calendar.setup "Setup/Edit Calendar details">
 <!ENTITY rf.caldav.calendar.activate "Activating a '&rf.caldav.remoteCalendar;' will automatically send new or edited reminders to the remote system and synchronize local with remote reminders. See details in documentation.">
 <!ENTITY rf.caldav.calendar.syncto "Sync to &rf.caldav.remoteCalendar;">
-<!-- CalDAVv2 -->
+<!--   ....... Options ............. -->
 <!ENTITY rf.help.docupages "Open documentation for detailed help pages.">
 <!ENTITY rf.caldav.google.request "Enter the Google account name and use [Request]. It opens a Google page to get a login token. Copy it and proceed here with [Paste].">
 <!ENTITY rf.caldav.account.example "See also examples:">
@@ -685,6 +703,7 @@
 <!ENTITY rf.options.calendarDefaults "Calendar Defaults">
 <!ENTITY rf.options.documentation.Base "Open documentation for base calendar settings.">
 <!ENTITY rf.options.file.backup "Backup reminders with date/time stamp">
+<!ENTITY rf.options.file.backup.tooltip "Save reminder data to backup location">
 <!ENTITY rf.options.alarms "Alarm Presets">
 <!ENTITY rf.options.alarm.dialogs "Alarm Dialogs">
 <!ENTITY rf.options.date.format "Date format">
@@ -692,13 +711,17 @@
 <!ENTITY rf.options.layout.Defaults "Layout Defaults">
 <!ENTITY rf.options.layout.help "See Reminder/Todo/Lists tab documentation">
 <!ENTITY rf.options.system.menu "Open Reminderfox with use of Main Menu and  Add-on Bar on the application (FX/TB) window">
+<!ENTITY rf.options.smartFoxy.display.label "Display Foxy Toolbar Icon">
 <!ENTITY rf.options.smartFoxy "Show Foxy badge shows number of reminders.">
 <!ENTITY rf.options.smartFoxy.none "No, hide it">
 <!ENTITY rf.options.smartFoxy.todays "only today's">
 <!ENTITY rf.options.smartFoxy.todaysUpcoming "today's and upcoming (default)">
+<!ENTITY rf.options.smartFoxy.todaytext "Display text of today's reminders">
 <!ENTITY rf.options.smartFoxy.badge "Foxy has a badge showing the number of todays/upcoming reminders. The badge is red with important today's reminders.">
+<!ENTITY rf.options.bow.description "Select on which toolbar to display">
 <!ENTITY rf.options.bow "Display 'Bow' and text on statusbar">
 <!ENTITY rf.options.bow.text "Limit text to">
+<!ENTITY rf.options.bow.position.label "Set position where to display on bar">
 <!ENTITY rf.options.bars "Enable Add-on Bar / StatusBar with showing 'Bow' status icon and Today's reminders.">
 <!ENTITY rf.options.printing "Printing">
 <!ENTITY rf.options.printing.agenda "Documentation for 'Printing' the Reminders and ToDo's and how to get a 'Daily Agenda'.">
