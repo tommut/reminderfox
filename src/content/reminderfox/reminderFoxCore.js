@@ -7,7 +7,7 @@ if (!reminderfox.core.method) reminderfox.core.method = "";
 
 
 // constants
-reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.1.1";		// update also install.rdf
+reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.2";		// update also install.rdf
 
 // ************************* for dev, use "wip"; for offical MOZILLA set to "release"  *****
 // if set to "wip" enables the check-for-update link; if set to release, hides the update link in about dialog

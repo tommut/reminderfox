@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-	<project name="buildXPI" default="createJAR">
+	<project name="buildXPI" default="copyToDevDirectory">
 
 	<description>
 		'build_eANT.xml' is used to generate a MOZ extension using 'Eclispe SDK' 
@@ -106,6 +106,42 @@
 				<zipfileset dir=""              includes="build*.*,version.log"/>
 			</zip>
 		</target>
+
+	<!-- this copies the files directly to an existing FF profile for use in development -->
+	<!-- Finally it calls a bash script to kill/restart Firefox with that profile -->
+    <property name="reminderfoxProfileDirectory" value="/Users/tommut/Library/Application Support/Firefox/Profiles/weovqtaq.reminderfox-dev/extensions/{ada4b710-8346-4b82-8199-5de2b400a6ae}" />
+    <property name="restartFirefoxScript" value="/Users/tommut/dev/ff-addons/launchFFSavePID.sh" />
+    <target name="copyToDevDirectory" >
+        <copy todir="${reminderfoxProfileDirectory}">
+            <fileset dir="../src">
+                <include name="install.rdf"/>
+                <include name="readme.txt"/>
+
+                <include name="build.properties"/>
+                <include name="chrome.manifest"/>
+                <include name="components/*.*"/>
+                <include name="chrome/*.*"/>
+                <include name="defaults/*.*"/>
+            </fileset>
+        </copy>
+        <copy todir="${reminderfoxProfileDirectory}/chrome/content">
+            <fileset dir="../src/content" includes="**"/>
+        </copy>
+        <copy todir="${reminderfoxProfileDirectory}/chrome/locale">
+            <fileset dir="../src/locale" includes="**"/>
+        </copy>
+        <copy todir="${reminderfoxProfileDirectory}/chrome/skin">
+            <fileset dir="../src/skin" includes="**"/>
+        </copy>
+        <echo message="COPYING TO ${reminderfoxProfileDirectory}"/>
+
+        <!-- relaunch firefox -->
+        <exec executable="/bin/bash">
+            <arg value="${restartFirefoxScript}"/>
+        </exec>
+
+    </target>
+
 
 	<!--  PART 3 _________  Optional  Copy JAR / XPI   _____________________  -->
 
