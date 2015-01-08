@@ -159,6 +159,7 @@
 <!ENTITY rf.add.addTodo.options.label "Opciones:">
 <!ENTITY rf.add.addTodo.showInTooltip.label "Mostrar en mensaje emergente">
 <!ENTITY rf.add.addTodo.important.label "&rf.add.reminders.context.important.label;">
+<!ENTITY rf.add.file.menu.backup.title "Back up and restore">
 <!-- Alarm dialog -->
 <!ENTITY rf.about.homepage.label "Página inicio:">
 <!ENTITY rf.about.about.label "&rf.main.about.label;">

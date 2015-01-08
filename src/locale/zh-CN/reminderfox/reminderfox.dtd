@@ -159,6 +159,7 @@
 <!ENTITY rf.add.addTodo.options.label "选项：">
 <!ENTITY rf.add.addTodo.showInTooltip.label "在提示信息中显示">
 <!ENTITY rf.add.addTodo.important.label "&rf.add.reminders.context.important.label;">
+<!ENTITY rf.add.file.menu.backup.title "Back up and restore">
 <!-- about dialog -->
 <!ENTITY rf.about.homepage.label "主页：">
 <!ENTITY rf.about.about.label "&rf.main.about.label;">

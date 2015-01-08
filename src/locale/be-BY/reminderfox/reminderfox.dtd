@@ -159,6 +159,7 @@
 <!ENTITY rf.add.addTodo.options.label "Налады:">
 <!ENTITY rf.add.addTodo.showInTooltip.label "Паказваць у падказцы">
 <!ENTITY rf.add.addTodo.important.label "&rf.add.reminders.context.important.label;">
+<!ENTITY rf.add.file.menu.backup.title "Back up and restore">
 <!-- Alarm dialog -->
 <!ENTITY rf.about.homepage.label "Оф. сайт:">
 <!ENTITY rf.about.about.label "&rf.main.about.label;">

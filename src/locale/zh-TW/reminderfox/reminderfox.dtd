@@ -159,6 +159,7 @@
 <!ENTITY rf.add.addTodo.options.label "選項:">
 <!ENTITY rf.add.addTodo.showInTooltip.label "顯示在工具提示視窗中">
 <!ENTITY rf.add.addTodo.important.label "&rf.add.reminders.context.important.label;">
+<!ENTITY rf.add.file.menu.backup.title "Back up and restore">
 <!-- Alarm dialog -->
 <!ENTITY rf.about.homepage.label "網站首頁:">
 <!ENTITY rf.about.about.label "&rf.main.about.label;">
