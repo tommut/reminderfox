@@ -540,7 +540,7 @@ reminderfox.mail.sendEventNow = function (reminderToBeSend, todosToBeSend, metho
 };
 
 
-//  --- reminderfox.mail.folderListener  ----------------------------------------------- ---
+//  --- reminderfox.mail.folderListener  ---------------------------------------
 /**
  *  folder listener used with	SEND++
  */
@@ -550,53 +550,98 @@ reminderfox.mail.folderListener = {
 		OnItemAdded: function(parentItem, item) {
 		},
 		OnItemIntPropertyChanged: function(aFolder, aProperty, aOldValue, aNewValue) {
-			reminderfox.msgnr.whichMessenger();
-			var folderURI  = (reminderfox.msgnr.name != "PB")
-				?  aFolder.URI
-				:	aFolder.QueryInterface(Components.interfaces.nsIRDFResource).Value;
+			var folderURI  = aFolder.QueryInterface(Components.interfaces.nsIRDFResource).Value;
+			var nFile = aFolder.filePath.path
+			var messageId = null
 
-			var msg = "FolderListener: OnItemIntPropertyChanged: reminderfox.mail.FCC:" + reminderfox.mail.FCC
-					+ "\naFolder.URI: " + folderURI
-					+ "\n" + aProperty.toString() + "  old: " + aOldValue + "  new: " + aNewValue
+			var msg = "   FolderListener: OnItemIntPropertyChanged: " + aProperty.toString() 
+				+ "     folder.URI: " + folderURI
+				+ "  .path:" + aFolder.filePath.path
+		//	reminderfox.util.Logger('FolderListener', msg)
 
 			if ((aProperty.toString() == "FolderSize") && (reminderfox.mail.FCC == folderURI)) {
-		//		reminderfox.util.Logger('FolderListener', msg)
+				var lastReminder = reminderfox.core.lastSendReminder;
+				var referenceFound = false
 
-				if ( aOldValue != aNewValue) {
-				var messenger = Components.classes["@mozilla.org/messenger;1"].createInstance()
-								.QueryInterface(Components.interfaces.nsIMessenger);
+				var msg = "   FolderListener reminderfox.mail.FCC == folder.URI: " + folderURI
+						+ "\n" + aProperty.toString() + "  old: " + aOldValue + "  new: " + aNewValue
+				reminderfox.util.Logger('FolderListener', msg)
 
-				var msgUri = reminderfox.messenger.getMsgFolderFromUri(reminderfox.mail.FCC).baseMessageURI + "#" + aOldValue;
-				var msgHeader = messenger.messageServiceFromURI(msgUri).messageURIToMsgHdr(msgUri);
-				var messageId =  msgHeader.messageId;
-				var lastReminder = reminderfox.core.lastEvent;
+				if (folderURI.search("imap") == 0) {
+
+					// works with nsIMsgDatabase		//gW2015-01-22
+					var noMsgs = 0;
+					var folderMsgs = aFolder.messages;
+					while (folderMsgs.hasMoreElements()) {
+						var message = folderMsgs.getNext();
+
+						var msgHdr = message.QueryInterface(Components.interfaces.nsIMsgDBHdr)
+						var numRefs = msgHdr.numReferences
+						for (var i=0; i < numRefs; i++) {
+							reference = msgHdr.getStringReference(i).replace('@reminderfox','').replace('"','')
+
+							if (reference == reminderfox.core.lastReminderID) {
+								referenceFound = true
+								messageId = msgHdr.messageId
+							}
+						}
+						noMsgs++
+					}
+					var msg = "  FolderListener  SentFolder (imap)   msgDatabase  no of msgs:" + noMsgs 
+						+ "  Found:  reference: " + referenceFound + "  messageId:" + messageId
+					reminderfox.util.Logger('FolderListener', msg)
+
+				} else {
+	
+					var messenger = Components.classes["@mozilla.org/messenger;1"].createInstance()
+							.QueryInterface(Components.interfaces.nsIMessenger);
+	
+					var msgUri = reminderfox.messenger.getMsgFolderFromUri(reminderfox.mail.FCC)
+						.baseMessageURI + "#" + aOldValue;
+
+					var msgHeader = messenger.messageServiceFromURI(msgUri).messageURIToMsgHdr(msgUri);
+					messageId =  msgHeader.messageId;
+
+					var msg = "  FolderListener  SentFolder (Local)   messageId: " +  msgHeader.messageId;
+					reminderfox.util.Logger('FolderListener', msg)
+
+					setTimeout(function () {
+						reminderfox.tagging.msg( 'Reminderfox' /*tagName*/, true /*addKey*/,  "#993399", msgHeader);
+					},100);
+					referenceFound = true
+				}
+
+				if (referenceFound == true) {
+					// now update the "lastReminder"  with the ".messageID"
+					var activeReminders = reminderfox.core.getReminderEvents();
+
+					for ( var i = 0; i < activeReminders.length; i++ ) {
+				//		if (activeReminders[i].id == lastReminder.id ) {
+						if (activeReminders[i].id == reminderfox.core.lastReminderID) {
+							msg =  (" === found === : " + activeReminders[i].summary);
+							reminderfox.util.Logger('FolderListener', msg);
+
+							lastReminder.messageID ="<" + messageId.replace(new RegExp(/\"/g),"") + ">";
+
+							reminderfox.core.removeFromArray(activeReminders, i);
+							reminderfox.core.insertIntoArray(activeReminders, lastReminder, i);
+							reminderfox.core.writeOutRemindersAndTodos(false); // (isExport)
+
+		//TODO XXX ????					reminderfox.core.PlaySound (5 /*aValue*/)
+							Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound)
+								.playEventSound(Components.interfaces.nsISound.EVENT_NEW_MAIL_RECEIVED);
+						}
+					} // for activeReminders
+				} // referenceFound
 
 				// reset the 'send folder' and Listener to process only once
 				reminderfox.mail.FCC = "";
 				reminderfox.mail.setFolderListener("remove");
+				reminderfox.core.lastSendEvent = null
 
-				setTimeout(function () {
-					reminderfox.tagging.msg( 'Reminderfox' /*tagName*/, true /*addKey*/,  "#993399", msgHeader);
-				},100);
+		} // folder size
 
-				// now update the "lastReminder"  with the ".messageID"
-				var activeReminders = reminderfox.core.getReminderEvents();
-
-				for ( var i = 0; i < activeReminders.length; i++ ) {
-					if (activeReminders[i].id == lastReminder.id ) {
-						msg =  (" === found === : " + activeReminders[i].summary);
-				//		reminderfox.util.Logger('FolderListener', msg);
-
-						lastReminder.messageID ="<" + messageId.replace(new RegExp(/\"/g),"") + ">";
-
-						reminderfox.core.removeFromArray(activeReminders, i);
-						reminderfox.core.insertIntoArray(activeReminders, lastReminder, i);
-						reminderfox.core.writeOutRemindersAndTodos(false); // (isExport)            ???
-					}
-				}
-			}
-		}
-	}
+	}  // OnItemIntPropertyChanged
 }
 
 
@@ -825,86 +870,37 @@ if(!reminderfox.messenger) reminderfox.messenger = {
 	 * Searchs in subfolder
 	 */
 	searchInSubFolder : function (sFolder, messageId) {
-		reminderfox.msgnr.whichMessenger();
-		if ((reminderfox.msgnr.name == "TB3") || (reminderfox.msgnr.name == "SM") || (reminderfox.msgnr.name == "PB")) {
 
-			var subfolder = null;
-			var msgHdr = null;
-			var msgDB = null;
-			var currentFolderURI = "";
-			var done = false;
+		var subfolder = null;
+		var msgHdr = null;
+		var msgDB = null;
+		var currentFolderURI = "";
+		var done = false;
 
-			if (sFolder.hasSubFolders) {
-				var subfolders = sFolder.subFolders;
-				while (subfolders.hasMoreElements()) {
-					var subfolder = subfolders.getNext().QueryInterface(Components.interfaces.nsIMsgFolder);
-				//	if (currentFolderURI.substring(1,7) != "news://") {
-						msgHdr = this.searchInSubFolder(subfolder, messageId);
-				//	}
-					if (!msgHdr) {
-						try {
-							var msgDB = subfolder.msgDatabase;
-						} catch (ex) {}
-
-						if ( msgDB != null ) msgHdr = msgDB.getMsgHdrForMessageID(messageId);
-					}
-					if (msgHdr) return msgHdr;
+		if (sFolder.hasSubFolders) {
+			var subfolders = sFolder.subFolders;
+			while (subfolders.hasMoreElements()) {
+				var subfolder = subfolders.getNext().QueryInterface(Components.interfaces.nsIMsgFolder);
+			//	if (currentFolderURI.substring(1,7) != "news://") {
+					msgHdr = this.searchInSubFolder(subfolder, messageId);
+			//	}
+				if (!msgHdr) {
 					try {
-						subfolders.next();
-					} catch(e) {
-						done = true;
-					}
-				} //while
-			} //if (sFolder.hasSubFolders)
-			return null;
+						var msgDB = subfolder.msgDatabase;
+					} catch (ex) {}
 
-		} else {
-
-			if (sFolder.hasSubFolders) {  // PB.
-				var subfolders = sFolder.GetSubFolders();
-				var subfolder = null;
-				var msgHdr = null;
-				var msgDB = null;
-				var currentFolderURI = "";
-				var done = false;
-
-				while(!done) {
-					currentFolderURI = subfolders.currentItem()
-											.QueryInterface(Components.interfaces.nsIRDFResource).Value;
-					subfolder = this.getMsgFolderFromUri(currentFolderURI);
-
-					if (currentFolderURI.substring(1,7) != "news://") {
-								msgHdr = this.searchInSubFolder(subfolder, messageId);
-					}
-					if (!msgHdr) {
-
-						try {
-							this.msgWindow = reminderFox_getMsgWindow();
-							msgDB = subfolder.getMsgDatabase(this.msgWindow);
-						} catch (ex) {
-
-						// subfolder.updateFolder(this.msgWindow); // TM: this call was causing a hang in some instances
-						// try {
-						// // msgDB = subfolder.getMsgDatabase(this.msgWindow);
-						// } catch (ex) {
-						// }
-						}
-	
-						if ( msgDB != null ) {
-							msgHdr = msgDB.getMsgHdrForMessageID(messageId);
-						}
-					}
-					if (msgHdr) return msgHdr;
-	
-					try {
-						subfolders.next();
-					} catch(e) {
-						done = true;
-					}
+					if ( msgDB != null ) msgHdr = msgDB.getMsgHdrForMessageID(messageId);
 				}
-			}  //PB
-			return null;
-		}
+				if (msgHdr) return msgHdr;
+				try {
+					subfolders.next();
+				} catch(e) {
+					done = true;
+				}
+			} //while
+		} //if (sFolder.hasSubFolders)
+		return null;
+
 	},
 
 

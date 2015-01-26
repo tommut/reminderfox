@@ -3,6 +3,10 @@
 ##  version.txt
 ##
 
+wip  2015-01-25 __ version 2.1.5.2 (wip)
+	Sent++ supporting IMAP Sent folder
+
+
 2014-12-29
 Externalized more strings.
 

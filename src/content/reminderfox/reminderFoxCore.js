@@ -11,7 +11,7 @@ reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.2";		// update also insta
 
 // ************************* for dev, use "wip"; for offical MOZILLA set to "release"  *****
 // if set to "wip" enables the check-for-update link; if set to release, hides the update link in about dialog
-reminderfox.consts.SPECIAL_VERSION_DETAIL					= "release";
+reminderfox.consts.SPECIAL_VERSION_DETAIL					= "wip"  // "release";  
 reminderfox.consts.DROPBOX										= "https://dl.dropbox.com/u/35444930/rmFX/XPI/"
     + reminderfox.consts.SPECIAL_VERSION_DETAIL + "/";
 
@@ -27,6 +27,8 @@ reminderfox.consts.REMINDER_FOX_WELCOME_PAGE_URL			= "http://www.reminderfox.org
 reminderfox.core.numDaysEvents = [];
 reminderfox.core.numDaysTodos = [];
 reminderfox.core.lastEvent = null;
+reminderfox.core.lastReminderID = null;
+reminderfox.core.lastSendReminder = null
 
 if (!reminderfox.tabInfo) reminderfox.tabInfo = {};
 reminderfox.tabInfo.tabName		= "Reminders";
@@ -7349,4 +7351,21 @@ reminderfox.core.CalDAVaction = function(recentReminder, actionCode) {
             }
         }
     }
+}
+
+
+
+reminderfox.core.PlaySound = function(aValue, aMail)
+{
+   const nsISound = Components.interfaces.nsISound;
+   var sound = Components.classes["@mozilla.org/sound;1"]
+                         .createInstance(nsISound);
+/*--
+   if (aValue)
+     sound.play(Services.io.newURI(aValue, null, null));
+   else if (aMail && !/Mac/.test(navigator.platform))
+     sound.playEventSound(nsISound.EVENT_NEW_MAIL_RECEIVED);
+   else
+---*/
+     sound.beep();
 }
