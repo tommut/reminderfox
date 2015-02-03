@@ -10,7 +10,6 @@ reminderfox.calDAV.colorMap = [];
 if(!reminderfox.msgnr) reminderfox.msgnr = {};
 if (!reminderfox.msgnr.name) reminderfox.msgnr.name = "";
 
-//reminderfox.msgnr.pageHistorie = [];
 
 // ***************** Reminderfox date functions    .date.  <<<<<<<<<<<<<<<<<<<<<
 
@@ -2760,7 +2759,8 @@ reminderfox.calDAV.accountsReadIn= function (thisFile) {
 	else {
 		reminderfox.calDAV.accounts = JSON.parse(calDAVaccounts);
 	}
-	return calDAVaccounts;
+
+	return reminderfox.calDAV.accounts;
 };
 
 

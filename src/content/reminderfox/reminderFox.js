@@ -2734,7 +2734,8 @@ reminderfox.overlay.start_postInit= function() {
 //    window.setInterval(reminderfox.overlay.initializeReminderFoxHourly,
 //        reminderfox.overlay.consts.HOUR_TIMEOUT); // 10000 == 10 sec min
 
-    reminderfox.overlay.initializeReminderFoxHourlyTimer.notify(reminderfox.overlay.timerObject); //this is how we start the timer, we start off by running the callback, then from there every 5 sec it will call
+    reminderfox.overlay.initializeReminderFoxHourlyTimer.notify(reminderfox.overlay.timerObject); 
+//this is how we start the timer, we start off by running the callback, then from there every 5 sec it will call
 //if want to start off by waiting 5sec first then comment out line 20 and uncomment line 18
 //}
 
@@ -2762,7 +2763,8 @@ reminderfox.overlay.start_postInit= function() {
                 }
 
                 // update all known&active user/accounts
-                setTimeout(function () {rmFx_CalDAV_SyncActiveAccounts(null, " reminderFox.js: 'update all active rmCal'")}, 5000);
+//gW2015-02-01                setTimeout(function () {rmFx_CalDAV_SyncActiveAccounts(null, " reminderFox.js: 'update all active rmCal'")}, 5000);
+                setTimeout(function () {rmFx_CalDAV_SyncActiveAccounts(null, " >>>>>>>> reminderFox.js: 'update all active rmCal'  timedelay=500")}, 500);
 
                 reminderfox.overlay.processQuickAlarms();
             }

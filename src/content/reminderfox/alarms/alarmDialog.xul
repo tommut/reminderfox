@@ -18,8 +18,6 @@
 	windowtype="window:reminderFoxAlarmDialog" onfocus="updateTimeUntil()"
 	onload="loadAlarm()" onunload="reminderFox_alarmClosed(true);"
 	>
-	<!-- maxwidth="300px"    gW changed 2012-12   2013-06 because W7 changes size with reopen -->
-
 
 	<stringbundleset id="stringbundleset">
 		<stringbundle id="reminderFox-bundle"
@@ -38,7 +36,7 @@
 	<script type="application/x-javascript" src="chrome://reminderfox/content/reminderFox.js" />
 	<script type="application/x-javascript"
 		src="chrome://reminderfox/content/datepicker/datepicker.js" />
-	<!--script type="application/x-javascript" src="chrome://reminderfox/content/utils/rmFxUtils.js" /  duplicate -->
+
 	<script type="application/x-javascript" src="chrome://reminderfox/content/mail/rmFxMail.js" />
 
 
@@ -47,6 +45,7 @@
     <keyset id="reminderFoxOptions-keys">
 		<key keycode="VK_ESCAPE" oncommand="reminderFox_alarmClosed()" />
 	</keyset>
+
 	<!-- keyset id="reminderFoxOptions-keys">
 		<key keycode="VK_ESCAPE" oncommand="reminderFox_alarmClosed()" />
 		<key keycode="VK_ENTER" oncommand="reminderFox_alarmChooseDone();" />
@@ -67,6 +66,8 @@
 					<hbox align="center">
 						<label id="descLabel" value="&rf.reminderoptions.description.label;"
 							align="bottom" />
+						<toolbarbutton id="displayCalDAV" style="display: none;"
+							type="checkbox" oncommand="calDavInAlarm()" />
 						<toolbarbutton id="displayMail" style="display: none;"
 							type="checkbox" oncommand="showMailInAlarm()" />
 						<textbox id="reminderDescriptionText" readonly="true"
@@ -94,6 +95,12 @@
 					<hbox id="locationHbox" align="center" hidden="true">
 						<label id="locationLabel" value="&rf.reminderoptions.location.label;" />
 						<label id="locationText" align="bottom" />
+					</hbox>
+
+					<!-- show calDAV if there is one -->
+					<hbox id="calDavHbox" align="center" hidden="true">
+						<label id="calDavLabel" value="Remote Calendar"/> <!--  "&rf.reminderoptions.location.label;" -->
+						<label id="calDavText" align="bottom" />
 					</hbox>
 
 					<!-- show URL if there is one -->

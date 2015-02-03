@@ -11,7 +11,7 @@ if(!reminderfox.sendPlus) reminderfox.sendPlus = {};
  */
 reminderfox.sendPlus.reminder = function () {	
 // -----------------------------------------------------------
-//reminderfox.util.Logger('send++', "   .sendPlus.reminder Logger")
+reminderfox.util.Logger('send++', "   .sendPlus.reminder Logger")
 
 	reminderfox.util.JS.dispatch('sendPlus');
 
@@ -24,7 +24,7 @@ reminderfox.sendPlus.reminder = function () {
 	var identity = reminderfox.msgnr.getIdentity(msgIdentity)
 	reminderfox.mail.FCC = identity.fccFolder;	// remember 'send folder' for account
 
-//reminderfox.util.Logger('FolderListener', "  ######## sendPlus : " +  identity.fccFolder)
+reminderfox.util.Logger('FolderListener', "  ######## sendPlus : " +  identity.fccFolder + "   key:" + identity.key)
 
 	reminderfox.mail.setFolderListener("add");
 
@@ -32,6 +32,9 @@ reminderfox.sendPlus.reminder = function () {
 	var newDate = new Date();
 	newDate.setDate(newDate.getDate() + 1);	// default to using tomorrow's date for reminder
 	var rmFx_SwRm_Reference = reminderfox.core.generateUniqueReminderId(newDate);
+
+	reminderfox.core.lastReminderID = rmFx_SwRm_Reference   //gW2015-01-22
+
 
 	var org_References = gMsgCompose.compFields.references;
 	if (gMsgCompose.compFields.references == null || gMsgCompose.compFields.references == "") {
@@ -72,11 +75,15 @@ reminderfox.sendPlus.reminder = function () {
 	if ((msgCompFields.priority == "Highest") || (msgCompFields.priority == "High")) {
 			newReminderToBeAdded.priority = 1;		// set RmFx 'Important'=1
 	}
+
 	var added = reminderfox.core.addReminderHeadlessly(newReminderToBeAdded);
 
 	if (added == false) {	// [CANCEL] NOT 'added' --> reset the 'References' and don't send
 			gMsgCompose.compFields.references = org_References;
 	} else {
+
+		reminderfox.core.lastSendReminder = reminderfox.core.lastEvent
+
 		// now send the msg
 		// msgID will be reset  with nsIMsgCompDeliverMode.Now and .Later 
 		// using .Later will store the msg to the FCC Folder

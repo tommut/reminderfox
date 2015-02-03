@@ -125,6 +125,8 @@ function rmFx_CalDAV_AccountListing (call) {
 // -----------------------------------------------------------------------
 	var account, name, xreminder, uid, summary, msg, delMsg;
 
+	if (call.noNewListing != null) return
+
 	if (!call.idStamp) {call.idStamp = 0;}
 	var accountID = call.account.ID;
 
@@ -156,64 +158,87 @@ function rmFx_CalDAV_AccountListing (call) {
 				}
 
 				if (!xreminder) {
-					var xmsg = " Check  xreminder : " + xreminder + "\n  account : " + accountID +  "   name : " + name
-		//			reminderfox.util.Logger("ALERT", xmsg)
+					var xmsg = "\n Check  xreminder : " + xreminder + "\n  account : " + accountID +  "   name : " + name + "\n"
+					reminderfox.util.Logger("calDAV", xmsg)
+
+						//found an entry in .DAV which has no ICS representation. Need to remove from array
+							thisAccounts[accountID] = 
+								reminderfox.util.removeObjectFromObject (thisAccounts[accountID], uid);
+							thisAccounts[accountID] = 
+								reminderfox.util.removeObjectFromObject (thisAccounts[accountID], name);
+
+					call.msg = "Changed"
 				} else {
 
-				xreminder.calDAVid = accountID;
-				summary = "  Summary: " + xreminder.summary;
+					xreminder.calDAVid = accountID;
+					summary = "  Summary: " + xreminder.summary;
 
-				if (account[name].etag) {		// this is the 'event.id' entry
+					if (account[name].etag) {		// this is the 'event.id' entry
 
-					msg += 'Reminder ID \t' + name + summary 
+						msg += 'Reminder ID \t' + name + summary 
 						+ "\n\t\t  [ etag: " + account[name].etag
 						+ "  status: " +  account[name].status  + " idStamp: " + call.idStamp
 						+ ((call.idStamp === 0) ? '' : ('  *** del: '+ (call.idStamp > account[name].status)))
 						+ " ]\n";
 
-					// check to remove the event details from local account and reminders
-					if ((call.idStamp !== 0) && (call.idStamp > account[name].status)) {
-						thisAccounts[accountID] = 
-							reminderfox.util.removeObjectFromObject (thisAccounts[accountID], name);
-						try {		// skip if Main Dialog isn't open!
-							removeUIListItemReminder(xreminder);
-							modifiedReminders();
-						} catch (ex) {}
-						reminderfox.core.removeReminderFromDataModels(xreminder);
-					}
-				} else {   // this is the ics entry 
+						//gW2015  if etag and status are '0' this is a 'remote' reminder 
+						// but was not sync'd because offline during add/edit 
+						if ((account[name].etag == 0) && (account[name].status == 0)) {
+							msg += "  reminder was added offline!\n"
+							rmFx_CalDAV_UpdateReminder (xreminder, true /* no new Listing*/)
+						} else {
 
-					msg += 'Reminder ID \t' + name  + summary 
-						+ "\n\t\t  [ ics: " + account[name] 
-						+  "  status: " +  account[account[name]].status
-						+ '  ### del: '+ (call.idStamp > account[account[name]].status)
-						+ " ]\n";
+							// check to remove the event details from local account and reminders
+							if ((call.idStamp !== 0) && (call.idStamp > account[name].status)) {
+								thisAccounts[accountID] = 
+									reminderfox.util.removeObjectFromObject (thisAccounts[accountID], name);
+								try {		// skip if Main Dialog isn't open!
+									removeUIListItemReminder(xreminder);
+									modifiedReminders();
+								} catch (ex) {}
+								reminderfox.core.removeReminderFromDataModels(xreminder);
+							}
+						}
+					} else {   // this is the ics entry 
+						msg += 'Reminder ID \t' + name  + summary 
+							+ "\n\t\t  [ ics: " + account[name] 
+							+  "  status: " +  account[account[name]].status
+							+ '  ### del: '+ (call.idStamp > account[account[name]].status)
+							+ " ]\n";
 
-					if ((call.idStamp !== 0) && (call.idStamp > account[account[name]].status)) {
-						uid = account[name];
-						xreminder = (account.Typ == "VTODO") 
-							? xreminder = reminderfox.core.getTodosById(name, call.cTodos) : reminderfox.core.getRemindersById(name);
+						//gW2015   if etag and status are '0' this is a 'remote' todo 
+						// but was not sync'd because offline during add/edit 
+						if ((account[name].etag == 0) && (account[name].status == 0)) {
+							msg += "   reminder was added offline!\n"
+							rmFx_CalDAV_UpdateReminder (xreminder, true /* no new Listing*/)
+						} else {
 
-						try {		// skip if Main Dialog isn't open!
-							removeUIListItemReminder(xreminder);
-							modifiedReminders();
-						} catch (ex) {}
-						reminderfox.core.removeReminderFromDataModels(xreminder);
+							if ((call.idStamp !== 0) && (call.idStamp > account[account[name]].status)) {
+								uid = account[name];
+								xreminder = (account.Typ == "VTODO") 
+									? xreminder = reminderfox.core.getTodosById(name, call.cTodos) : reminderfox.core.getRemindersById(name);
 
-						thisAccounts[accountID] = 
-							reminderfox.util.removeObjectFromObject (thisAccounts[accountID], uid);
-						thisAccounts[accountID] = 
-							reminderfox.util.removeObjectFromObject (thisAccounts[accountID], name);
+								try {		// skip if Main Dialog isn't open!
+									removeUIListItemReminder(xreminder);
+									modifiedReminders();
+								} catch (ex) {}
+								reminderfox.core.removeReminderFromDataModels(xreminder);
+	
+								thisAccounts[accountID] = 
+									reminderfox.util.removeObjectFromObject (thisAccounts[accountID], uid);
+								thisAccounts[accountID] = 
+									reminderfox.util.removeObjectFromObject (thisAccounts[accountID], name);
+							}
+						}
 					}
 				}
-}
 			} //default
 		} // switch
 	} // account
 	
 	if (call.sMsg != null) call.msg = call.sMsg + call.msg
 	reminderfox.util.Logger('calDAVaccount', msg + call.msg + "  call.idStamp: " + call.idStamp);
-	if ((call.msg.indexOf("New Reminder") != -1) || (call.msg.indexOf("CTAG") != -1)){
+	if ((call.msg.indexOf("New Reminder") != -1) || (call.msg.indexOf("CTAG") != -1) || (call.msg.indexOf("Changed") != -1)){
 		reminderfox.calDAV.accountsWriteOut (thisAccounts);
 	}
 }
@@ -288,7 +313,7 @@ reminderfox.util.Logger('checkData', "rmFx_CalDAV_SyncActiveAccounts  trace: " +
 	rmFx_CalDAV_ActiveAccountsList = "";
 	rmFx_CalDAV_ActiveAccountsUpdate = false;
 
-	var calDAVaccounts = JSON.parse(reminderfox.calDAV.accountsReadIn());
+	var calDAVaccounts = (reminderfox.calDAV.accountsReadIn());
 	for (var accountID in calDAVaccounts) {
 		if (calDAVaccounts[accountID].Active === true) {
 			rmFx_CalDAV_ActiveAccountsList += accountID;
@@ -496,26 +521,27 @@ function rmFx_CalDAV_ReminderDelete(reminder, caller, calDAVid2Delete) {
  * The reminder/event has the accountId (.calDAVid), if not (it's a local event), just return 
  * Finally generates a list with valid account entries
  */
-function rmFx_CalDAV_UpdateReminder (reminder) {
+function rmFx_CalDAV_UpdateReminder (reminder, noNewListing) {
 //------------------------------------------------------------------------------
 // reminderfox.util.Logger("ALERT", " rmFx_CalDAV_UpdateReminder   " + reminder.summary + "   >>" + reminder.calDAVid + "<<");
 
 	if ((!reminder.calDAVid) || (reminder.calDAVid === "")) return;
 
 //gWTESTalarm
-	reminderfox.calDAV.accounts = JSON.parse(reminderfox.calDAV.accountsReadIn());
+	reminderfox.calDAV.accounts = (reminderfox.calDAV.accountsReadIn());
 	var _account = reminderfox.calDAV.accounts[reminder.calDAVid];
 
-	var msgTxt = "   _account reminder.id: " + reminder.id 
+	var msgTxt = " rmFx_CalDAV_UpdateReminder   _account reminder.id: " + reminder.id 
 	if ( _account[reminder.id] != null) {
 		msgTxt += "  etag: " + _account[reminder.id].etag
 	}
-	// reminderfox.util.Logger("Alert", msgTxt)
+	//reminderfox.util.Logger("calDAV", msgTxt)
 
 	var cReminders = [];
 	cReminders[0] = reminder;
 
 	var myRequest = new reminderfoxX.XcalDAVrequest();
+	if (noNewListing != null) myRequest.noNewListing = true
 	myRequest.multiple = null;
 	myRequest.UpdateReminder(reminder.calDAVid, cReminders, myRequest);
 }
@@ -1731,7 +1757,8 @@ reminderfoxX.XcalDAVrequest = function () {}
 
 // check if for the local event already calDAV account/server details are stored
 // if so, go for PUT with the etag known. Conflict should show up with err 412
-			if ((call.account[call.ics]) && (call.account[call.ics].etag)) {
+//gW2015-02-02  if etag=0 was a reminder added offline
+			if ((call.account[call.ics]) && (call.account[call.ics].etag) && (call.account[call.ics].etag != 0) ) {
 
 				call.request   = 'updateVELEMENT';
 				call.callback  = 'onETAG';
@@ -1763,6 +1790,23 @@ reminderfoxX.XcalDAVrequest = function () {}
 		var msg, myHTTP;
 		var callMsg = rmFx_CalDAV_callMsg (status, statusText, call, headers)
 		reminderfox.util.Logger('calDAV',  callMsg);
+
+		//gW2015   this a Add/Edit reminder but Offline mode
+		if ((status === 0) && (xml == null)) {
+			var _account = reminderfox.calDAV.accounts[call.account.ID];
+
+			if (!_account[call.ics]) {
+				_account[call.ics] = {};
+			}
+			// add/renew  'etag' to the account
+			_account[call.ics].etag = "0";
+			_account[call.ics].status = "0";
+			call.msg = "New Reminder / Off Line";
+			reminderfox.calDAV.accounts[call.account.ID] = _account
+
+			rmFx_CalDAV_AccountListing (call);
+			return
+		}
 
 		if ((status === 0) ||(status >= 200 && status < 300)) {
 			msg = callMsg + "\n  Response:\n" + text;

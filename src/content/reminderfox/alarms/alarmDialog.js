@@ -164,6 +164,9 @@ function reminderFox_getLinkDisplayText(linkurl) {
 }
 
 function initializeAlarm(reminderAlarmOptions, hasNotes, firstTab) {
+
+	accounts = reminderfox.calDAV.accountsReadIn()
+
 	var tabPanel = reminderAlarmOptions.alarmTabPanel;
 	var recentReminder = reminderAlarmOptions.alarmRecentReminder;
 
@@ -296,6 +299,17 @@ function initializeAlarm(reminderAlarmOptions, hasNotes, firstTab) {
 		getChildElementById(tabPanel, "reminderTimeText").setAttribute("hidden", true);
 	}
 
+	// CalDAV Icon -----------
+	var calDavButton = getChildElementById(tabPanel, "displayCalDAV");
+	if(recentReminder != null && recentReminder.calDAVid != null) {
+		calDavButton.setAttribute('style', 'visibility: visible');
+		calDavButton.setAttribute('disabled', 'false');
+	} else {
+		calDavButton.setAttribute('style', 'display: none;');
+		calDavButton.setAttribute('disabled', 'true');
+	}
+
+
 	// DisplayMail Icon -----------
 	var displayMailButton = getChildElementById(tabPanel, "displayMail");
 	if(recentReminder != null && recentReminder.messageID != null) {
@@ -347,6 +361,16 @@ function initializeAlarm(reminderAlarmOptions, hasNotes, firstTab) {
 	} else {
 		getChildElementById(tabPanel, "locationText").setAttribute("value", null);
 		getChildElementById(tabPanel, "locationHbox").setAttribute("hidden", true);
+	}
+
+
+	if(recentReminder != null && recentReminder.calDAVid != null) {
+		var account = accounts[recentReminder.calDAVid];
+		getChildElementById(tabPanel, "calDavText").setAttribute("value", ' [ ' +recentReminder.calDAVid + ' ] ' + account.Name);
+		getChildElementById(tabPanel, "calDavHbox").removeAttribute("hidden");
+	} else {
+		getChildElementById(tabPanel, "calDavText").setAttribute("value", null);
+		getChildElementById(tabPanel, "calDavHbox").setAttribute("hidden", true);
 	}
 
 	if(recentReminder != null && recentReminder.url != null && recentReminder.url.length > 0) {
@@ -541,6 +565,11 @@ function showMailInAlarm() {
 	var recentReminder = reminderAlarmArray[index].alarmRecentReminder;
 	reminderfox.mail.openByMessageID(recentReminder);
 }
+
+function calDavInAlarm () {
+	//gW TODO XXX
+}
+
 
 function playAlarmSound() {
 	// play a sound for notification (if the user elects to)

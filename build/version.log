@@ -1,8 +1,28 @@
 
-	Reminderfox  [2.1.5.2] release
-	   as of:    Tue, 6 Jan 2015 08:51:09 -0500 (EST)
-	'reminderfox_2.1.5.2_release_20150106_0851.xpi'   <'20150106_0851'>
+	Reminderfox  [2.1.5.2] wip
+	   as of:    Tue, 3 Feb 2015 18:15:12 +0100 (CET)
+	'reminderfox_2.1.5.2_wip_20150203_1815.xpi'   <'20150203_1815'>
 	
+
+wip 2015-02-03 __ version 2.1.5.2 (wip)
+	CalDAV Offline mode
+		while offline a new reminder can be added; sync with remote is automatically
+		done with remote available
+
+	Alarm dialog
+		alarmed reminders are show with icon/account id
+
+	Fix
+		Alarm with CalDAV/remote didn't worked with 'Delete'
+
+
+wip  2015-01-27 __ version 2.1.5.2 (wip)
+	Sent++ lost reminder attributes added with "Add Reminder" compose
+
+
+wip  2015-01-25 __ version 2.1.5.2 (wip)
+	Sent++ supporting IMAP Sent folder
+
 
 2014-12-29
 Externalized more strings.

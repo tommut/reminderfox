@@ -91,6 +91,10 @@ treechildren::-moz-tree-cell-text(imporantCompleteTextToday) {
 	list-style-image: url("chrome://reminderfox/skin/images/notes.png");
 }
 
+#displayCalDAV { 
+	list-style-image: url("chrome://reminderfox/skin/images/icon_share_16.png");
+}
+
 #displayMail {
 	list-style-image: url("chrome://reminderfox/skin/images/mail.png");
 }

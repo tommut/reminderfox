@@ -2365,10 +2365,8 @@ reminderfox.calendar.ttt.addIconLine= function (eventDrawer, icons, summaryStyle
 			calDAVTTT = reminderfox.string('rf.caldav.calendar.account') + ' [ ' +reminder.calDAVid + ' ] ' + account.Name;
 			var icon = document.createElement("toolbarbutton");
 			icon.setAttribute("class", "rmFx-calDAV-share");
-	//		icon.setAttribute("type", "checkbox");
 			icon.setAttribute("idValue", n);
 			icon.setAttribute("numDate", numDate);
-		//	icon.addEventListener("click", function() {reminderfox. --?? --- (this);},false);
 			icon.setAttribute("tooltiptext", calDAVTTT);
 			iconbox.appendChild(icon);
 		}
