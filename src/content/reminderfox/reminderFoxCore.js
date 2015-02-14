@@ -6254,8 +6254,7 @@ reminderfox.core.addReminderHeadlessly= function(originalReminder, isEdit, isTod
     }
     reminderfox.tabInfo.tabID = oldTabName;
 
-    if (!reminderfox.calDAV.accounts) reminderfox.calDAV.accountsReadIn();
-
+    reminderfox.calDAV.accountsReadIn();
 
     if((originalReminder.calDAVid) && (originalReminder.calDAVid !== ""))
         currentReminder.calDAVidOriginal = originalReminder.calDAVid

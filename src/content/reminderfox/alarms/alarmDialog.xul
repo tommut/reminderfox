@@ -91,15 +91,16 @@
 						<label id="timeUntilLabel" value="&rf.alarm.occursIn.label;" />
 						<label id="timeUntilText" align="bottom" />
 					</hbox>
+
 					<!-- show location if there is one -->
-					<hbox id="locationHbox" align="center" hidden="true">
+					<hbox id="locationHboxX" align="center" hidden="true">
 						<label id="locationLabel" value="&rf.reminderoptions.location.label;" />
 						<label id="locationText" align="bottom" />
 					</hbox>
 
 					<!-- show calDAV if there is one -->
 					<hbox id="calDavHbox" align="center" hidden="true">
-						<label id="calDavLabel" value="Remote Calendar"/> <!--  "&rf.reminderoptions.location.label;" -->
+						<label id="calDavLabel" value="Remote Calendar"/>
 						<label id="calDavText" align="bottom" />
 					</hbox>
 

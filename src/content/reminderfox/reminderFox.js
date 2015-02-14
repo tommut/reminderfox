@@ -610,6 +610,8 @@ reminderfox.overlay.showMissedAlarms= function( alarmInfos ) {
 }
 
 reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
+	var calDAVaccounts = reminderfox.core.getReminderEvents()		//gW2015-02
+
     var showAlarmsInTabs= reminderfox.core.getPreferenceValue( reminderfox.consts.ALARMS_SHOW_IN_TABS );
 
     // go through all options
@@ -715,7 +717,9 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
 
                         //alert( "ORIG1" + existingAlarmArray[0].alarmRecentReminder.originalDate + "; " +  existingAlarmArray[0].alarmRecentReminder.summary + " - " + existingAlarmArray[0].alarmRecentReminder.date );
 
-                        var newOptions = {  alarmInfos: existingAlarmArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarms}
+                        var newOptions = {  alarmInfos: existingAlarmArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarms,
+                        	calDAVaccounts : calDAVaccounts}
+
                         window.openDialog("chrome://reminderfox/content/alarms/alarmDialog.xul",
                             "alarmOptionsDialog", "chrome,resizable,dialog=no", newOptions);
                         topWindow = reminderfox.util.getWindow("window:reminderFoxAlarmDialog");
@@ -735,7 +739,9 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
                         singleArray[0] = alarmArray[i];
                         //	alert( "ORIG2" + singleArray[0].alarmRecentReminder.originalDate + "; " +singleArray[0].alarmRecentReminder.summary + " - " + singleArray[0].alarmRecentReminder.date );
 
-                        var newOptions = {  alarmInfos: singleArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarmsSnooze}
+                        var newOptions = {  alarmInfos: singleArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarmsSnooze,
+                        	calDAVaccounts : calDAVaccounts}
+
                         window.openDialog("chrome://reminderfox/content/alarms/alarmDialog.xul",
                                 "alarmOptionsDialog"+new Date().getTime() + i, "chrome,resizable,dialog=no", newOptions);
                         topWindow = reminderfox.util.getWindow("window:reminderFoxAlarmDialog");
@@ -746,7 +752,9 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
                 }
                 else {
 
-                    var newOptions = {  alarmInfos: alarmArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarmsSnooze}
+                    var newOptions = {  alarmInfos: alarmArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarmsSnooze,
+                     	calDAVaccounts : calDAVaccounts}
+
                     //we don't use alarmOptionsDialog + date =- sometimes showing a separate window
                     window.openDialog("chrome://reminderfox/content/alarms/alarmDialog.xul",
                         "alarmOptionsDialog", "chrome,resizable,dialog=no", newOptions);
@@ -2734,8 +2742,7 @@ reminderfox.overlay.start_postInit= function() {
 //    window.setInterval(reminderfox.overlay.initializeReminderFoxHourly,
 //        reminderfox.overlay.consts.HOUR_TIMEOUT); // 10000 == 10 sec min
 
-    reminderfox.overlay.initializeReminderFoxHourlyTimer.notify(reminderfox.overlay.timerObject); 
-//this is how we start the timer, we start off by running the callback, then from there every 5 sec it will call
+    reminderfox.overlay.initializeReminderFoxHourlyTimer.notify(reminderfox.overlay.timerObject); //this is how we start the timer, we start off by running the callback, then from there every 5 sec it will call
 //if want to start off by waiting 5sec first then comment out line 20 and uncomment line 18
 //}
 
@@ -2759,21 +2766,17 @@ reminderfox.overlay.start_postInit= function() {
                 if (printAgenda) { // only go if user has set it on Options/Tooltip page
                     var template = {}
                     template.value = "Agenda.xsl";
-                    setTimeout(function () {reminderfox_xmlPrint(template, 'XPI')}, 1000)
+                    setTimeout(function () {reminderfox_xmlPrint(template, 'XPI')}, 3000)
                 }
+					reminderfox.overlay.processQuickAlarms();
 
-                // update all known&active user/accounts
-//gW2015-02-01                setTimeout(function () {rmFx_CalDAV_SyncActiveAccounts(null, " reminderFox.js: 'update all active rmCal'")}, 5000);
-                setTimeout(function () {rmFx_CalDAV_SyncActiveAccounts(null, " >>>>>>>> reminderFox.js: 'update all active rmCal'  timedelay=500")}, 500);
-
-                reminderfox.overlay.processQuickAlarms();
-            }
+					// check for online --> update all known&active user/accounts
+					setTimeout(function(){ reminderfox.online.status()},1000)
+				}
 
             reminderfox.overlay.showAlertSliderTimingFunction.notify(reminderfox.overlay.alertTimerObject); //this is how we start the timer, we start off by running the callback, then from there every X specified minutes it will call
         }
     }
-    // clear reminders from memory
-//	reminderfox.core.clearRemindersAndTodos();				//gW??  do we need this   2014-04-12
 }
 
 

@@ -53,8 +53,6 @@
 	<script type="application/x-javascript"
 		src="chrome://reminderfox/content/categories/rmFxViews.js" />
 
-	<!--script type="application/x-javascript" src="chrome://reminderfox/content/utils/testtest.js" 
-		/ -->
 
 	<script type="application/x-javascript" src="chrome://reminderfox/content/network/download.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/network/upload.js" />
@@ -129,7 +127,11 @@
 		<key id="key_reload" key="R" modifiers="accel"
 			oncommand="rmFx_mainDialogLoadReload();" />		<!-- //gWSync -->
 
-		<!-- key id="key_reload" key="U" modifiers="accel" oncommand="calDAVupdate()"/-->
+		<!-- TEST area only, disable for offical release -->
+			<key id="key_reload" key="F" modifiers="accel" 
+				oncommand="rmFx_CalDAV_update4Offline('calDAVofflineUpdate')"/>
+			<key id="key_reload" key="O" modifiers="accel" 
+				oncommand="reminderfox.online.status()"/>
 
 	</keyset>
 
@@ -139,7 +141,7 @@
 		<spacer width="5px" />
 
 		<!-- rmFx-foxy-icon -->
-		<toolbarbutton class="image-button" id="rmFx-foxy-icon-small"
+		<toolbarbutton class="image-button" id="rmFx-foxy-icon-small" mode=""
 			type="menu"
 			tooltiptext="&rf.calendar.foxy;">
 
@@ -195,7 +197,7 @@
 						<menuseparator id="calDAVaccountSeparator1" />
 
 						<menuitem id="rmFx_syncCalDAV" label="&rf.caldav.sync.all;"
-							onclick="rmFx_CalDAV_SyncActiveAccounts(null, 'Main Dialog menu:rmFx_syncCalDAV');" 
+							onclick="rmFx_CalDAV_SyncActiveAccounts('Main Dialog menu:rmFx_syncCalDAV');" 
 							type="radio" />
 							<!-- image="chrome://reminderfox/skin/images/icon_share_20w.png" -->
 
@@ -837,14 +839,6 @@
 			reminderfox.util.docRmFX('new-functions/');
 		}
 	}
-
-//	function calDAVupdate() {	// use with Cntrl u -- and timed call  //TODO
-/* will fail because windows.arguments not defined !!!
-   *** use Cntrl R on Main Dialog to reload all active calendars!
-*/
-//		setTimeout(function () {window.openDialog('chrome://reminderFox/content/caldav/calDAVupdate.xul',
-//					'rmFxCaldavUpdate')}, 50);
-//	}
 
 	</script>
 </window>

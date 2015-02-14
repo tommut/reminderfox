@@ -540,7 +540,7 @@ reminderfox.mail.sendEventNow = function (reminderToBeSend, todosToBeSend, metho
 };
 
 
-//  --- reminderfox.mail.folderListener  ---------------------------------------
+//  --- reminderfox.mail.folderListener  ----------------------------------------------- ---
 /**
  *  folder listener used with	SEND++
  */
@@ -616,7 +616,6 @@ reminderfox.mail.folderListener = {
 					var activeReminders = reminderfox.core.getReminderEvents();
 
 					for ( var i = 0; i < activeReminders.length; i++ ) {
-				//		if (activeReminders[i].id == lastReminder.id ) {
 						if (activeReminders[i].id == reminderfox.core.lastReminderID) {
 							msg =  (" === found === : " + activeReminders[i].summary);
 							reminderfox.util.Logger('FolderListener', msg);
@@ -640,12 +639,6 @@ reminderfox.mail.folderListener = {
 				reminderfox.core.lastSendEvent = null
 
 		} // folder size
-
-	//	var topWindow = reminderfox.util.getWindow("window:reminderFoxEdit");
-	//	if(topWindow) {
-	//		rmFx_mainDialogLoadReload()
-	//	}
-
 	}  // OnItemIntPropertyChanged
 
 

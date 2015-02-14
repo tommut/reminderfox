@@ -6,6 +6,8 @@ if (!reminderfox.util)    reminderfox.util = {};
 if (!reminderfox.calDAV)    reminderfox.calDAV = {};
 
 reminderfox.calDAV.colorMap = [];
+reminderfox.calDAV.offlineReminders = false;
+
 
 if(!reminderfox.msgnr) reminderfox.msgnr = {};
 if (!reminderfox.msgnr.name) reminderfox.msgnr.name = "";
@@ -1665,6 +1667,9 @@ reminderfox.util.STACK= function (aDepth) {
 	if (aDepth === 0) return stack;
 
 	for (var i = 1; i <= depth && frame; i++) {
+
+		var x = (frame.filename != null) ? frame.filename : ""
+		if (x.search("reminderfox") == -1) break		//gW2015 to clean the log from not relevant lines
 		stack += (i + ": [" + frame.filename + " # " +
 			frame.lineNumber + "] " + frame.name + "\n");
 		if (!frame.filename) break;
@@ -1732,7 +1737,7 @@ reminderfox.util.Logger = function (Log, msg) {
 
 	if ((Log == 'alert') || (Log == 'Alert') || (Log == 'ALERT')){
 		var date = new Date();
-		logMsg = "Reminderfox  ** Alert **    " + date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + "\n" + msg;
+		logMsg = "\nReminderfox  ** Alert **    " + date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + "\n" + msg;
 		if (Log == 'ALERT') logMsg += "\n" + reminderfox.util.STACK();
 		if (Log == 'Alert') logMsg += "\n" + reminderfox.util.STACK(1);
 		if (Log == 'alert') logMsg += "\n";
@@ -1760,7 +1765,7 @@ reminderfox.util.Logger = function (Log, msg) {
 
 
 	var date = new Date();
-	logMsg = "Reminderfox Logger : "+ rootID + "  [" + Log + " : " + logId + "]      "
+	logMsg = "\nReminderfox Logger : "+ rootID + "  [" + Log + " : " + logId + "]      "
 		+ date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + "\n" + msg;
 
 	if (logNum >= 50 /* 'Warn', 'Error', 'Fatal' */) logMsg += "\n" + reminderfox.util.STACK();
@@ -2542,8 +2547,8 @@ if (!reminderfox.calDAV.accounts)   reminderfox.calDAV.accounts = {};    //calDA
 //		var calDAVaccountsStr = JSON.stringify(calDAVaccounts);
 //		var calDAVaccounts    = JSON.parse(calDAVaccountsStr);
 
-//CalDAV.account definitions ___________________________
-/*  to access a specfic detail use:
+/* CalDAV.account definitions ___________________________
+ *   to access a specfic detail use:
  *
  *   .calDAV.accounts[ "calDAV account.ID" ] .ID               = [string]
  *   .calDAV.accounts[ "calDAV account.ID" ] .Type             = [string]
@@ -2586,10 +2591,10 @@ if (!reminderfox.calDAV.accounts)   reminderfox.calDAV.accounts = {};    //calDA
 			"134523-876543233" : {etag: "45862-6gf", status: 1361747817888},
 			"153233-999342777" : {etag: "45862-eds", status: 1361747817888}
 	}
----------------------------*/
-// Get the CalDAV account using the 'calDAVid'
-// just use   reminderfox.calDAV.accounts[calDAVid]
-//------------------------------------------------------------------------------
+
+   Get the CalDAV account using the 'calDAVid'
+   just use   reminderfox.calDAV.accounts[calDAVid]
+----------------------------------------------------------------------------*/
 
 
 /**
@@ -2739,14 +2744,30 @@ reminderfox.calDAV.setupColorMap= function () {
 
 
 /**
- *  Read the reminderfox.calDAV.accounts from file stored parallel to the
- *  current 'reminderfox.ics' with extension .ics.dav
+ *  Check reminderfox.calDAV.accounts. If accounts found, just return, if not read
+ *  from file stored parallel to the current 'reminderfox.ics' with extension .ics.dav
  *  @param {string}  ics fileName
  */
 reminderfox.calDAV.accountsReadIn= function (thisFile) {
 //-------------------------------------------------------------
+	var calDAVstatus = reminderfox.calDAV.accountsStatus()
+
+/*---------------
+	// if we have accounts, just return them
+	if (calDAVstatus.count != 0) {
+
+		var msg = "  **** CalDAV accounts ... Status ... count >>" + calDAVstatus.count + "<<   active >>" + calDAVstatus.active + "<<" 
+			+ "  offlineReminders: " + calDAVstatus.offlineReminders
+		reminderfox.util.Logger("checkData", msg)
+
+		return reminderfox.calDAV.accounts
+	}
+------------*/
+
+	// no calDAV accounts, read from file 
 	var calDAVfile = reminderfox.calDAV.accountsFile(thisFile);
 	var calDAVaccounts;
+	reminderfox.calDAV.offlineReminders= false;
 
 	try {
 		calDAVaccounts = reminderfox.core.readInFileContents (calDAVfile);
@@ -2754,24 +2775,44 @@ reminderfox.calDAV.accountsReadIn= function (thisFile) {
 		calDAVaccounts = "";
 	}
 
-	if ((!calDAVaccounts) || (calDAVaccounts === ""))
+	if ((!calDAVaccounts) || (calDAVaccounts === "")){
 		reminderfox.calDAV.accounts = {};
-	else {
-		reminderfox.calDAV.accounts = JSON.parse(calDAVaccounts);
 	}
+
+	reminderfox.calDAV.accounts = JSON.parse(calDAVaccounts);
+
+	var calDAVstatus = reminderfox.calDAV.accountsStatus()
+
+	var msg = "  **** CalDAV accounts ... readIn ... count >>" + calDAVstatus.count 
+		+ "<<   active >>" + calDAVstatus.active + "<<" 
+		+ "   offlineReminders: " + calDAVstatus.offlineReminders
+	//	+ "\n   " + calDAVaccounts
+	reminderfox.util.Logger("checkData", msg)
 
 	return reminderfox.calDAV.accounts;
 };
 
 
-reminderfox.calDAV.accountsActive = function (_calDAVaccounts) {
+reminderfox.calDAV.accountsStatus = function () {
+	var calDAVaccounts = reminderfox.calDAV.accounts
 	var calDAVstatus = [];
+
 	calDAVstatus.count = 0;
-	calDAVstatus.active = false;
-	for (var account in _calDAVaccounts) {
-		if (_calDAVaccounts[account].Active === true) calDAVstatus.active = true;
-		calDAVstatus.count ++;
+	calDAVstatus.active = 0;
+	for (var account in calDAVaccounts) {
+		if (calDAVaccounts[account].Active === true) calDAVstatus.active++;
+		calDAVstatus.count++;
 	}
+
+	var sCalDAVaccounts = JSON.stringify (calDAVaccounts);
+
+	calDAVstatus.offlineReminders = false
+	if ((sCalDAVaccounts.search('"status":"0"') != -1) 			//Add
+		|| (sCalDAVaccounts.search('"status":"-1"') != -1)		//Delete
+		|| (sCalDAVaccounts.search('"status":"-2"') != -1)){	//Edit/Update
+		calDAVstatus.offlineReminders = true;
+	}
+
 	return calDAVstatus;
 };
 
@@ -2786,16 +2827,16 @@ reminderfox.calDAV.accountsWriteOut= function (calDAVaccounts) {
 //-------------------------------------------------------------
 	if (!calDAVaccounts) calDAVaccounts = {};
 
-	var rmFx_CalDAV_accounts = 0;
+	var calDAVaccountsNo = 0;
 	for (var account in calDAVaccounts) {
-		rmFx_CalDAV_accounts++;
+		calDAVaccountsNo++;
 	}
 
 	var outputStr = JSON.stringify (calDAVaccounts);
 	var file = reminderfox.calDAV.accountsFile();
-
 	reminderfox.calDAV.fileWriteOut (outputStr, file);
-	return rmFx_CalDAV_accounts;
+
+	return calDAVaccountsNo;
 };
 
 
@@ -2838,15 +2879,11 @@ reminderfox.calDAV.accountsFile= function (currentFilePath) {
 	if (!currentFilePath) {
 		currentFilePath = reminderfox.core.getReminderStoreFile().path;
 	}
-reminderfox.util.Logger('calDAV', " reminderfox.calDAV.accountsFile   currentFilePath   >>" + currentFilePath + "<<")
-	var cStatus = reminderfox.util.fileCheck (currentFilePath)
-//	reminderfox.util.Logger('Alert', "  dir/file check: " + cStatus + " dir/f: " + currentFilePath)
-
-
-	var calDAVpath = currentFilePath + ".dav";
+	var msg =  " reminderfox.calDAV.accountsFile   currentFilePath   >>" + currentFilePath + "<<"
+//	reminderfox.util.Logger("calDAV",msg)
 
 	var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
-	file.initWithPath(calDAVpath);
+	file.initWithPath(currentFilePath + ".dav");
 	return file;
 };
 
@@ -3163,3 +3200,33 @@ function reminderfox_isSubscribedCalendarTabSelected(){
 				tabbox.selectedIndex = tabbox.selectedIndex;
 			}
 		}
+
+
+/**
+ * Query a remote system (Mozilla)  to check on/offline
+ */
+reminderfox.online = {
+//--------------------------------------------------------------------------
+	status : function (isOnline, isOffline) {	//	reminderfox.online.status('calDAVonline', 'calDAVoffline')
+
+			if (navigator.onLine) {
+				var msg = " Reminderfox:  System status   +++ ONLINE +++"
+				reminderfox.util.Logger("calDAV",msg)
+				var foxy = document.getElementById("rmFx-foxy-icon-small");
+				if (foxy != null) 
+					foxy.setAttribute('mode', 'online');
+
+				rmFx_CalDAV_update4Offline();
+
+			} else {
+				var msg = " Reminderfox:  System status   --- OFFINE ---"
+				reminderfox.util.Logger("calDAV",msg)
+
+				reminderfox.core.statusSet("System is Offline!", true)
+				var foxy = document.getElementById("rmFx-foxy-icon-small");
+				if (foxy != null) 
+					foxy.setAttribute('mode', 'offline');
+			}
+	}
+
+};

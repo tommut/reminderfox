@@ -335,8 +335,12 @@ treechildren::-moz-tree-cell-text(odd, selected) { color: #000000; }
         width               : 18px  !important;
     }
 
-    .image-button[id="rmFx-foxy-icon-small"] {
-        list-style-image    : url("chrome://reminderfox/skin/images/foxy-head-20.png");
+   #rmFx-foxy-icon-small {
+		list-style-image    : url("chrome://reminderfox/skin/images/foxy-head-20.png");
+    }
+
+    #rmFx-foxy-icon-small[mode="offline"] {
+	list-style-image    : url("chrome://reminderfox/skin/images/foxy-head-20-grey.png");
     }
 
     .reminderfox-icon {

@@ -766,10 +766,9 @@ function rmFx_mainDialogLoad(restartSkip){
 	//get Sync settings 
 	var networkSync = reminderfox.core.getPreferenceValue(reminderfox.consts.NETWORK_SYNCHRONIZE, reminderfox.consts.NETWORK_SYNCHRONIZE_DEFAULT);
 
-	reminderfox.calDAV.accountsReadIn();
-	var calDAVstatus = reminderfox.calDAV.accountsActive (reminderfox.calDAV.accounts)
-	var calDAVactive = calDAVstatus.active
-reminderfox.util.Logger('sync',"Sync settings  ..   networkSync: " + networkSync + "   CalDAV  accounts: " + calDAVactive)
+	var calDAVstatus = reminderfox.calDAV.accountsStatus ()
+	reminderfox.util.Logger('sync',"Sync settings  ..   networkSync: " + networkSync + "   CalDAV  accounts: " + calDAVstatus.count)
+
 	document.getElementById('rmFx_progress-panel').hidden = true;
 
 
@@ -777,12 +776,13 @@ reminderfox.util.Logger('sync',"Sync settings  ..   networkSync: " + networkSync
 	setTimeout(function () { reminderfox.calendar.ui.selectDay('today')}, 0);
 
 	// start synchronizing in background (if that network option is set) if no CalDAV active
-	if (!calDAVactive)
+	if (calDAVstatus.active == 0)
 		setTimeout(reminderFox_ensureRemoteRemindersSynchronizedInEditWindow, 1);
 
+//gW2015   moved to the end with checking "offline"
 	// start sync in background for Remote Calendars
-	if (calDAVactive)
-		setTimeout(function () { rmFx_CalDAV_SyncActiveAccounts(false, "addReminderDialog: ' start sync in background for Remote Calendars'");},0);
+//	if (calDAVstatus.active > 0)
+//		setTimeout(function () { rmFx_CalDAV_SyncActiveAccounts("addReminderDialog: ' start sync in background for Remote Calendars'");},0);
 
 
 	if (window.arguments != null && window.arguments[1] != null) {
@@ -801,6 +801,9 @@ reminderfox.util.Logger('sync',"Sync settings  ..   networkSync: " + networkSync
 	reminderFox_updateFoxyBadge();
 	focusAddButton();
 	
+
+	// start sync in background for Remote Calendars
+	reminderfox.online.status('rmFx_CalDAV_update4Offline','')
 }
 
 
@@ -3920,7 +3923,7 @@ function activateContextReminder(event){
 
 function reminderFox_onListCalDAV(xthis){
 	// calDAV menu
-	if (reminderfox.calDAV.accounts == null) 	reminderfox.calDAV.accountsReadIn();
+	reminderfox.calDAV.accountsReadIn();
 	var accounts = reminderfox.calDAV.accounts;
 	if (accounts != null) { 
 

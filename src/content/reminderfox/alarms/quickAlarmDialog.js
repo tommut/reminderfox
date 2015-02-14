@@ -111,7 +111,7 @@ function rmFx_datePickerQA(event) {
 
 	var datepicker = document.createElement("datepicker");
 	datepicker.setAttribute('id', 'datePickerCurrent');
-	datepicker.setAttribute('value', dateEntryYear + '-'+ dateEntryMonth + '-' + dateEntryDay);
+	datepicker.setAttribute('value', dateEntryYear + '-'+ reminderfox.date.num2(dateEntryMonth) + '-' + reminderfox.date.num2(dateEntryDay));
 	datepicker.setAttribute('type', 'grid');
 	datepicker.setAttribute('firstdayofweek', reminderfox.datePicker.StartingDayOfWeek());
 	datepickerBox.appendChild(datepicker);

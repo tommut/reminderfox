@@ -1,7 +1,24 @@
-
 ##
 ##  version.txt
 ##
+
+wip 2015-02-14 __ version 2.1.5.2 (wip)
+	Auto sync at FX/TB startup and also with open RmFX MainDialog
+	Offline mode (Foxy symbol changes, status line in MainDialog)
+
+	CalDAV 
+	-- Alarm dialog functions with CalDAV didn't worked correctly
+	-- Renew reminders of a selected account 
+	   (Foxy menu on Main Dialog --> 'Sync Remote Calendars' --> Select account with Cntrl)
+
+	Alarm dialog
+		alarmed reminders are shown with icon/account id
+
+
+
+wip  2015-01-27 __ version 2.1.5.2 (wip)
+	Sent++ supporting IMAP Sent folder
+
 
 2014-12-29
 Externalized more strings.

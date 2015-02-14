@@ -68,12 +68,6 @@ reminderfoxX.XcalDAVhttp = function () {}
 
 		var loginpw = "";
 
-		logMsg = 'CalDAV: HTTP sendContentToURL (' + call.ID + '):  [' + call.request + "|" + call.callback +"]"
-			+ "\n  url:"    + call.url 
-			+ "\n  login : " + call.username + "|" + call.password + "|";
-		reminderfox.util.Logger('calDAVhttp',logMsg)
-
-
 		if ((call.url) && (call.url.search('https://www.googleapis.com/caldav/v2/')) === 0) {
 
 			var access_token = reminderFox_getPassword ({
@@ -142,10 +136,10 @@ reminderfoxX.XcalDAVhttp = function () {}
 			}
 
 			logMsg = "CalDAV  HTTP sendContentToURL  [" + call.request + "|" + call.callback +"]  (" + call.ID + ")" 
-				+ '\n  method: ' + call.method +  "  headers:" + call.header
+				+ '\n  method: ' + call.method +  "  headers >>\n" + call.header + "\n<<"
 				+ "\n  urlstr:"    + urlstr + "  login : " + call.username
 				+ "\n  contentType:" + call.contentType
-				+ "\n  content:\n" + call.body;
+				+ "\n  content   >>\n" + call.body + "\n<<";
 			reminderfox.util.Logger('calDAVhttp', logMsg);
 
 	rmFX_GCal_SPDYset(call,  (call.request + "|" + call.callback +"]  (" + call.ID + ")" ))

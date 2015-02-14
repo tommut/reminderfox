@@ -9,8 +9,6 @@
 ]>
 
 <!--   Note:   this XUL dialog is HIDDEN; 
-       Also there is no user action required, an update of all remote calendars 
-       is required at system startup and it needs to run separately. 
        With sync failing of any remote calendar the XUL dialog is unhidden
        and shows the error for the calendar. Handles to open Options tab:sync 
        to configure, or to ignore and proceed with next calendar
@@ -20,7 +18,7 @@
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	windowtype="window:rmFxCaldavUpdate" orient="vertical"
 	onload="calDAVupdate()"
-	width="400px" 
+	autostretch="always"
 	title="Reminderfox Remote Calendar -- Auto Sync">
 
 	<stringbundleset id="stringbundleset">
@@ -87,8 +85,6 @@
 			document.getElementById('url').value               = window.arguments[0].uMsg;
 			document.getElementById('callDetails').value       = window.arguments[0].calls;
 			document.getElementById('rmFxCaldavUpdate').hidden = false;
-
-	//gwTESTalarm		rmFx_CalDAV_SyncActiveAccounts(null, "window:rmFxCaldavUpdate");
 		}
 
 		function go4OptionSync() {
@@ -99,8 +95,6 @@
 
 		function go4NextSync() {
 			rmFx_CalDAV_SyncActiveAccountsNext(false);
-	// need to hold the XUL open or the further sync process will stop !
-	//		window.close();  
 		}
 
 	]]></script>

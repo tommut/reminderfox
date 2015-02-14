@@ -60,6 +60,8 @@ function updateTimeUntil() {
 function loadAlarm() {
 	reminderFox_reopeningWindow = false;
 	reminderAlarmArray = window.arguments[0].alarmInfos;
+	
+	reminderfox.calDAV.accounts = window.arguments[0].calDAVaccounts;
 
 	var panels = document.getElementById("tabPanelID");
 	var tabList = document.getElementById("tabList");
@@ -166,6 +168,7 @@ function reminderFox_getLinkDisplayText(linkurl) {
 function initializeAlarm(reminderAlarmOptions, hasNotes, firstTab) {
 
 	accounts = reminderfox.calDAV.accountsReadIn()
+	//accounts = reminderfox.calDAV.accounts //ReadIn()
 
 	var tabPanel = reminderAlarmOptions.alarmTabPanel;
 	var recentReminder = reminderAlarmOptions.alarmRecentReminder;
@@ -357,10 +360,10 @@ function initializeAlarm(reminderAlarmOptions, hasNotes, firstTab) {
 
 	if(recentReminder != null && recentReminder.location != null && recentReminder.location.length > 0) {
 		getChildElementById(tabPanel, "locationText").setAttribute("value", recentReminder.location);
-		getChildElementById(tabPanel, "locationHbox").removeAttribute("hidden");
+		getChildElementById(tabPanel, "locationHboxX").removeAttribute("hidden");
 	} else {
 		getChildElementById(tabPanel, "locationText").setAttribute("value", null);
-		getChildElementById(tabPanel, "locationHbox").setAttribute("hidden", true);
+		getChildElementById(tabPanel, "locationHboxX").setAttribute("hidden", true);
 	}
 
 
