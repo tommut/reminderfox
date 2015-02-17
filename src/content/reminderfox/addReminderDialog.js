@@ -546,21 +546,20 @@ function rmFx_mainDialogLoadReload() {
  *  Starting the ReminderFox Main Dialog with MainList and/or Calendar
  */
 function rmFx_mainDialogLoad(restartSkip){
-	// --- calDAV accounts setup: reminderfox.calDAV.accounts  ---- 
+	// --- calDAV accounts setup: reminderfox.calDAV.accounts
 	reminderfox.calDAV.accountsReadIn();
 
-	// --- load calDAVcolorMap and set the CSS file to respect prefs saturation  --------
-	reminderfox.calDAV.calDAVmapReadIn();
+	// --- load calDAVcolorMap and set the CSS file to respect prefs saturation
+	reminderfox.colorMap.cssFileRead();
 
-	var cssfile = reminderfox.calDAV.calDAVmapFile();
+	var cssfile = reminderfox.colorMap.cssFileGet();
 	var sss = Components.classes["@mozilla.org/content/style-sheet-service;1"]
 						.getService(Components.interfaces.nsIStyleSheetService);
 	var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
 
 	var uri = ios.newURI("file:" + cssfile.path, null, null);
 	try {
-//reminderfox.util.Logger('calDAVcss',' calDAVmapFile  cssfile: ' + cssfile.path)
-	sss.loadAndRegisterSheet(uri, sss.USER_SHEET);
+		sss.loadAndRegisterSheet(uri, sss.USER_SHEET);
 	} catch (ex) {
 		Components.utils.reportError(ex);
 	}
@@ -5594,7 +5593,6 @@ function toggleImportantFlag(remindersPassed){
 
 	// if this is a remote calendar event go to sync it
 	rmFx_CalDAV_UpdateReminder (currentReminder)
-//gW	refreshCalendar(true, true);
 }
 
 

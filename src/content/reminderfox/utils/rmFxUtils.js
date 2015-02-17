@@ -1592,7 +1592,7 @@ reminderfox.util.makeMsgFile= function(xcontent, tempFile){
 };
 
 
-reminderfox.util.makeMsgFile8= function(outputStr, file){
+reminderfox.util.makeFile8= function(outputStr, file){
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	var sfile = Components.classes["@mozilla.org/file/local;1"]
 		.createInstance(Components.interfaces.nsIFile);
@@ -2539,71 +2539,14 @@ reminderfox.aboutXPI= function () {
 };
 
 
-//CalDAV _________________________________________
-if (!reminderfox.calDAV.accounts)   reminderfox.calDAV.accounts = {};    //calDAV  main definition of accounts
-
-// CalDAV  working with JSON
-//		var calDAVaccounts    = reminderfox.calDAV.accounts;
-//		var calDAVaccountsStr = JSON.stringify(calDAVaccounts);
-//		var calDAVaccounts    = JSON.parse(calDAVaccountsStr);
-
-/* CalDAV.account definitions ___________________________
- *   to access a specfic detail use:
- *
- *   .calDAV.accounts[ "calDAV account.ID" ] .ID               = [string]
- *   .calDAV.accounts[ "calDAV account.ID" ] .Type             = [string]
- *   .calDAV.accounts[ "calDAV account.ID" ] .Name             = [string]
- *   .calDAV.accounts[ "calDAV account.ID" ] .Login            = [string]
- *   .calDAV.accounts[ "calDAV account.ID" ] .Url              = [string]
- *   .calDAV.accounts[ "calDAV account.ID" ] .Active           = [boolean]
- *   .calDAV.accounts[ "calDAV account.ID" ] .CTag             = [string]
- *   .calDAV.accounts[ "calDAV account.ID" ] .Color            = [integer]  //optional
- *   .calDAV.accounts[ "calDAV account.ID" ] [ "UID" ].etag    = [string]
- *   .calDAV.accounts[ "calDAV account.ID" ] [ "UID" ].status  = [integer]
- *
- *   'status' parameter used to control the deletion of local reminders, for
- *      details see function rmFx_CalDAV_AccountListing/calDAVcalls.js
-
-   _________ EXAMPLE ______________________________
-	R : / * calDAV account.ID * / {
-		ID:    "R",
-		Typ:   "VTODO",
-		Name:  "myProject",
-		Login: "thisFox@yxc.de",
-		Url:   "https://dav.fruux.com/calendars/a1234567/calendar/",
-		Active: true,
-		CTag:  "4567gt",
-		Color:  "2",
-		"132603-873892222" : {etag: "", status: 1361576110326},
-		"567899-54321456z" : {etag: "", status: 1361576110326}
-	},
-
-	G : {
-		ID:    "G",
-		Typ:   "VEVENT",
-		Name:  "ourProject",
-		Login: "gabc@asd.de",
-		Url:   "https://dav.fruux.com/calendars/a9876543/calendar/",
-		Active: true,
-		CTag:  "etgt67",
-			"132829-456228787" : {etag: "36456-876", status: 1361747817888},
-			"123454-654345677" : {etag: "45862-3e3", status: 1361747817888},
-			"134523-876543233" : {etag: "45862-6gf", status: 1361747817888},
-			"153233-999342777" : {etag: "45862-eds", status: 1361747817888}
-	}
-
-   Get the CalDAV account using the 'calDAVid'
-   just use   reminderfox.calDAV.accounts[calDAVid]
-----------------------------------------------------------------------------*/
-
-
 /**
  * Get the file object for the colorMap
  * read it from ProfD/reminder/calDAVmap.css
  * if not exsist, copy a default definition from extDir
  * return {object}  calDAVmap.css
  */
-reminderfox.calDAV.calDAVmapFile= function(){
+if (!reminderfox.colorMap)   reminderfox.colorMap = {};
+reminderfox.colorMap.cssFileGet= function(){
 //-------------------------------------------------------------
 	var cssfile = reminderfox.util.ProfD_extend("reminderfox");
 	cssfile.append("calDAVmap.css");
@@ -2624,9 +2567,9 @@ reminderfox.calDAV.calDAVmapFile= function(){
 /**
  * Read the calDAV account color map 
  */
-reminderfox.calDAV.calDAVmapReadIn= function() {
+reminderfox.colorMap.cssFileRead= function() {
 //-------------------------------------------------------------
-	var cssString = reminderfox.core.readInFileContents (reminderfox.calDAV.calDAVmapFile());
+	var cssString = reminderfox.core.readInFileContents (reminderfox.colorMap.cssFileGet());
 	var colorCode;
 	var pos = 0;
 	var num = 0;
@@ -2658,11 +2601,11 @@ reminderfox.calDAV.calDAVmapReadIn= function() {
 	}
 	// reminderfox.util.Logger('calDAV',  ".calDAVmapReadIn " + msg);
 
-	reminderfox.calDAV.writeOutColorMap();
+	reminderfox.colorMap.cssFileWrite();
 };
 
 
-reminderfox.calDAV.writeOutColorMap= function () {
+reminderfox.colorMap.cssFileWrite= function () {
 //-----------------------------------------------------
 	var out = '/*-- tree color selectors --*/\n';
 
@@ -2711,8 +2654,8 @@ reminderfox.calDAV.writeOutColorMap= function () {
 	out +=  '\n/* http://www.colorpicker.com */';
 	out +=  '\ncolorpicker {color: #626262;}';
 
-	var cssFile = reminderfox.calDAV.calDAVmapFile();
-	reminderfox.calDAV.fileWriteOut (out, cssFile);
+	var cssFile = reminderfox.colorMap.cssFileGet();
+	reminderfox.calDAV.fileWrite (out, cssFile);
 
 
 		function hsl(colorHue) {
@@ -2724,19 +2667,18 @@ reminderfox.calDAV.writeOutColorMap= function () {
 /*
 * load calDAVcolorMap and set the CSS file to respect prefs saturation  --------
 */
-reminderfox.calDAV.setupColorMap= function () {
+reminderfox.colorMap.setup= function () {
 //-----------------------------------------------------
-	reminderfox.calDAV.calDAVmapReadIn();
+	reminderfox.colorMap.cssFileRead();
 
-	var cssfile = reminderfox.calDAV.calDAVmapFile();
+	var cssfile = reminderfox.colorMap.cssFileGet();
 	var sss = Components.classes["@mozilla.org/content/style-sheet-service;1"]
 						.getService(Components.interfaces.nsIStyleSheetService);
 	var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
 
 	var uri = ios.newURI("file:" + cssfile.path, null, null);
 	try {
-//reminderfox.util.Logger('calDAVcss',' calDAVmapFile  cssfile: ' + cssfile.path)
-	sss.loadAndRegisterSheet(uri, sss.USER_SHEET);
+		sss.loadAndRegisterSheet(uri, sss.USER_SHEET);
 	} catch (ex) {
 		Components.utils.reportError(ex);
 	}
@@ -2747,7 +2689,30 @@ reminderfox.calDAV.setupColorMap= function () {
  *  Check reminderfox.calDAV.accounts. If accounts found, just return, if not read
  *  from file stored parallel to the current 'reminderfox.ics' with extension .ics.dav
  *  @param {string}  ics fileName
- */
+ */	
+reminderfox.calDAV.XXXXaccountsReadIn= function (thisFile) {
+
+	if (Object.keys(reminderfox.calDAV.accounts).length === 0 ){
+		// no calDAV accounts? read file to make sure for accounts 
+		var calDAVfile = reminderfox.calDAV.accountsFile(thisFile);
+
+		var msg= (" .... calDAVfile: " + calDAVfile.path)
+		reminderfox.util.Logger('Alert', msg)
+		try {
+			reminderfox.calDAV.accounts = JSON.parse(reminderfox.core.readInFileContents (calDAVfile));
+		} catch(ex) {
+			reminderfox.calDAV.accounts = {};
+		}
+		var msg = (" .... calDAV_accounts read from (" + calDAVfile.path +")\n" + reminderfox.calDAV.accounts.toSource())
+		reminderfox.util.Logger('Alert', msg)
+	}
+
+	reminderfox.calDAV.accountsStatus()
+	return reminderfox.calDAV.accounts
+}
+
+
+
 reminderfox.calDAV.accountsReadIn= function (thisFile) {
 //-------------------------------------------------------------
 	var calDAVstatus = reminderfox.calDAV.accountsStatus()
@@ -2823,7 +2788,7 @@ reminderfox.calDAV.accountsStatus = function () {
  *  @param {object} the CalDAVaccounts definition objects
  *  @param {string} thisFile, optional: a file/path, if null: the current .ics location is used
  */
-reminderfox.calDAV.accountsWriteOut= function (calDAVaccounts) {
+reminderfox.calDAV.accountsWrite= function (calDAVaccounts) {
 //-------------------------------------------------------------
 	if (!calDAVaccounts) calDAVaccounts = {};
 
@@ -2834,38 +2799,18 @@ reminderfox.calDAV.accountsWriteOut= function (calDAVaccounts) {
 
 	var outputStr = JSON.stringify (calDAVaccounts);
 	var file = reminderfox.calDAV.accountsFile();
-	reminderfox.calDAV.fileWriteOut (outputStr, file);
+	reminderfox.calDAV.fileWrite (outputStr, file);
 
 	return calDAVaccountsNo;
 };
 
 
-reminderfox.calDAV.fileWriteOut= function (outputStr, thisFile) {
+reminderfox.calDAV.fileWrite= function (outputStr, thisFile) {
 //-------------------------------------------------------------
-	var msg = "\n___ Reminderfox WriteOut ________ file: " + thisFile.path;
+	var msg = "\n Reminderfox WriteOut CalDAV file: " + thisFile.path;
 	reminderfox.util.Logger('calDAV',  msg);
 
-	var outputStream = Components.classes["@mozilla.org/network/file-output-stream;1"]
-		.createInstance(Components.interfaces.nsIFileOutputStream);
-	outputStream.init(thisFile, 0x04 | 0x08 | 0x20, 420, 0);
-
-	var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
-		.createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-	converter.charset = "UTF-8";
-
-	var chunk = null;
-	try {
-		chunk = converter.ConvertFromUnicode(outputStr);
-	}
-	catch (e) {
-		chunk = outputStr;
-	}
-	outputStream.write(chunk, chunk.length);
-
-	var fin = converter.Finish();
-	if (fin.length > 0)
-		outputStream.write(fin, fin.length);
-	outputStream.close();
+	reminderfox.util.makeFile8(outputStr, thisFile.path)
 };
 
 
@@ -2879,9 +2824,6 @@ reminderfox.calDAV.accountsFile= function (currentFilePath) {
 	if (!currentFilePath) {
 		currentFilePath = reminderfox.core.getReminderStoreFile().path;
 	}
-	var msg =  " reminderfox.calDAV.accountsFile   currentFilePath   >>" + currentFilePath + "<<"
-//	reminderfox.util.Logger("calDAV",msg)
-
 	var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
 	file.initWithPath(currentFilePath + ".dav");
 	return file;
@@ -3207,11 +3149,11 @@ function reminderfox_isSubscribedCalendarTabSelected(){
  */
 reminderfox.online = {
 //--------------------------------------------------------------------------
-	status : function (isOnline, isOffline) {	//	reminderfox.online.status('calDAVonline', 'calDAVoffline')
+	status : function () {
 
 			if (navigator.onLine) {
 				var msg = " Reminderfox:  System status   +++ ONLINE +++"
-				reminderfox.util.Logger("calDAV",msg)
+				reminderfox.util.Logger('calDAV',msg)
 				var foxy = document.getElementById("rmFx-foxy-icon-small");
 				if (foxy != null) 
 					foxy.setAttribute('mode', 'online');
@@ -3220,7 +3162,7 @@ reminderfox.online = {
 
 			} else {
 				var msg = " Reminderfox:  System status   --- OFFINE ---"
-				reminderfox.util.Logger("calDAV",msg)
+				reminderfox.util.Logger('calDAV',msg)
 
 				reminderfox.core.statusSet("System is Offline!", true)
 				var foxy = document.getElementById("rmFx-foxy-icon-small");

@@ -675,7 +675,7 @@
 
 		accountColorsSetup : function (accountColor) {
 		//-----------------------------------------------------
-			reminderfox.calDAV.calDAVmapReadIn();
+			reminderfox.colorMap.cssFileRead();
 			var colorsLength = reminderfox.calDAV.colorMap.length;
 			if (accountColor === "") accountColor = 999;
 
@@ -708,7 +708,8 @@
 				newBox.setAttribute("colorNum", n);
 				accountColors.appendChild(newBox);
 			}
-			reminderfox.calDAV.writeOutColorMap ();
+			// reminderfox.calDAV.colorMapWrite ();
+			reminderfox.colorMap.cssFileWrite()
 		},
 
 		accountColorsSelect : function (xthis) {
@@ -758,7 +759,7 @@
 				thisBox.setAttribute("hexColor",pickerColor);
 				thisBox.setAttribute("hexColorD",pickerColorDark);
 			}
-			reminderfox.calDAV.writeOutColorMap ();
+			reminderfox.calDAV.colorMapWrite ();
 		},
 
 

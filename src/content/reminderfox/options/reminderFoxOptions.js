@@ -1439,7 +1439,7 @@ function rmFx_calDAVfileCheckAndSave() {
 	// That array is stored to a file with the same name as the "reminderfox.ics" with
 	// an extension or ".dav", that is : "reminderfox.ics.dav"
 	// Write the accounts to 'current' file location
-	var old_CalDAV_accounts = reminderfox.calDAV.accountsWriteOut (reminderfox.calDAV.accounts);
+	var old_CalDAV_accounts = reminderfox.calDAV.accountsWrite (reminderfox.calDAV.accounts);
 
 	// With changing the ICS file location another ".dav" has to be used also.
 
@@ -1499,11 +1499,11 @@ function rmFx_calDAVfileCheckAndSave() {
 					reminderfox.calDAV.accounts = reminderfox.calDAV.accountsClearReminderDetails(reminderfox.calDAV.accounts);
 	
 					// need to write to NEW .ics.dav  file!
-					reminderfox.calDAV.accountsWriteOut (reminderfox.calDAV.accounts, rmFx_icsFileLocationNew);
+					reminderfox.calDAV.accountsWrite (reminderfox.calDAV.accounts, rmFx_icsFileLocationNew);
 				}
 
 				if ( /* New */ 'key1' == xulStrings.whichKey) {
-					reminderfox.calDAV.accountsWriteOut (null, rmFx_icsFileLocationNew);
+					reminderfox.calDAV.accountsWrite (null, rmFx_icsFileLocationNew);
 					reminderfox.calDAV.accounts = {}
 				}
 

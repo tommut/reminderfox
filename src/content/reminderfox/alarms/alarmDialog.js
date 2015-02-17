@@ -170,6 +170,9 @@ function initializeAlarm(reminderAlarmOptions, hasNotes, firstTab) {
 	accounts = reminderfox.calDAV.accountsReadIn()
 	//accounts = reminderfox.calDAV.accounts //ReadIn()
 
+var msg = "initializeAlarm"
+reminderfox.util.Logger('checkData', msg)
+
 	var tabPanel = reminderAlarmOptions.alarmTabPanel;
 	var recentReminder = reminderAlarmOptions.alarmRecentReminder;
 
@@ -613,7 +616,7 @@ function reminderFox_editReminderFromAlarm() {
 
 //gWTESTalarm
 //		var msgLog = " Alarmed reminder was edited : " + returnedSummary;
-//		reminderfox.util.Logger("Alert", msgLog);
+//		reminderfox.util.Logger('Alert', msgLog);
 
 		tabList.children[index].label=returnedSummary;
 		document.getElementById('reminderDescriptionText').value = returnedSummary
@@ -754,9 +757,9 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 	}
 
 	// mark reminder's last-acknowleged  (unless snooze was pressed)
-	if(reminder != null) {//gWTESTalarm
-//        var msgText = "  reminderFox_performAlarmAction    reminder: " + reminder.summary + "  alarmAction: " + actionIndex
-//        reminderfox.util.Logger("Alert", msgText)
+	if(reminder != null) {
+        var msgText = "  reminderFox_performAlarmAction    reminder: " + reminder.summary + "  alarmAction: " + actionIndex
+        reminderfox.util.Logger('Alert', msgText)
 
 		var removed = false;
 		var completed = false;
@@ -1051,9 +1054,14 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 		reminderFox_closeAlarmTab();
 	}
 
-	//sync with remote calendar	//gWTESTalarm with CalDAV
+	//sync with remote calendar
 	if(reminder.calDAVid != null) {
 		if (completed) reminder.completedDate = new Date();
+
+//TEST
+var msg = " check accounts before going to .CalDAVaction: \n" + accounts.toSource()
+reminderfox.util.Logger('checkData', msg)
+
 		reminderfox.core.CalDAVaction (reminder, actionIndex)
 	}
 }

@@ -53,8 +53,6 @@
 			</description>
 
 			<spacer height="10px"/>
-			<description id="callDetails" width="250px" class="reminderfox_TextNote">
-			</description>
 
 			<hbox>
 				<button id="reminderFox_go4OptionSync" 
@@ -83,7 +81,6 @@
 			document.getElementById('errorStatus').value       = window.arguments[0].sMsg;
 			document.getElementById('account').value           = window.arguments[0].aMsg;
 			document.getElementById('url').value               = window.arguments[0].uMsg;
-			document.getElementById('callDetails').value       = window.arguments[0].calls;
 			document.getElementById('rmFxCaldavUpdate').hidden = false;
 		}
 

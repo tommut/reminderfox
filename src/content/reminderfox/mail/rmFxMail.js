@@ -1311,7 +1311,7 @@ if(!reminderfox.msgnr) reminderfox.msgnr={};
 		}
 
 		// ------ write TMP file ---------------
-		return  reminderfox.util.makeMsgFile8 (fContent, reminderfox.util.buildUIDFile(refID));
+		return  reminderfox.util.makeFile8 (fContent, reminderfox.util.buildUIDFile(refID));
 	}
 
 

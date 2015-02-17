@@ -5,6 +5,8 @@ if (!reminderfox.network) reminderfox.network = {};
 
 if (!reminderfox.core.method) reminderfox.core.method = "";
 
+if (!reminderfox.calDAV)   reminderfox.calDAV = {};
+if (!reminderfox.calDAV.accounts)   reminderfox.calDAV.accounts = {};    //calDAV  main definition of accounts
 
 // constants
 reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.2";		// update also install.rdf
@@ -2667,8 +2669,6 @@ function reminderfox_getNumDaysModel(reminders) {
 
 
 reminderfox.core.getReminderTodos= function(){
-//	var msg =" #### reminderfox.core.getReminderTodos ##### ";
-//  reminderfox.util.Logger('calDAV',  msg);
     if (!reminderfox.core.reminderFoxTodosArray) {
         reminderfox.core.reminderFoxEvents = new Array();
         reminderfox.core.reminderFoxTodosArray = {};
@@ -3432,7 +3432,7 @@ reminderfox.core.writeOutRemindersAndTodos= function(isExport){
     }
 
     reminderfox.core.writeStringToFile(outputStr, file, false);
-    reminderfox.calDAV.accountsWriteOut (reminderfox.calDAV.accounts);  // change reminderfox.calDAV.accounts
+    reminderfox.calDAV.accountsWrite (reminderfox.calDAV.accounts);  // change reminderfox.calDAV.accounts
 };
 
 
@@ -6312,7 +6312,6 @@ reminderfox.core.addReminderHeadlessly= function(originalReminder, isEdit, isTod
                 var sortedIndex = reminderfox.core.getSortedIndexOfNewReminder(reminders, currentReminder, false);
                 reminderfox.core.insertIntoArray(reminders, currentReminder, sortedIndex);
 
-//gWTESTalarm				rmFx_CalDAV_UpdateReminder(currentReminder);
                 reminderfox.core.CalDAVaction (currentReminder, 1 /* actionIndex */)
             }
 
@@ -7342,6 +7341,10 @@ reminderfox.core.CalDAVaction = function(recentReminder, actionCode) {
         var mWindow = reminderfox.core.getWindowEnumerator()
         if (mWindow.hasMoreElements()) {
             var xWindow = mWindow.getNext();
+
+//TEST
+		var msg = (" ...core.CalDAVaction  accounts:\n" + reminderfox.calDAV.accounts.toSource())
+		reminderfox.util.Logger('Alert', msg)
 
             if (actionCode == REMINDERFOX_ACTION_TYPE.DELETE){
                 setTimeout(function() {xWindow.rmFx_CalDAV_ReminderDelete(recentReminder)},0);
