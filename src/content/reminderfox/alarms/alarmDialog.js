@@ -61,7 +61,9 @@ function loadAlarm() {
 	reminderFox_reopeningWindow = false;
 	reminderAlarmArray = window.arguments[0].alarmInfos;
 	
-	reminderfox.calDAV.accounts = window.arguments[0].calDAVaccounts;
+//	reminderfox.calDAV.accounts = window.arguments[0].calDAVaccounts;
+	accounts = window.arguments[0].calDAVaccounts;
+
 
 	var panels = document.getElementById("tabPanelID");
 	var tabList = document.getElementById("tabList");
@@ -167,11 +169,10 @@ function reminderFox_getLinkDisplayText(linkurl) {
 
 function initializeAlarm(reminderAlarmOptions, hasNotes, firstTab) {
 
-	accounts = reminderfox.calDAV.accountsReadIn()
-	//accounts = reminderfox.calDAV.accounts //ReadIn()
+	accounts = reminderfox.calDAV.getAccounts()
 
-var msg = "initializeAlarm"
-reminderfox.util.Logger('checkData', msg)
+var msg = "initializeAlarm   accounts: " + accounts.toSource()
+reminderfox.util.Logger('ALERT', msg)
 
 	var tabPanel = reminderAlarmOptions.alarmTabPanel;
 	var recentReminder = reminderAlarmOptions.alarmRecentReminder;
@@ -1059,10 +1060,10 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 		if (completed) reminder.completedDate = new Date();
 
 //TEST
-var msg = " check accounts before going to .CalDAVaction: \n" + accounts.toSource()
-reminderfox.util.Logger('checkData', msg)
+//var msg = " check accounts before going to .CalDAVaction: \n" + accounts.toSource()
+//reminderfox.util.Logger('checkData', msg)
 
-		reminderfox.core.CalDAVaction (reminder, actionIndex)
+//		reminderfox.core.CalDAVaction (reminder, actionIndex)
 	}
 }
 

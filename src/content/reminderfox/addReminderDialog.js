@@ -546,8 +546,8 @@ function rmFx_mainDialogLoadReload() {
  *  Starting the ReminderFox Main Dialog with MainList and/or Calendar
  */
 function rmFx_mainDialogLoad(restartSkip){
-	// --- calDAV accounts setup: reminderfox.calDAV.accounts
-	reminderfox.calDAV.accountsReadIn();
+
+	reminderfox.calDAV.getAccounts();
 
 	// --- load calDAVcolorMap and set the CSS file to respect prefs saturation
 	reminderfox.colorMap.cssFileRead();
@@ -1958,7 +1958,7 @@ function createUIListItemReminder(baseReminder){
 
 //calDAV_color
 		if (baseReminder.calDAVid != null) {
-			var thisAccountDef = reminderfox.calDAV.accounts[baseReminder.calDAVid]
+			var thisAccountDef = reminderfox.calDAV.getAccounts()[baseReminder.calDAVid]
 			
 			if ((thisAccountDef != null) && (thisAccountDef.Color != null)) {
 				var calDAVNum = thisAccountDef.Color;
@@ -2396,7 +2396,7 @@ function createUIListReminderItemSorted(reminder, todaysDate){
 
 
 		if (reminder.calDAVid != null) {
-			var thisAccountDef = reminderfox.calDAV.accounts[reminder.calDAVid]
+			var thisAccountDef = reminderfox.calDAV.getAccounts()[reminder.calDAVid]
 			
 			if ((thisAccountDef != null) && (thisAccountDef.Color != null)) {
 				var calDAVNum = thisAccountDef.Color;
@@ -3922,9 +3922,9 @@ function activateContextReminder(event){
 
 function reminderFox_onListCalDAV(xthis){
 	// calDAV menu
-	reminderfox.calDAV.accountsReadIn();
-	var accounts = reminderfox.calDAV.accounts;
-	if (accounts != null) { 
+	var accounts = reminderfox.calDAV.getAccounts();
+
+	if (Object.keys(accounts).length !== 0 ){
 
 		// remove all items from popup menu
 		var calDAVlist = document.getElementById(xthis.id);  // 'exportXML-popup' or 'exportXML-todo-popup'
@@ -4231,7 +4231,7 @@ function reminderTreeTooltip(event){
 		}
 
 		if ((reminder.calDAVid != null) && (reminder.calDAVid != "")) {
-			var account = reminderfox.calDAV.accounts[reminder.calDAVid];
+			var account = reminderfox.calDAV.getAccounts()[reminder.calDAVid];
 			if (account != null) {
 				addTooltipWithLabel(tooltipItem, null, '[ ' + reminder.calDAVid + ' ] ' + account.Name, false, false, reminderfox.string("rf.caldav.account.remote"));
 			}
@@ -4380,7 +4380,7 @@ function todoTreeTooltip(event){
 		}
 
 		if ((todo.calDAVid != null) && (todo.calDAVid != "")) {
-			var account = reminderfox.calDAV.accounts[todo.calDAVid];
+			var account = reminderfox.calDAV.getAccounts()[todo.calDAVid];
 			if (account != null) {
 				addTooltipWithLabel(tooltipItem, null, '[ ' + todo.calDAVid + ' ] ' 
 				+ account.Name, false, false, reminderfox.string("rf.caldav.account.remote"));

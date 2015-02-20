@@ -2360,7 +2360,7 @@ reminderfox.calendar.ttt.addIconLine= function (eventDrawer, icons, summaryStyle
 //gWCalDAV
 	if (icons.CalDAV == true) { // isCalDAV 
 		var calDAVTTT = "";
-		var account = reminderfox.calDAV.accounts[reminder.calDAVid];
+		var account = reminderfox.calDAV.getAccounts()[reminder.calDAVid];
 		if (account != null) {
 			calDAVTTT = reminderfox.string('rf.caldav.calendar.account') + ' [ ' +reminder.calDAVid + ' ] ' + account.Name;
 			var icon = document.createElement("toolbarbutton");

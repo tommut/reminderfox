@@ -167,7 +167,7 @@
 						<groupbox>
 							<vbox>
 								<hbox>
-									<menulist id="reminderFox-alarm-action" oncommand="XreminderFox_actionChanged();">
+									<menulist id="reminderFox-alarm-action" oncommand="reminderFox_actionChanged();">
 										<menupopup>
 											<menuitem label="&rf.alarm.button.acknowledge;" />
 											<menuitem label="&rf.alarm.button.complete;" />
@@ -191,12 +191,5 @@
 			</tabpanel>
 		</tabpanels>
 	</tabbox>
-
-
-	<script type="application/x-javascript"><![CDATA[
-		function XreminderFox_actionChanged() {
-			reminderFox_actionChanged()
-		}
-	]]></script>
 
 </window>

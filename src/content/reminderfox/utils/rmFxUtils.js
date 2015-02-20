@@ -1401,7 +1401,7 @@ reminderfox.util.pickFileICSfile= function (extension, xthis) {
 		//gWCalDAV
 		// With CalDAV enabled, each event/todo connected to a CalDAV account will 
 		// be traced in  'reminderfox.calDAV.accounts' 
-		reminderfox.calDAV.accountsReadIn();
+		reminderfox.calDAV.getAccounts();
 
 		// check if we've successfully imported any reminders or todo events
 		var importedSuccess = reminderEvents.length !== 0;
@@ -2689,73 +2689,33 @@ reminderfox.colorMap.setup= function () {
  *  Check reminderfox.calDAV.accounts. If accounts found, just return, if not read
  *  from file stored parallel to the current 'reminderfox.ics' with extension .ics.dav
  *  @param {string}  ics fileName
- */	
-reminderfox.calDAV.XXXXaccountsReadIn= function (thisFile) {
+ */
+reminderfox.calDAV.getAccounts = function (thisFile) {
 
-	if (Object.keys(reminderfox.calDAV.accounts).length === 0 ){
-		// no calDAV accounts? read file to make sure for accounts 
-		var calDAVfile = reminderfox.calDAV.accountsFile(thisFile);
+	var calDAVfile;
 
-		var msg= (" .... calDAVfile: " + calDAVfile.path)
+	// no calDAV accounts? Or a file is given? --> read file to make sure for accounts 
+	if ((Object.keys(reminderfox.calDAV.accounts).length === 0) || (thisFile != null)){
+
+		calDAVfile = reminderfox.calDAV.accountsFile(thisFile);
+		var msg= (" .... Read from calDAVfile: " + calDAVfile.path)
 		reminderfox.util.Logger('Alert', msg)
 		try {
 			reminderfox.calDAV.accounts = JSON.parse(reminderfox.core.readInFileContents (calDAVfile));
 		} catch(ex) {
 			reminderfox.calDAV.accounts = {};
 		}
-		var msg = (" .... calDAV_accounts read from (" + calDAVfile.path +")\n" + reminderfox.calDAV.accounts.toSource())
+
+		var msg = (" ..1.. '.calDAV.accounts'  in use:\n" + reminderfox.calDAV.accounts.toSource())
 		reminderfox.util.Logger('Alert', msg)
 	}
+
+	var msg = (" ..2.. '.calDAV.accounts'  in use:\n" + reminderfox.calDAV.accounts.toSource())
+	//reminderfox.util.Logger('Alert', msg)
 
 	reminderfox.calDAV.accountsStatus()
 	return reminderfox.calDAV.accounts
 }
-
-
-
-reminderfox.calDAV.accountsReadIn= function (thisFile) {
-//-------------------------------------------------------------
-	var calDAVstatus = reminderfox.calDAV.accountsStatus()
-
-/*---------------
-	// if we have accounts, just return them
-	if (calDAVstatus.count != 0) {
-
-		var msg = "  **** CalDAV accounts ... Status ... count >>" + calDAVstatus.count + "<<   active >>" + calDAVstatus.active + "<<" 
-			+ "  offlineReminders: " + calDAVstatus.offlineReminders
-		reminderfox.util.Logger("checkData", msg)
-
-		return reminderfox.calDAV.accounts
-	}
-------------*/
-
-	// no calDAV accounts, read from file 
-	var calDAVfile = reminderfox.calDAV.accountsFile(thisFile);
-	var calDAVaccounts;
-	reminderfox.calDAV.offlineReminders= false;
-
-	try {
-		calDAVaccounts = reminderfox.core.readInFileContents (calDAVfile);
-	} catch(ex) {
-		calDAVaccounts = "";
-	}
-
-	if ((!calDAVaccounts) || (calDAVaccounts === "")){
-		reminderfox.calDAV.accounts = {};
-	}
-
-	reminderfox.calDAV.accounts = JSON.parse(calDAVaccounts);
-
-	var calDAVstatus = reminderfox.calDAV.accountsStatus()
-
-	var msg = "  **** CalDAV accounts ... readIn ... count >>" + calDAVstatus.count 
-		+ "<<   active >>" + calDAVstatus.active + "<<" 
-		+ "   offlineReminders: " + calDAVstatus.offlineReminders
-	//	+ "\n   " + calDAVaccounts
-	reminderfox.util.Logger("checkData", msg)
-
-	return reminderfox.calDAV.accounts;
-};
 
 
 reminderfox.calDAV.accountsStatus = function () {
@@ -2764,8 +2724,11 @@ reminderfox.calDAV.accountsStatus = function () {
 
 	calDAVstatus.count = 0;
 	calDAVstatus.active = 0;
+	calDAVstatus.snap=""
 	for (var account in calDAVaccounts) {
 		if (calDAVaccounts[account].Active === true) calDAVstatus.active++;
+		calDAVstatus.snap += "["+calDAVaccounts[account].ID + "] CTag:" + calDAVaccounts[account].CTag + ";  "
+
 		calDAVstatus.count++;
 	}
 
@@ -2777,6 +2740,12 @@ reminderfox.calDAV.accountsStatus = function () {
 		|| (sCalDAVaccounts.search('"status":"-2"') != -1)){	//Edit/Update
 		calDAVstatus.offlineReminders = true;
 	}
+
+	var msg = (" .... '.calDAV.accountsStatus'   count#:" + calDAVstatus.count +"  active# " + calDAVstatus.active 
+		+ "  .offlineReminders: " + calDAVstatus.offlineReminders)
+		+"\n snap: " + calDAVstatus.snap
+
+	reminderfox.util.Logger('calDAV', msg)
 
 	return calDAVstatus;
 };
@@ -2790,7 +2759,11 @@ reminderfox.calDAV.accountsStatus = function () {
  */
 reminderfox.calDAV.accountsWrite= function (calDAVaccounts) {
 //-------------------------------------------------------------
+var msg = "  fct:  reminderfox.calDAV.accountsWrite= function (calDAVaccounts) \n" + calDAVaccounts.toSource();
+reminderfox.util.Logger('checkData',msg)
+
 	if (!calDAVaccounts) calDAVaccounts = {};
+	reminderfox.calDAV.accounts = calDAVaccounts
 
 	var calDAVaccountsNo = 0;
 	for (var account in calDAVaccounts) {
@@ -2801,6 +2774,8 @@ reminderfox.calDAV.accountsWrite= function (calDAVaccounts) {
 	var file = reminderfox.calDAV.accountsFile();
 	reminderfox.calDAV.fileWrite (outputStr, file);
 
+//TEST
+//2015-02-20    reminderfox.calDAV.accounts = {}
 	return calDAVaccountsNo;
 };
 

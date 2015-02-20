@@ -2646,7 +2646,8 @@ reminderfox.core.getReminderEvents= function(clear){
             //gWCalDAV
             // With CalDAV enabled, each event/todo connected to a CalDAV account will 
             // be traced in  'reminderfox.calDAV.accounts' 
-            reminderfox.calDAV.accountsReadIn();
+//            reminderfox.calDAV.accountsReadIn();
+            reminderfox.calDAV.getAccounts();
 
         }
         reminderfox_getNumDaysModel(reminderfox.core.reminderFoxEvents);
@@ -2682,7 +2683,8 @@ reminderfox.core.getReminderTodos= function(){
         //gWCalDAV
         // With CalDAV enabled, each event/todo connected to a CalDAV account will 
         // be traced in  'reminderfox.calDAV.accounts' 
-        reminderfox.calDAV.accountsReadIn();
+//        reminderfox.calDAV.accountsReadIn();
+        reminderfox.calDAV.getAccounts();
     }
     return reminderfox.core.reminderFoxTodosArray;
 };
@@ -3432,7 +3434,10 @@ reminderfox.core.writeOutRemindersAndTodos= function(isExport){
     }
 
     reminderfox.core.writeStringToFile(outputStr, file, false);
-    reminderfox.calDAV.accountsWrite (reminderfox.calDAV.accounts);  // change reminderfox.calDAV.accounts
+
+
+//TEST
+	reminderfox.calDAV.accountsWrite(reminderfox.calDAV.accounts);
 };
 
 
@@ -6254,8 +6259,6 @@ reminderfox.core.addReminderHeadlessly= function(originalReminder, isEdit, isTod
     }
     reminderfox.tabInfo.tabID = oldTabName;
 
-    reminderfox.calDAV.accountsReadIn();
-
     if((originalReminder.calDAVid) && (originalReminder.calDAVid !== ""))
         currentReminder.calDAVidOriginal = originalReminder.calDAVid
 
@@ -6266,7 +6269,7 @@ reminderfox.core.addReminderHeadlessly= function(originalReminder, isEdit, isTod
         isTodo : isTodo,
         tabInfo : reminderfox.tabInfo,
         calDAVid : "",
-        calDAVaccounts : reminderfox.calDAV.accounts
+        calDAVaccounts : reminderfox.calDAV.getAccounts()
     };
 
     window.openDialog("chrome://reminderfox/content/editing/reminderEventDialog.xul", "reminderOptionsDialog", "chrome,resizable,modal", newOptions);
@@ -6410,7 +6413,7 @@ reminderfox.core.updateMainDialog= function (currentReminder, oldTabName, newTab
             topWindow.rmFx_CalDAV_ReminderDelete(currentReminder);
 
         } else if ((currentReminder.calDAVidOriginal != null) && (currentReminder.calDAVid != currentReminder.calDAVidOriginal)) {
-            topWindow.rmFx_CalDAV_ReminderMoved (currentReminder);
+            topWindow.rmFx_CalDAV_ReminderMoved(currentReminder);
 
         } else {
             // CalDAV   update on server
@@ -7343,13 +7346,15 @@ reminderfox.core.CalDAVaction = function(recentReminder, actionCode) {
             var xWindow = mWindow.getNext();
 
 //TEST
-		var msg = (" ...core.CalDAVaction  accounts:\n" + reminderfox.calDAV.accounts.toSource())
+		var msg = (" ...core.CalDAVaction  accounts:\n" + reminderfox.calDAV.getAccounts().toSource())
 		reminderfox.util.Logger('Alert', msg)
 
             if (actionCode == REMINDERFOX_ACTION_TYPE.DELETE){
-                setTimeout(function() {xWindow.rmFx_CalDAV_ReminderDelete(recentReminder)},0);
+   //             setTimeout(function() {xWindow.rmFx_CalDAV_ReminderDelete(recentReminder)},0);
+                xWindow.rmFx_CalDAV_ReminderDelete(recentReminder)
             } else {
-                setTimeout(function() {xWindow.rmFx_CalDAV_UpdateReminder(recentReminder)},0);
+   //             setTimeout(function() {xWindow.rmFx_CalDAV_UpdateReminder(recentReminder)},0);
+                xWindow.rmFx_CalDAV_UpdateReminder(recentReminder, null, reminderfox.calDAV.accounts)
             }
         }
     }

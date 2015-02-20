@@ -27,7 +27,7 @@ var rmFx_networkSync = false;
 
 function reminderFox_loadOptions() {
 //------------------------------------------------------------------------------
-	reminderfox.calDAV.accountsReadIn();				//	reminderfox.calDAV.accounts   read  accounts from file 
+	reminderfox.calDAV.getAccounts();				//	reminderfox.calDAV.accounts   read  accounts from file 
 
 	if (window.arguments != null) {
 
@@ -414,7 +414,7 @@ function reminderFox_loadOptions() {
 	}
 
 	// read CalDAV accounts
-	var calDAVaccounts = rmFx_calDAV_AddNew(reminderfox.calDAV.accounts);
+	var calDAVaccounts = rmFx_calDAV_AddNew(reminderfox.calDAV.getAccounts());
 
 	// set the 'default' CalDAV account
 	var calDAV_defaultSyncAccount = reminderfox.core.getPreferenceValue (reminderfox.consts.CALDAV_DEFAULT_ACCOUNT, '--');
@@ -1225,7 +1225,7 @@ function reminderFox_updateOptions() {
 		// remove account/object from the accounts if 'toDelete' flag set
 		// OR if the 'ID' is equal '?'
 		if ((elem.getAttribute('toDelete') == 'true') || (ID == '?')){
-			reminderfox.calDAV.accounts = reminderfox.util.removeObjectFromObject(reminderfox.calDAV.accounts, ID);
+			reminderfox.calDAV.accounts = reminderfox.util.removeObjectFromObject(reminderfox.calDAV.getAccounts(), ID);
 			_accounts = _accounts -1
 		} else {
 
@@ -1265,7 +1265,7 @@ function reminderFox_updateOptions() {
 
 	// disable server/ Network Sync  if CalDAV active
 	// need the corrected number of remote calendars, could be removed, see above 'toDelete'
-	var calDAVstatus = rmFx_calDAVstatus(reminderfox.calDAV.accounts)
+	var calDAVstatus = rmFx_calDAVstatus(reminderfox.calDAV.getAccounts())
 	reminderFox_networkServerEnable(calDAVstatus.active)
 
 	rmFx_networkSync = document.getElementById("reminderFox-network-sync").getAttribute("checked");
@@ -1363,7 +1363,7 @@ function reminderFox_calDAVsave() {
 		// remove account/object from the accounts if 'toDelete' flag set
 		// OR if the 'ID' is equal '?'
 		if ((elem.getAttribute('toDelete') == 'true') || (ID == '?')){
-			reminderfox.calDAV.accounts = reminderfox.util.removeObjectFromObject(reminderfox.calDAV.accounts, ID);
+			reminderfox.calDAV.accounts = reminderfox.util.removeObjectFromObject(reminderfox.calDAV.getAccounts(), ID);
 		} else {
 
 			// if this is a new account make new and set CTag
@@ -1439,7 +1439,7 @@ function rmFx_calDAVfileCheckAndSave() {
 	// That array is stored to a file with the same name as the "reminderfox.ics" with
 	// an extension or ".dav", that is : "reminderfox.ics.dav"
 	// Write the accounts to 'current' file location
-	var old_CalDAV_accounts = reminderfox.calDAV.accountsWrite (reminderfox.calDAV.accounts);
+	var old_CalDAV_accounts = reminderfox.calDAV.accountsWrite (reminderfox.calDAV.getAccounts());
 
 	// With changing the ICS file location another ".dav" has to be used also.
 
@@ -1463,7 +1463,8 @@ function rmFx_calDAVfileCheckAndSave() {
 		// check if Remote Calendar/CalDAV accounts are already defined for 
 		// the 'new' file selection, if so, readin
 		if (reminderfox.util.fileCheck(rmFx_calDAVaccountsFileLocationNew) > 0) { 
-			reminderfox.calDAV.accountsReadIn (rmFx_icsFileLocationNew)
+//			reminderfox.calDAV.accountsReadIn (rmFx_icsFileLocationNew)
+			reminderfox.calDAV.getAccounts (rmFx_icsFileLocationNew)
 		}
 
 		else { // NO .dav file, ask user how to 
@@ -1499,7 +1500,7 @@ function rmFx_calDAVfileCheckAndSave() {
 					reminderfox.calDAV.accounts = reminderfox.calDAV.accountsClearReminderDetails(reminderfox.calDAV.accounts);
 	
 					// need to write to NEW .ics.dav  file!
-					reminderfox.calDAV.accountsWrite (reminderfox.calDAV.accounts, rmFx_icsFileLocationNew);
+					reminderfox.calDAV.accountsWrite (reminderfox.calDAV.getAccounts(), rmFx_icsFileLocationNew);
 				}
 
 				if ( /* New */ 'key1' == xulStrings.whichKey) {
@@ -1534,9 +1535,10 @@ function rmFx_calDAVsetup() {
 	}
 
 	// read CalDAV accounts
-	reminderfox.calDAV.accountsReadIn(rmFx_icsFileLocationCurrent);
+//	reminderfox.calDAV.accountsReadIn(rmFx_icsFileLocationCurrent);
+	reminderfox.calDAV.getAccounts(rmFx_icsFileLocationCurrent);
 
-	var calDAVaccounts = rmFx_calDAV_AddNew(reminderfox.calDAV.accounts);
+	var calDAVaccounts = rmFx_calDAV_AddNew(reminderfox.calDAV.getAccounts());
 
 	// set the 'default' CalDAV account
 	var calDAV_defaultSyncAccount = reminderfox.core.getPreferenceValue (reminderfox.consts.CALDAV_DEFAULT_ACCOUNT, 'Reminders');
