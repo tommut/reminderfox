@@ -61,9 +61,7 @@ function loadAlarm() {
 	reminderFox_reopeningWindow = false;
 	reminderAlarmArray = window.arguments[0].alarmInfos;
 	
-//	reminderfox.calDAV.accounts = window.arguments[0].calDAVaccounts;
-	accounts = window.arguments[0].calDAVaccounts;
-
+	calDAVaccounts = window.arguments[0].calDAVaccounts;
 
 	var panels = document.getElementById("tabPanelID");
 	var tabList = document.getElementById("tabList");
@@ -169,10 +167,10 @@ function reminderFox_getLinkDisplayText(linkurl) {
 
 function initializeAlarm(reminderAlarmOptions, hasNotes, firstTab) {
 
-	accounts = reminderfox.calDAV.getAccounts()
+	var calDAVaccounts = reminderfox.calDAV.getAccounts()
 
-var msg = "initializeAlarm   accounts: " + accounts.toSource()
-reminderfox.util.Logger('ALERT', msg)
+var msg = "initializeAlarm   calDAVaccounts: " + calDAVaccounts.toSource()
+//reminderfox.util.Logger('ALERT', msg)
 
 	var tabPanel = reminderAlarmOptions.alarmTabPanel;
 	var recentReminder = reminderAlarmOptions.alarmRecentReminder;
@@ -372,7 +370,7 @@ reminderfox.util.Logger('ALERT', msg)
 
 
 	if(recentReminder != null && recentReminder.calDAVid != null) {
-		var account = accounts[recentReminder.calDAVid];
+		var account = calDAVaccounts[recentReminder.calDAVid];
 		getChildElementById(tabPanel, "calDavText").setAttribute("value", ' [ ' +recentReminder.calDAVid + ' ] ' + account.Name);
 		getChildElementById(tabPanel, "calDavHbox").removeAttribute("hidden");
 	} else {
@@ -604,9 +602,6 @@ function reminderFox_editReminderFromAlarm() {
 	var isReminder = reminderAlarmArray[index].alarmIsReminder;
 	var isReminderType = (isReminder == "true" || isReminder == true );
 
-	//reminderfox.overlay.openMainDialog(false);		//§§TODO .. need to lunch main dialog for CalDAV (workaround)
-	//2014-02-16  see alamDialog.xul : loading calDav stuff
-
 	var alarmReminder;
 	if (isReminderType) reminderOrTodoEdit (reminderfox.core.getRemindersById(reminderID), false /*isTodo*/);
 	if (!isReminderType) reminderOrTodoEdit(reminderfox.core.getSpecificTodoById(reminderID), true, reminderAlarmArray[index].alarmListName);
@@ -614,10 +609,6 @@ function reminderFox_editReminderFromAlarm() {
 	// successful edit will set the .lastEvent -- so we can update the Alarm dialog 
 	if (reminderfox.core.lastEvent) {
 		var returnedSummary = reminderfox.core.lastEvent.summary;
-
-//gWTESTalarm
-//		var msgLog = " Alarmed reminder was edited : " + returnedSummary;
-//		reminderfox.util.Logger('Alert', msgLog);
 
 		tabList.children[index].label=returnedSummary;
 		document.getElementById('reminderDescriptionText').value = returnedSummary
@@ -1046,7 +1037,7 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 				currentWindow.reminderfox.core.reminderFoxTodosArray = reminderfox.core.reminderFoxTodosArray;
 
 				currentWindow.reminderfox.overlay.updateRemindersInWindow();
-				currentWindow.reminderfox.core.clearRemindersAndTodos();
+//gwTEST				currentWindow.reminderfox.core.clearRemindersAndTodos();
 			}
 		}
 	}
@@ -1059,11 +1050,8 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 	if(reminder.calDAVid != null) {
 		if (completed) reminder.completedDate = new Date();
 
-//TEST
-//var msg = " check accounts before going to .CalDAVaction: \n" + accounts.toSource()
-//reminderfox.util.Logger('checkData', msg)
-
-//		reminderfox.core.CalDAVaction (reminder, actionIndex)
+//gwTEST
+		reminderfox.core.CalDAVaction (reminder, actionIndex)
 	}
 }
 

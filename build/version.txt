@@ -2,6 +2,15 @@
 ##  version.txt
 ##
 
+wip 2015-02-23 __ version 2.1.5.2 (wip)
+	CalDAV
+	-- update accounts on all XUL windows with write to .dav
+
+	DTSTART/DTEND changed to Z-time format with storing/syncing to be compatible
+	with systems like fruux (values are converted for 'local' time for UI and 
+	internal RmFX use) 
+
+
 wip 2015-02-14 __ version 2.1.5.2 (wip)
 	Auto sync at FX/TB startup and also with open RmFX MainDialog
 	Offline mode (Foxy symbol changes, status line in MainDialog)

@@ -407,7 +407,7 @@
 			if (callOptions.ID == "%%") return;
 
 			if (callOptions.ID != oldID) {
-				reminderfox.calDAV.accounts = reminderfox.util.removeObjectFromObject(reminderfox.calDAV.accounts, oldID);
+				reminderfox.calDAV.accounts = reminderfox.util.removeObjectFromObject(reminderfox.calDAV.accounts , oldID);
 			}
 
 			elem.querySelector("#calDAV_ID").value = callOptions.ID;

@@ -27,7 +27,7 @@ var rmFx_networkSync = false;
 
 function reminderFox_loadOptions() {
 //------------------------------------------------------------------------------
-	reminderfox.calDAV.getAccounts();				//	reminderfox.calDAV.accounts   read  accounts from file 
+	var calDAVaccounts = reminderfox.calDAV.getAccounts();				//	reminderfox.calDAV.accounts   read  accounts from file 
 
 	if (window.arguments != null) {
 
@@ -414,7 +414,7 @@ function reminderFox_loadOptions() {
 	}
 
 	// read CalDAV accounts
-	var calDAVaccounts = rmFx_calDAV_AddNew(reminderfox.calDAV.getAccounts());
+	var calDAVaccounts = rmFx_calDAV_AddNew(calDAVaccounts);
 
 	// set the 'default' CalDAV account
 	var calDAV_defaultSyncAccount = reminderfox.core.getPreferenceValue (reminderfox.consts.CALDAV_DEFAULT_ACCOUNT, '--');
@@ -685,6 +685,8 @@ function reminderFox_icsFileLocationChanged() {
 
 function reminderFox_updateOptions() {
 	var showStatusText = "true";
+	var calDAVaccounts = reminderfox.calDAV.getAccounts()
+
 	try {
 		showStatusText = document.getElementById("reminderFox-statustext").getAttribute("checked");
 	} catch(e) {
@@ -1216,7 +1218,7 @@ function reminderFox_updateOptions() {
 	// save CalDAVaccounts from tab:'Sync'
 	var calDAV_calendars = document.getElementById("calDAV_calendars");
 	rmFx_CalDAV_accounts = calDAV_calendars.children.length -1;
-	var _accounts = rmFx_CalDAV_accounts		// need to correct number of accounts if 'toDelete'
+//	var _accounts = rmFx_CalDAV_accounts		// need to correct number of accounts if 'toDelete'
 
 	for (var i=0; i < rmFx_CalDAV_accounts; i++) {
 		var elem = calDAV_calendars.children[i];
@@ -1226,28 +1228,28 @@ function reminderFox_updateOptions() {
 		// OR if the 'ID' is equal '?'
 		if ((elem.getAttribute('toDelete') == 'true') || (ID == '?')){
 			reminderfox.calDAV.accounts = reminderfox.util.removeObjectFromObject(reminderfox.calDAV.getAccounts(), ID);
-			_accounts = _accounts -1
+//			_accounts = _accounts -1
 		} else {
 
 			// if this is a new account make new and set CTag
-			if (!reminderfox.calDAV.accounts[ID]) {
-				reminderfox.calDAV.accounts[ID] = {};
-				reminderfox.calDAV.accounts[ID].CTag = 0;
+			if (!reminderfox.calDAV.accounts [ID]) {
+				reminderfox.calDAV.accounts [ID] = {};
+				reminderfox.calDAV.accounts [ID].CTag = 0;
 			}
 
 			var query = elem.querySelector(".calDAV_Name");
 			if ( query != null ) {
-				reminderfox.calDAV.accounts[ID].Name   = query.value;
+				reminderfox.calDAV.accounts [ID].Name   = query.value;
 	
 				var x = elem.querySelector(".calDAV_Name").getAttribute('color');
-				reminderfox.calDAV.accounts[ID].Color  = (x == null) ? "" : x;
+				reminderfox.calDAV.accounts [ID].Color  = (x == null) ? "" : x;
 	
-				reminderfox.calDAV.accounts[ID].ID     = ID;
-				reminderfox.calDAV.accounts[ID].Typ    = elem.querySelector(".calDAV_Active").getAttribute('typ');
-				reminderfox.calDAV.accounts[ID].Active = elem.querySelector(".calDAV_Active").checked;
+				reminderfox.calDAV.accounts [ID].ID     = ID;
+				reminderfox.calDAV.accounts [ID].Typ    = elem.querySelector(".calDAV_Active").getAttribute('typ');
+				reminderfox.calDAV.accounts [ID].Active = elem.querySelector(".calDAV_Active").checked;
 	
-				reminderfox.calDAV.accounts[ID].Url    = elem.querySelector(".calDAV_Url").value;
-				reminderfox.calDAV.accounts[ID].Login  = elem.querySelector(".calDAV_Login").value;
+				reminderfox.calDAV.accounts [ID].Url    = elem.querySelector(".calDAV_Url").value;
+				reminderfox.calDAV.accounts [ID].Login  = elem.querySelector(".calDAV_Login").value;
 			}
 		}
 	}
@@ -1367,24 +1369,24 @@ function reminderFox_calDAVsave() {
 		} else {
 
 			// if this is a new account make new and set CTag
-			if (!reminderfox.calDAV.accounts[ID]) {
-				reminderfox.calDAV.accounts[ID] = {};
-				reminderfox.calDAV.accounts[ID].CTag = 0;
+			if (!reminderfox.calDAV.accounts [ID]) {
+				reminderfox.calDAV.accounts [ID] = {};
+				reminderfox.calDAV.accounts [ID].CTag = 0;
 			}
 
 			var query = elem.querySelector(".calDAV_Name");
 			if ( query != null ) {
-				reminderfox.calDAV.accounts[ID].Name   = elem.querySelector(".calDAV_Name").value;
+				reminderfox.calDAV.accounts [ID].Name   = elem.querySelector(".calDAV_Name").value;
 	
 				var x = elem.querySelector(".calDAV_Name").getAttribute('color');
-				reminderfox.calDAV.accounts[ID].Color  = (x == null) ? "" : x;
+				reminderfox.calDAV.accounts [ID].Color  = (x == null) ? "" : x;
 	
-				reminderfox.calDAV.accounts[ID].ID     = ID;
-				reminderfox.calDAV.accounts[ID].Typ    = elem.querySelector(".calDAV_Active").getAttribute('typ');
-				reminderfox.calDAV.accounts[ID].Active = elem.querySelector(".calDAV_Active").checked;
+				reminderfox.calDAV.accounts [ID].ID     = ID;
+				reminderfox.calDAV.accounts [ID].Typ    = elem.querySelector(".calDAV_Active").getAttribute('typ');
+				reminderfox.calDAV.accounts [ID].Active = elem.querySelector(".calDAV_Active").checked;
 	
-				reminderfox.calDAV.accounts[ID].Url    = elem.querySelector(".calDAV_Url").value;
-				reminderfox.calDAV.accounts[ID].Login  = elem.querySelector(".calDAV_Login").value;
+				reminderfox.calDAV.accounts [ID].Url    = elem.querySelector(".calDAV_Url").value;
+				reminderfox.calDAV.accounts [ID].Login  = elem.querySelector(".calDAV_Login").value;
 			}
 		}
 	}
@@ -1463,7 +1465,6 @@ function rmFx_calDAVfileCheckAndSave() {
 		// check if Remote Calendar/CalDAV accounts are already defined for 
 		// the 'new' file selection, if so, readin
 		if (reminderfox.util.fileCheck(rmFx_calDAVaccountsFileLocationNew) > 0) { 
-//			reminderfox.calDAV.accountsReadIn (rmFx_icsFileLocationNew)
 			reminderfox.calDAV.getAccounts (rmFx_icsFileLocationNew)
 		}
 
@@ -1535,7 +1536,6 @@ function rmFx_calDAVsetup() {
 	}
 
 	// read CalDAV accounts
-//	reminderfox.calDAV.accountsReadIn(rmFx_icsFileLocationCurrent);
 	reminderfox.calDAV.getAccounts(rmFx_icsFileLocationCurrent);
 
 	var calDAVaccounts = rmFx_calDAV_AddNew(reminderfox.calDAV.getAccounts());

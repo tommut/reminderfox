@@ -546,7 +546,6 @@ function rmFx_mainDialogLoadReload() {
  *  Starting the ReminderFox Main Dialog with MainList and/or Calendar
  */
 function rmFx_mainDialogLoad(restartSkip){
-
 	reminderfox.calDAV.getAccounts();
 
 	// --- load calDAVcolorMap and set the CSS file to respect prefs saturation
@@ -765,7 +764,7 @@ function rmFx_mainDialogLoad(restartSkip){
 	//get Sync settings 
 	var networkSync = reminderfox.core.getPreferenceValue(reminderfox.consts.NETWORK_SYNCHRONIZE, reminderfox.consts.NETWORK_SYNCHRONIZE_DEFAULT);
 
-	var calDAVstatus = reminderfox.calDAV.accountsStatus ()
+	var calDAVstatus = reminderfox.calDAV.accountsStatus ("  ....  rmFx_mainDialogLoad")
 	reminderfox.util.Logger('sync',"Sync settings  ..   networkSync: " + networkSync + "   CalDAV  accounts: " + calDAVstatus.count)
 
 	document.getElementById('rmFx_progress-panel').hidden = true;
@@ -901,6 +900,7 @@ function fillList(fillReminders, fillTodoList){
 	// don't go for fillList if no List is shown
 	if (document.documentElement.attributes["layout"].value == 0) return;    // Calendar only mode
 
+//gwTEST	var calDAVaccounts = reminderfox.calDAV.getAccounts()
 	var i;
 	if (fillReminders) {
 		if (isTabSorted('fillList .. Reminders')) {
@@ -932,6 +932,7 @@ function fillList(fillReminders, fillTodoList){
 						dayReminderArray = monthArray[dayIndex];
 						if (dayReminderArray != null) {
 							for (reminderIndex = 0; reminderIndex < dayReminderArray.length; reminderIndex++) {
+//gwTEST						createUIListReminderItemSorted(dayReminderArray[reminderIndex], todaysDate, calDAVaccounts);
 								createUIListReminderItemSorted(dayReminderArray[reminderIndex], todaysDate);
 							}
 						}
@@ -1873,6 +1874,8 @@ function createUIListItemReminder(baseReminder){
 //	if (document.documentElement.attributes["layout"].value == 0) return;    // Calendar only mode
 	if (reminderfox.calendar.layout.status < 1) return; // call from menu icon or Calndr only
 
+	var calDAVaccounts = reminderfox.calDAV.getAccounts()
+
 	var lastListIndex = 0;
 	var once = document.getElementById("occurrence");
 	var treeChildren = document.getElementById("treechildren");
@@ -1958,7 +1961,7 @@ function createUIListItemReminder(baseReminder){
 
 //calDAV_color
 		if (baseReminder.calDAVid != null) {
-			var thisAccountDef = reminderfox.calDAV.getAccounts()[baseReminder.calDAVid]
+			var thisAccountDef = calDAVaccounts[baseReminder.calDAVid]
 			
 			if ((thisAccountDef != null) && (thisAccountDef.Color != null)) {
 				var calDAVNum = thisAccountDef.Color;
@@ -2387,6 +2390,7 @@ function createUIListReminderItemSorted(reminder, todaysDate){
 
 	if (!rmFx_checkFiltered (reminder)) return;
 
+	var calDAVaccounts = reminderfox.calDAV.getAccounts()
 	var once = document.getElementById("occurrence");
 	var treeChildren = document.getElementById("treechildren");
 
@@ -2396,10 +2400,10 @@ function createUIListReminderItemSorted(reminder, todaysDate){
 
 
 		if (reminder.calDAVid != null) {
-			var thisAccountDef = reminderfox.calDAV.getAccounts()[reminder.calDAVid]
-			
-			if ((thisAccountDef != null) && (thisAccountDef.Color != null)) {
-				var calDAVNum = thisAccountDef.Color;
+			var account = calDAVaccounts[reminder.calDAVid]
+
+			if ((account != null) && (account.Color != null)) {
+				var calDAVNum = account.Color;
 				newRow.setAttribute('properties', 'caldav' + calDAVNum);
 				newRow.setAttribute('class', 'caldav' + calDAVNum);
 			}
@@ -3922,9 +3926,9 @@ function activateContextReminder(event){
 
 function reminderFox_onListCalDAV(xthis){
 	// calDAV menu
-	var accounts = reminderfox.calDAV.getAccounts();
+	var calDAVaccounts = reminderfox.calDAV.getAccounts();
 
-	if (Object.keys(accounts).length !== 0 ){
+	if ((calDAVaccounts != null) && (Object.keys(calDAVaccounts).length !== 0 )){
 
 		// remove all items from popup menu
 		var calDAVlist = document.getElementById(xthis.id);  // 'exportXML-popup' or 'exportXML-todo-popup'
@@ -3932,14 +3936,14 @@ function reminderFox_onListCalDAV(xthis){
 		while (calDAVlist.hasChildNodes()) {
 			calDAVlist.removeChild(calDAVlist.firstChild);
 		}
-		for (var account in accounts) {
-			if (accounts[account].Active == true) {
+		for (var account in calDAVaccounts) {
+			if (calDAVaccounts[account].Active == true) {
 
 				var menuItem = document.createElement("menuitem");
 				menuItem.setAttribute("class", "menuitem-iconic");
 
 				menuItem.setAttribute("image", reminderfox.consts.SHAREW);
-				menuItem.setAttribute("label", '[ ' + account + " ] " + accounts[account].Name);
+				menuItem.setAttribute("label", '[ ' + account + " ] " + calDAVaccounts[account].Name);
 				menuItem.setAttribute("value", account);
 				menuItem.setAttribute("tooltiptext", reminderfox.string('rf.caldav.event2remote'));
 
@@ -4085,6 +4089,7 @@ function reminderTreeTooltip(event){
 		column.value = column.value.id;
 	}
 
+	var calDAVaccounts = reminderfox.calDAV.getAccounts()
 
 	var index = tree.boxObject.getRowAt(event.clientX, event.clientY);
 	if (index == -1) {
@@ -4231,7 +4236,7 @@ function reminderTreeTooltip(event){
 		}
 
 		if ((reminder.calDAVid != null) && (reminder.calDAVid != "")) {
-			var account = reminderfox.calDAV.getAccounts()[reminder.calDAVid];
+			var account = calDAVaccounts[reminder.calDAVid];
 			if (account != null) {
 				addTooltipWithLabel(tooltipItem, null, '[ ' + reminder.calDAVid + ' ] ' + account.Name, false, false, reminderfox.string("rf.caldav.account.remote"));
 			}
@@ -4251,6 +4256,8 @@ function todoTreeTooltip(event){
 	var boxobject = tree.boxObject;
 	boxobject.QueryInterface(Components.interfaces.nsITreeBoxObject); // cast to treeboxobject to use getRowAt
 	//boxobject.getCellAt(event.clientX, event.clientY, row, column, part);
+
+	var calDAVaccounts = reminderfox.calDAV.getAccounts()
 
 	var row = {}, column = {}, part = {};
 	boxobject.getCellAt(event.clientX, event.clientY, row, column, part);
@@ -4380,7 +4387,7 @@ function todoTreeTooltip(event){
 		}
 
 		if ((todo.calDAVid != null) && (todo.calDAVid != "")) {
-			var account = reminderfox.calDAV.getAccounts()[todo.calDAVid];
+			var account = calDAVaccounts[todo.calDAVid];
 			if (account != null) {
 				addTooltipWithLabel(tooltipItem, null, '[ ' + todo.calDAVid + ' ] ' 
 				+ account.Name, false, false, reminderfox.string("rf.caldav.account.remote"));
@@ -6429,6 +6436,7 @@ function fillListSortTodos(){
 function fillListSortReminders(){
 	var tabName = reminderfox.tabInfo.tabName;
 	var sortColumn = listSortMap[tabName].sortColumn
+	var calDAVaccounts = reminderfox.calDAV.getAccounts()
 
 	clearAllSortColumns();
 	var column = document.getElementById(sortColumn);
@@ -6456,7 +6464,7 @@ function fillListSortReminders(){
 				dayReminderArray = monthArray[dayIndex];
 				if (dayReminderArray != null) {
 					for (reminderIndex = 0; reminderIndex < dayReminderArray.length; reminderIndex++) {
-						//createUIListReminderItemSorted(dayReminderArray[reminderIndex]);
+						//createUIListReminderItemSorted(dayReminderArray[reminderIndex], calDAVaccounts);
 						unsortedArray[unsortedArray.length] = dayReminderArray[reminderIndex];
 					}
 				}
@@ -6474,6 +6482,7 @@ function fillListSortReminders(){
 	var todaysDate = new Date();
 	reminderfox.core.quick_sort(sortedArray, listSortMap[tabName].sortColumn, listSortMap[tabName].sortDirection);
 	for (i = 0; i < sortedArray.length; i++) {
+//gwTEST		createUIListReminderItemSorted(sortedArray[i], todaysDate, calDAVaccounts);
 		createUIListReminderItemSorted(sortedArray[i], todaysDate);
 	}
 }

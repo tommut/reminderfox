@@ -708,7 +708,6 @@
 				newBox.setAttribute("colorNum", n);
 				accountColors.appendChild(newBox);
 			}
-			// reminderfox.calDAV.colorMapWrite ();
 			reminderfox.colorMap.cssFileWrite()
 		},
 
@@ -759,7 +758,7 @@
 				thisBox.setAttribute("hexColor",pickerColor);
 				thisBox.setAttribute("hexColorD",pickerColorDark);
 			}
-			reminderfox.calDAV.colorMapWrite ();
+			reminderfox.colorMap.cssFileWrite()
 		},
 
 

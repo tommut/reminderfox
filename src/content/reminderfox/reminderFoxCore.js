@@ -6,7 +6,7 @@ if (!reminderfox.network) reminderfox.network = {};
 if (!reminderfox.core.method) reminderfox.core.method = "";
 
 if (!reminderfox.calDAV)   reminderfox.calDAV = {};
-if (!reminderfox.calDAV.accounts)   reminderfox.calDAV.accounts = {};    //calDAV  main definition of accounts
+if (!reminderfox.calDAV.accounts )   reminderfox.calDAV.accounts = {};    //calDAV  main definition of accounts
 
 // constants
 reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.2";		// update also install.rdf
@@ -2646,7 +2646,6 @@ reminderfox.core.getReminderEvents= function(clear){
             //gWCalDAV
             // With CalDAV enabled, each event/todo connected to a CalDAV account will 
             // be traced in  'reminderfox.calDAV.accounts' 
-//            reminderfox.calDAV.accountsReadIn();
             reminderfox.calDAV.getAccounts();
 
         }
@@ -2683,7 +2682,6 @@ reminderfox.core.getReminderTodos= function(){
         //gWCalDAV
         // With CalDAV enabled, each event/todo connected to a CalDAV account will 
         // be traced in  'reminderfox.calDAV.accounts' 
-//        reminderfox.calDAV.accountsReadIn();
         reminderfox.calDAV.getAccounts();
     }
     return reminderfox.core.reminderFoxTodosArray;
@@ -3095,7 +3093,7 @@ reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, 
                         + reminder.alarmLastAcknowledge + newline;
                 }
                 if (reminder.snoozeTime) {
-//gWTESTalarm
+
                     var x = reminder.snoozeTime.split(";")[0]
                     outputStr += reminderfox.consts.REMINDER_FOX_EXTENDED + "SNOOZE-TIME" + separator
                         + (reminder.snoozeTime) + newline;
@@ -3272,10 +3270,11 @@ reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, 
     outputStr += "X-REMINDERFOX-SUMMARY:Events=" + rLen + " Todos=" + tLen +  newline;
     outputStr += "END:VCALENDAR" + newline;
 
-    reminderfox.util.Logger('checkData', " ---- .core.constructReminderOutput"
-        + " ..writes to file:  Events=" + rLen + " Todos=" + tLen);		//gWcheckData
 
-    //reminderfox.core.logMessageLevel("Finished output to file.  Final file:\n***************\n\n" + outputStr, reminderfox.consts.LOG_LEVEL_DEBUG);
+    var msg =  " ---- .core.constructReminderOutput  on windowtype: " + document.documentElement.getAttribute('windowtype') 
+        + " .. outputStr with  Events=" + rLen + " Todos=" + tLen;		//gWcheckData
+    reminderfox.util.Logger('checkData', msg)
+
     return outputStr;
 };
 
@@ -3316,6 +3315,9 @@ reminderfox.core.createStringForDate= function(reminderOrTodo, currentDate, isEx
             minutes +
             "00" +
             newline;
+//gwTEST
+        var dateZ = new Date(currentDate).toISOString().replace(/-/g,"").replace(/:/g,"").substring(0,15)+"Z"
+        outputStr = "DTSTART" + separator + dateZ + newline;
     }
     return outputStr;
 };
@@ -3385,6 +3387,13 @@ reminderfox.core.createStringForEndDate= function(reminderOrTodo, currentDate, i
                 minutes +
                 "00" +
                 newline;
+
+//gwTEST
+//DTSTART:20150222T231500Z
+//DTEND:20150222T231500Z
+
+            var dateZ = new Date(currentDate).toISOString().replace(/-/g,"").replace(/:/g,"").substring(0,15)+"Z"
+            outputStr = "DTEND" + separator + dateZ + newline;
         }
         else
         if (isExport) {
@@ -3434,10 +3443,7 @@ reminderfox.core.writeOutRemindersAndTodos= function(isExport){
     }
 
     reminderfox.core.writeStringToFile(outputStr, file, false);
-
-
-//TEST
-	reminderfox.calDAV.accountsWrite(reminderfox.calDAV.accounts);
+	reminderfox.calDAV.accountsWrite(reminderfox.calDAV.accounts );
 };
 
 
@@ -7334,30 +7340,26 @@ reminderfox.core.smartFoxySwitch= function(mode) {
     document.persist(currentBarName,"currentset");
 }
 
-//gWTESTalarm
+
 // run a 'Delete' or 'Update' of a remote calendar event/task
 // actionCode is checked for 'delete' == 2, other codes go for 'Update'
 reminderfox.core.CalDAVaction = function(recentReminder, actionCode) {
 //-------------------------------------------------------------
-    if(recentReminder.calDAVid != null) {
+	if(recentReminder.calDAVid != null) {
 
-        var mWindow = reminderfox.core.getWindowEnumerator()
-        if (mWindow.hasMoreElements()) {
-            var xWindow = mWindow.getNext();
+		var mWindow = reminderfox.core.getWindowEnumerator()
+		if (mWindow.hasMoreElements()) {
+			var xWindow = mWindow.getNext();
 
-//TEST
-		var msg = (" ...core.CalDAVaction  accounts:\n" + reminderfox.calDAV.getAccounts().toSource())
-		reminderfox.util.Logger('Alert', msg)
+			reminderfox.calDAV.accountsStatus ("reminderfox.core.CalDAVaction")
 
-            if (actionCode == REMINDERFOX_ACTION_TYPE.DELETE){
-   //             setTimeout(function() {xWindow.rmFx_CalDAV_ReminderDelete(recentReminder)},0);
-                xWindow.rmFx_CalDAV_ReminderDelete(recentReminder)
-            } else {
-   //             setTimeout(function() {xWindow.rmFx_CalDAV_UpdateReminder(recentReminder)},0);
-                xWindow.rmFx_CalDAV_UpdateReminder(recentReminder, null, reminderfox.calDAV.accounts)
-            }
-        }
-    }
+			if (actionCode == REMINDERFOX_ACTION_TYPE.DELETE){
+				xWindow.rmFx_CalDAV_ReminderDelete(recentReminder)
+			} else {
+				xWindow.rmFx_CalDAV_UpdateReminder(recentReminder)
+			}
+		}
+	}
 }
 
 

@@ -1398,7 +1398,7 @@ reminderfox.util.pickFileICSfile= function (extension, xthis) {
 		var reminderEvents = new Array();
 		var reminderTodos = new Array();
 		reminderfox.core.readInRemindersAndTodosICSFromFile(reminderEvents, reminderTodos, file, false /*ignoreExtraInfo IfImportingAdditionalEvents*/);
-		//gWCalDAV
+
 		// With CalDAV enabled, each event/todo connected to a CalDAV account will 
 		// be traced in  'reminderfox.calDAV.accounts' 
 		reminderfox.calDAV.getAccounts();
@@ -2655,8 +2655,7 @@ reminderfox.colorMap.cssFileWrite= function () {
 	out +=  '\ncolorpicker {color: #626262;}';
 
 	var cssFile = reminderfox.colorMap.cssFileGet();
-	reminderfox.calDAV.fileWrite (out, cssFile);
-
+	reminderfox.util.makeFile8(out, cssFile.path)
 
 		function hsl(colorHue) {
 			var saturation = reminderfox.core.getPreferenceValue(reminderfox.consts.CALDAV_SATURATION, 40);
@@ -2691,35 +2690,36 @@ reminderfox.colorMap.setup= function () {
  *  @param {string}  ics fileName
  */
 reminderfox.calDAV.getAccounts = function (thisFile) {
-
+//-----------------------------------------------------
 	var calDAVfile;
+	var msg = ("  ....  calDAV.getAccounts   ")
 
-	// no calDAV accounts? Or a file is given? --> read file to make sure for accounts 
-	if ((Object.keys(reminderfox.calDAV.accounts).length === 0) || (thisFile != null)){
+	// no calDAV accounts? Or a file is given? --> read file
+	if ((reminderfox.calDAV.accounts != null) && (Object.keys(reminderfox.calDAV.accounts ).length === 0) || (thisFile != null)){
 
 		calDAVfile = reminderfox.calDAV.accountsFile(thisFile);
-		var msg= (" .... Read from calDAVfile: " + calDAVfile.path)
-		reminderfox.util.Logger('Alert', msg)
 		try {
 			reminderfox.calDAV.accounts = JSON.parse(reminderfox.core.readInFileContents (calDAVfile));
+			msg += "   read from file: " + calDAVfile.path
 		} catch(ex) {
 			reminderfox.calDAV.accounts = {};
+			msg += "   new array!"
 		}
 
-		var msg = (" ..1.. '.calDAV.accounts'  in use:\n" + reminderfox.calDAV.accounts.toSource())
-		reminderfox.util.Logger('Alert', msg)
+	} else {
+		msg += "   already loaded!"
 	}
 
-	var msg = (" ..2.. '.calDAV.accounts'  in use:\n" + reminderfox.calDAV.accounts.toSource())
-	//reminderfox.util.Logger('Alert', msg)
-
-	reminderfox.calDAV.accountsStatus()
+	reminderfox.calDAV.accountsStatus(msg)
 	return reminderfox.calDAV.accounts
 }
 
 
-reminderfox.calDAV.accountsStatus = function () {
-	var calDAVaccounts = reminderfox.calDAV.accounts
+reminderfox.calDAV.accountsStatus = function (msg, calDAVaccounts) {
+//-----------------------------------------------------
+	if (calDAVaccounts == null) {
+		calDAVaccounts = reminderfox.calDAV.accounts
+	} 
 	var calDAVstatus = [];
 
 	calDAVstatus.count = 0;
@@ -2741,11 +2741,12 @@ reminderfox.calDAV.accountsStatus = function () {
 		calDAVstatus.offlineReminders = true;
 	}
 
-	var msg = (" .... '.calDAV.accountsStatus'   count#:" + calDAVstatus.count +"  active# " + calDAVstatus.active 
+	msg += ("\n  ....  calDAV.accountsStatus on windowtype: " + document.documentElement.getAttribute('windowtype') 
+		+ "\n  count#:" + calDAVstatus.count +"  active#: " + calDAVstatus.active 
 		+ "  .offlineReminders: " + calDAVstatus.offlineReminders)
-		+"\n snap: " + calDAVstatus.snap
+		+"\n  snap: " + calDAVstatus.snap + "\n"
 
-	reminderfox.util.Logger('calDAV', msg)
+	reminderfox.util.Logger('calDAVaccount', msg)
 
 	return calDAVstatus;
 };
@@ -2755,15 +2756,36 @@ reminderfox.calDAV.accountsStatus = function () {
  *  Write the reminderfox.calDAV.accounts to 'reminderfox.ics.dav' 
  *  in same dir as 'reminderfox.ics'
  *  @param {object} the CalDAVaccounts definition objects
- *  @param {string} thisFile, optional: a file/path, if null: the current .ics location is used
  */
 reminderfox.calDAV.accountsWrite= function (calDAVaccounts) {
 //-------------------------------------------------------------
-var msg = "  fct:  reminderfox.calDAV.accountsWrite= function (calDAVaccounts) \n" + calDAVaccounts.toSource();
-reminderfox.util.Logger('checkData',msg)
+	var msg = "  ....  calDAV.accountsWrite   .. "
+	reminderfox.calDAV.accountsStatus (msg, calDAVaccounts) 
 
 	if (!calDAVaccounts) calDAVaccounts = {};
-	reminderfox.calDAV.accounts = calDAVaccounts
+
+	var xulWin =
+			"window:reminderFoxEdit,window:reminderFoxOptions"
+		+ ",window:reminderFoxAlarmDialog,window:reminderFoxReminderOptionsDialog"
+		+ ",window:rmFxCaldavUpdate,navigator:browser"
+		+ ",mail:3pane,mail:messageWindow"
+		//+ ",calendarMainWindow"
+	var xWin = xulWin.split(",")
+
+    var windowManager = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService();
+    var windowManagerInterface = windowManager.QueryInterface(Components.interfaces.nsIWindowMediator);
+
+	msg = "  ....  enum xulWindows"
+
+	for (var aWin in xWin) {
+		var windowEnumerator = windowManagerInterface.getEnumerator(xWin[aWin]);
+		while (windowEnumerator.hasMoreElements()) {
+
+			msg += "   >> " + xWin[aWin] 
+			var currentWindow = windowEnumerator.getNext();
+			currentWindow.reminderfox.calDAV.accounts = calDAVaccounts
+		}
+	}
 
 	var calDAVaccountsNo = 0;
 	for (var account in calDAVaccounts) {
@@ -2772,21 +2794,14 @@ reminderfox.util.Logger('checkData',msg)
 
 	var outputStr = JSON.stringify (calDAVaccounts);
 	var file = reminderfox.calDAV.accountsFile();
-	reminderfox.calDAV.fileWrite (outputStr, file);
 
-//TEST
-//2015-02-20    reminderfox.calDAV.accounts = {}
+	var mssg = "\n  WriteOut calDAVaccounts to file: " + file.path + "\n" + msg;
+	reminderfox.util.Logger('calDAVaccount',  mssg);
+
+	reminderfox.util.makeFile8(outputStr, file.path)
 	return calDAVaccountsNo;
 };
 
-
-reminderfox.calDAV.fileWrite= function (outputStr, thisFile) {
-//-------------------------------------------------------------
-	var msg = "\n Reminderfox WriteOut CalDAV file: " + thisFile.path;
-	reminderfox.util.Logger('calDAV',  msg);
-
-	reminderfox.util.makeFile8(outputStr, thisFile.path)
-};
 
 
 /**
@@ -2807,8 +2822,7 @@ reminderfox.calDAV.accountsFile= function (currentFilePath) {
 
 /**
  *  Clear all reminder details from all accounts in "reminderfox.calDAV.accounts"
- *  @param  {object} calDAVaccouts objects with all aacouts ans it's definitios and reminder relations
- *  @return {object} calDAVaccouts  -- only account defintions, no reminder relations
+ *  @param  {object} calDAVaccouts objects with all accouts and it's definitios and reminder relations
  */
 reminderfox.calDAV.accountsClearReminderDetails= function (calDAVaccounts) {
 //-------------------------------------------------------------
