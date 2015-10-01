@@ -520,8 +520,9 @@ function reminderFox_restoreFile() {
 
 	rmFx_mainDialogLoadReload();
 	reminderfox.core.logMessageLevel("restore3: ", reminderfox.consts.LOG_LEVEL_INFO);
-
 }
+
+
 function rmFx_mainDialogLoadReload() {
 	reminderfox.core.logMessageLevel("reload1: ", reminderfox.consts.LOG_LEVEL_INFO)
 	if (!reminderfox.core.checkModified ()) {
@@ -764,7 +765,7 @@ function rmFx_mainDialogLoad(restartSkip){
 	//get Sync settings 
 	var networkSync = reminderfox.core.getPreferenceValue(reminderfox.consts.NETWORK_SYNCHRONIZE, reminderfox.consts.NETWORK_SYNCHRONIZE_DEFAULT);
 
-	var calDAVstatus = reminderfox.calDAV.accountsStatus ("  ....  rmFx_mainDialogLoad")
+	var calDAVstatus = reminderfox.calDAV.accountsStatus ()
 	reminderfox.util.Logger('sync',"Sync settings  ..   networkSync: " + networkSync + "   CalDAV  accounts: " + calDAVstatus.count)
 
 	document.getElementById('rmFx_progress-panel').hidden = true;
@@ -776,12 +777,6 @@ function rmFx_mainDialogLoad(restartSkip){
 	// start synchronizing in background (if that network option is set) if no CalDAV active
 	if (calDAVstatus.active == 0)
 		setTimeout(reminderFox_ensureRemoteRemindersSynchronizedInEditWindow, 1);
-
-//gW2015   moved to the end with checking "offline"
-	// start sync in background for Remote Calendars
-//	if (calDAVstatus.active > 0)
-//		setTimeout(function () { rmFx_CalDAV_SyncActiveAccounts("addReminderDialog: ' start sync in background for Remote Calendars'");},0);
-
 
 	if (window.arguments != null && window.arguments[1] != null) {
 		var editReminderID = window.arguments[1].editID;
@@ -797,11 +792,10 @@ function rmFx_mainDialogLoad(restartSkip){
 		}
 	}
 	reminderFox_updateFoxyBadge();
-	focusAddButton();
-	
+	reminderfox.search.focusAddEvent(); 
 
 	// start sync in background for Remote Calendars
-	reminderfox.online.status('rmFx_CalDAV_update4Offline','')
+	reminderfox.online.status('rmFx_CalDAV_updatePending','')
 }
 
 
@@ -891,16 +885,11 @@ function repopulateListForYear(oldYear, newYear){
 	selectCalendarSync = true;
 }
 
-function focusAddButton() {
-	reminderfox.search.focusAddEvent();
-}
-
 
 function fillList(fillReminders, fillTodoList){
 	// don't go for fillList if no List is shown
 	if (document.documentElement.attributes["layout"].value == 0) return;    // Calendar only mode
 
-//gwTEST	var calDAVaccounts = reminderfox.calDAV.getAccounts()
 	var i;
 	if (fillReminders) {
 		if (isTabSorted('fillList .. Reminders')) {
@@ -932,7 +921,6 @@ function fillList(fillReminders, fillTodoList){
 						dayReminderArray = monthArray[dayIndex];
 						if (dayReminderArray != null) {
 							for (reminderIndex = 0; reminderIndex < dayReminderArray.length; reminderIndex++) {
-//gwTEST						createUIListReminderItemSorted(dayReminderArray[reminderIndex], todaysDate, calDAVaccounts);
 								createUIListReminderItemSorted(dayReminderArray[reminderIndex], todaysDate);
 							}
 						}
@@ -1874,8 +1862,6 @@ function createUIListItemReminder(baseReminder){
 //	if (document.documentElement.attributes["layout"].value == 0) return;    // Calendar only mode
 	if (reminderfox.calendar.layout.status < 1) return; // call from menu icon or Calndr only
 
-	var calDAVaccounts = reminderfox.calDAV.getAccounts()
-
 	var lastListIndex = 0;
 	var once = document.getElementById("occurrence");
 	var treeChildren = document.getElementById("treechildren");
@@ -2642,70 +2628,8 @@ function getSubscribedCalendars(){
 	if (reminderFox_subscribedCalendars == null) {
 		reminderFox_subscribedCalendars = {};
 	}
-
 	return reminderFox_subscribedCalendars;
 }
-
-
-
-function reminderFox_downloadSubscribedCalendar(subsName, subscribedCal){
-	// sync 'em up
-	// var statusTxt = document.getElementById("reminderFox-network-status");
-
-
-	var subscriptions = reminderfox.core.getSubscriptions();
-	var url = subscriptions[subsName];
-	if (url != null && url.length > 0) {
-		reminderfox.core.statusSet(reminderfox.string("rf.options.customlist.subscribe.retrieve.title")
-			+ " " + url);
-		var webcalIndex = url.indexOf("webcal://"); // handle webcal address
-		if (webcalIndex != -1) {
-			url = "http://" + url.substring("webcal://".length);
-		}
-		reminderfox.network.download.reminderFox_download_Startup_headless_URL(reminderfox.consts.UI_MODE_HEADLESS_SHOW_ERRORS, reminderFox_downloadSubscribedCalendarCallback, url, subscribedCal, null);
-	}
-
-}
-
-
-function reminderFox_downloadSubscribedCalendarCallback(statustxtString, actionID, downloadedReminders){
-
-	if (actionID == 1) { // completed successfully (remote and local are equal, or were uploaded)
-		reminderfox.core.statusSet("");
-	}
-	else
-		if (actionID == 2) { // reminders were downloaded,  need to refresh reminders
-			var subscribedCalArr = getSubscribedCalendars();
-
-			var tabName = reminderfox.tabInfo.tabName;
-			var tabID = reminderfox.tabInfo.tabID;
-
-
-			var index = tabID.indexOf(':');
-			name = tabID.substring(index + 1, tabID.length);
-
-			var subscribedCal = subscribedCalArr[name];
-			if (subscribedCal == null) {
-				subscribedCal = new Array();
-				subscribedCalArr[name] = subscribedCal;
-			}
-			subscribedCal = downloadedReminders;
-
-			reminderfox.calendar.ui.selectDay();
-
-			selectCalendarSync = false;
-			// remove all of the calendar items and re-add them
-			removeAllListItems(true, false);
-			calendarReminderArray = null; // null out in case reminder columns are sorted
-			fillList(true, false);
-			selectCalendarSync = true;
-		}
-		else {
-			reminderfox.core.statusSet(statustxtString);
-		}
-
-}
-
 
 
 function createUIListItemTodo(todo, sort, todaysDate, addToArray){
@@ -6482,7 +6406,6 @@ function fillListSortReminders(){
 	var todaysDate = new Date();
 	reminderfox.core.quick_sort(sortedArray, listSortMap[tabName].sortColumn, listSortMap[tabName].sortDirection);
 	for (i = 0; i < sortedArray.length; i++) {
-//gwTEST		createUIListReminderItemSorted(sortedArray[i], todaysDate, calDAVaccounts);
 		createUIListReminderItemSorted(sortedArray[i], todaysDate);
 	}
 }

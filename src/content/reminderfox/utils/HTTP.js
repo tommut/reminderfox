@@ -11,9 +11,19 @@ reminderfox.HTTP = {
 		var request      = caller.callback
 		caller.ID        = new Date().getTime()
 
+		var callerPW = reminderfox.HTTP.handlePW(caller);
+
+		if ((callerPW == null) && (caller.username != "")) {
+			status = "401"; statusText = "Unauthorized"
+			text = "Check 'username' and/or 'password' for "
+			    + "\n" + caller.urlstr;
+			xml = {}; headers = {};
+			caller[caller.onError](status,xml,text,headers,statusText, caller)
+		}
+
 		reminderfox.HTTP.call(caller.method, caller.urlstr, { /* options */
-				username      : caller.username,
-				password      : caller.password,
+				username      : encodeURIComponent(caller.username ),   // ; caller.username,
+				password      : encodeURIComponent (callerPW.password),
 
 				timeout       : parseInt(caller.timeout) * 1000,
 
@@ -115,8 +125,7 @@ reminderfox.HTTP = {
 			requester.open(method,url,!options.synchronizedRequest);
 		}
 		if (options.timeout && !options.synchronizedRequest) {
-			timeout = setTimeout( 
-				 function() {
+			timeout = setTimeout( function() {
 		//			 var callback = options.onTimeout ? options.onTimeout : options.onFailure;
 		//			 callback(0,"Operation timeout.");
 					options.onSuccess(0,"Operation timeout.");
@@ -293,3 +302,25 @@ reminderfox.HTTP = {
 		}
 		return headers;
 	}
+
+
+	reminderfox.HTTP.handlePW= function (call) {
+	//---------------------------------------------------------------
+		if ((call.password === "") && (call.username !== "")) {
+
+			reminderfox.util.JS.dispatch('network')	//gW  2014-08-05
+			var callDetails = reminderFox_getPassword ({
+				ljURL    : call.urlstr,
+				username : call.username,
+				password : call.password
+			});
+
+			return callDetails
+
+		} else {
+			return {
+				username : call.username,
+				password : call.password
+			};
+		}
+	};

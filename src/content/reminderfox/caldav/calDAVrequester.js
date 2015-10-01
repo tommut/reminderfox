@@ -27,11 +27,11 @@ if (!reminderfoxX)     var reminderfoxX = {};
  * Parse of 'xml' results to JS object based on
  *     https://developer.mozilla.org/en-US/docs/JXON)
  */
-reminderfoxX.XcalDAVhttp = function () {}
+reminderfoxX.calDAVhttp = function () {}
 //------------------------------------------------------------------
-	reminderfoxX.XcalDAVhttp.prototype.inprogress = null;
+	reminderfoxX.calDAVhttp.prototype.inprogress = null;
 
-	reminderfoxX.XcalDAVhttp.prototype.handlePW= function (call) {
+	reminderfoxX.calDAVhttp.prototype.handlePW= function (call) {
 	//---------------------------------------------------------------
 		if ((call.password === "") && (call.username !== "")) {
 
@@ -50,7 +50,7 @@ reminderfoxX.XcalDAVhttp = function () {}
 	};
 
 
-	reminderfoxX.XcalDAVhttp.prototype.sendContentToURL = function(caller,call) {
+	reminderfoxX.calDAVhttp.prototype.sendContentToURL = function(caller,call) {
 	//----------------------------------------------------------------
 	var logMsg;
 

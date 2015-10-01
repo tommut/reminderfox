@@ -1547,8 +1547,10 @@ reminderfox.msgnr.mailIdentities = "";
 		reminderfox.msgnr.mailIdentities = "";
 
 		var identity = null;
-		for each (var account in fixIterator(MailServices.accounts.accounts, Ci.nsIMsgAccount)) {
-			for each (var id in fixIterator(account.identities, Ci.nsIMsgIdentity)) {
+
+      // see bug https://bugzilla.mozilla.org/show_bug.cgi?id=1113097    2015-04-23 gW
+		for (var account in fixIterator(MailServices.accounts.accounts, Ci.nsIMsgAccount)) {
+			for (var id in fixIterator(account.identities, Ci.nsIMsgIdentity)) {
 				// We're only interested in identities that have a real email.
 				if (id.email != null) 
 					reminderfox.msgnr.mailIdentities += id.identityName + ',';

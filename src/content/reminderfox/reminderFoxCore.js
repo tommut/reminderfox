@@ -6,7 +6,7 @@ if (!reminderfox.network) reminderfox.network = {};
 if (!reminderfox.core.method) reminderfox.core.method = "";
 
 if (!reminderfox.calDAV)   reminderfox.calDAV = {};
-if (!reminderfox.calDAV.accounts )   reminderfox.calDAV.accounts = {};    //calDAV  main definition of accounts
+if (!reminderfox.calDAV.accounts)   reminderfox.calDAV.accounts = {};    //calDAV  main definition of accounts
 
 // constants
 reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.2";		// update also install.rdf
@@ -337,6 +337,8 @@ reminderfox.core.reminderFox_timezones = {};
 reminderfox.core.reminderFox_reminderFoxExtraInfo = null;
 reminderfox.core.reminderFoxExtraInfoPrefix = null;
 
+reminderfox.core.utc = true
+
 
 reminderfox.string= function(bString){
     try {
@@ -434,6 +436,9 @@ reminderfox.core.initUserPrefsArray= function(){
     reminderfox._prefsUser[reminderfox.consts.CALDAV_SATURATION] = reminderfox._prefsTYPE.INT;
 
     reminderfox._prefsUser[reminderfox.consts.QUICK_ALARMS] = reminderfox._prefsTYPE.COMPLEX;
+
+    reminderfox._prefsUser[reminderfox.consts.UTC] = reminderfox._prefsTYPE.BOOL;
+
 };
 
 
@@ -997,6 +1002,8 @@ reminderfox.core.loadDefaultPreferences= function(){
             reminderfox.core.writeStringToFile(msg, file, false);
         }
     }
+
+	reminderfox.core.utc = reminderfox.core.getPreferenceValue ('utcFormat', reminderfox.consts.UTC_DEFAULT)
 };
 
 
@@ -2570,6 +2577,8 @@ reminderfox.core.getFileTimeStamp= function(){
 
 
 reminderfox.core.getFileTimeStampFromString= function(chunk){
+	reminderfox.util.Logger("userIO", chunk.length + " \n>>\n" + chunk + "\n <<")
+
     var index = chunk.indexOf(reminderfox.consts.REMINDERFOX_FILE_LAST_MODIFIED);
     if (index != -1) {
         var newline = "\n";
@@ -2620,7 +2629,8 @@ reminderfox.core.getReminderEvents= function(clear){
             subscribedCal = new Array();
             subscribedCalArr[tab] = subscribedCal;
             // start downloading in background
-            setTimeout(reminderFox_downloadSubscribedCalendar, 1, tab, subscribedCal);
+            //setTimeout(reminderFox_downloadSubscribedCalendar, 1, tab, subscribedCal);
+            setTimeout(function() {reminderfox.userIO.getSubscription(tab, subscribedCal);},0);
         }
         reminderfox_getNumDaysModel(subscribedCal);
         return subscribedCal;
@@ -2898,6 +2908,9 @@ reminderfox.core.processReminderDescription= function(reminder, year, isTodo){
 
 reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, isExport, ignoreExtraInfo, postingMethod){
     var newline, currentDate;
+//	var _startTime = new Date()		// use to measure execution time (performance of utc version)
+
+	reminderfox.core.utc = reminderfox.core.getPreferenceValue ('utcFormat', reminderfox.consts.UTC_DEFAULT)
 
     if (navigator.appVersion.lastIndexOf('Win') != -1) {
         newline = "\r\n";
@@ -2928,16 +2941,6 @@ reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, 
         modifiedTime = reminderfox.core.reminderFox_lastModifiedTime;
     }
     outputStr += reminderfox.consts.REMINDERFOX_FILE_LAST_MODIFIED + separator + modifiedTime + newline;
-
-    //postingMethod
-    /*-----------------
-     if (postingMethod === "" || postingMethod || postingMethod == "PUBLISH") { // for Invitation :  REQUEST
-     outputStr += "METHOD" + separator + "PUBLISH" + newline;
-     }
-     else {
-     outputStr += "METHOD" + separator + postingMethod + newline;
-     }
-     -------------*/
 
     if (postingMethod) { // for Invitation :  REQUEST
         outputStr += "METHOD" + separator + postingMethod + newline;
@@ -3270,9 +3273,11 @@ reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, 
     outputStr += "X-REMINDERFOX-SUMMARY:Events=" + rLen + " Todos=" + tLen +  newline;
     outputStr += "END:VCALENDAR" + newline;
 
-
-    var msg =  " ---- .core.constructReminderOutput  on windowtype: " + document.documentElement.getAttribute('windowtype') 
-        + " .. outputStr with  Events=" + rLen + " Todos=" + tLen;		//gWcheckData
+//	var _endTime = new Date()
+	
+    var msg =  "  ---- .core.constructReminderOutput  on windowtype: " + document.documentElement.getAttribute('windowtype') 
+        + "\n  .... outputStr with  Events=" + rLen + " Todos=" + tLen		//gWcheckData
+//        + "  time to construct ICS data: " + ( _endTime - _startTime) + "   UTC enabled: " + reminderfox.core.utc
     reminderfox.util.Logger('checkData', msg)
 
     return outputStr;
@@ -3280,150 +3285,246 @@ reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, 
 
 
 reminderfox.core.createStringForDate= function(reminderOrTodo, currentDate, isExport, separator, newline){
-    var outputStr;
-    var year = currentDate.getFullYear();
-    var month = currentDate.getMonth() + 1;
-    var day = currentDate.getDate();
-    if (month < 10)
-        month = "0" + month;
-    if (day < 10)
-        day = "0" + day;
+	var outputStr;
 
-    if (reminderOrTodo.allDayEvent) {
-        outputStr = "DTSTART;VALUE=DATE" + separator +
-            "" +
-            year +
-            month +
-            day +
-            newline;
-    }
-    else {
-        var hours = currentDate.getHours();
-        var minutes = currentDate.getMinutes();
-        if (hours < 10)
-            hours = "0" + hours;
-        if (minutes < 10)
-            minutes = "0" + minutes;
+	var year = currentDate.getFullYear();
+	var month = currentDate.getMonth() + 1;
+	var day = currentDate.getDate();
+	if (month < 10)
+		month = "0" + month;
+	if (day < 10)
+		day = "0" + day;
 
-        outputStr = "DTSTART" + separator +
-            "" +
-            year +
-            month +
-            day +
-            "T" +
-            hours +
-            minutes +
-            "00" +
-            newline;
-//gwTEST
-        var dateZ = new Date(currentDate).toISOString().replace(/-/g,"").replace(/:/g,"").substring(0,15)+"Z"
-        outputStr = "DTSTART" + separator + dateZ + newline;
-    }
-    return outputStr;
+	// DTSTART is all day event
+	if (reminderOrTodo.allDayEvent) {
+		outputStr = "DTSTART;VALUE=DATE" + separator +
+		"" +
+		year +
+		month +
+		day +
+		newline;
+	}
+
+	// DTSTART has a time value
+	else {
+
+		//  UTC Format 
+		if (reminderfox.core.utc == true) {
+			var dateZ = new Date(currentDate).toISOString().replace(/-/g,"").replace(/:/g,"").substring(0,15)+"Z"
+			outputStr = "DTSTART" + separator + dateZ + newline;
+
+		} else {
+			var hours = currentDate.getHours();
+			var minutes = currentDate.getMinutes();
+			if (hours < 10)
+				hours = "0" + hours;
+			if (minutes < 10)
+				minutes = "0" + minutes;
+
+			outputStr = "DTSTART" + separator +
+				"" +
+				year +
+				month +
+				day +
+				"T" +
+				hours +
+				minutes +
+				"00" +
+				newline;
+		}
+	}
+
+	return outputStr;
+};
+
+
+reminderfox.core.XXXXcreateStringForDate= function(reminderOrTodo, currentDate, isExport, separator, newline){
+	var outputStr;
+	var year = currentDate.getFullYear();
+	var month = currentDate.getMonth() + 1;
+	var day = currentDate.getDate();
+	if (month < 10)
+		month = "0" + month;
+	if (day < 10)
+		day = "0" + day;
+
+	if (reminderOrTodo.allDayEvent) {
+		outputStr = "DTSTART;VALUE=DATE" + separator +
+		"" +
+		year +
+		month +
+		day +
+		newline;
+	}
+	else {
+
+//gwUTC Format 
+		if (reminderfox.core.utc == true) {
+			var dateZ = new Date(currentDate).toISOString().replace(/-/g,"").replace(/:/g,"").substring(0,15)+"Z"
+			outputStr = "DTSTART" + separator + dateZ + newline;
+		} else {
+
+			var hours = currentDate.getHours();
+			var minutes = currentDate.getMinutes();
+			if (hours < 10)
+				hours = "0" + hours;
+			if (minutes < 10)
+				minutes = "0" + minutes;
+
+			outputStr = "DTSTART" + separator +
+				"" +
+				year +
+				month +
+				day +
+				"T" +
+				hours +
+				minutes +
+				"00" +
+				newline;
+		}
+	}
+	return outputStr;
 };
 
 
 reminderfox.core.createStringForEndDate= function(reminderOrTodo, currentDate, isExport, separator, newline){
-    var nullDate = false;
-    if (!currentDate) {
-        nullDate = true;
-        currentDate = reminderOrTodo.date;
-    }
-    var outputStr = "";
-    var year = currentDate.getFullYear();
-    var month = currentDate.getMonth() + 1;
-    var day = currentDate.getDate();
-    if (month < 10)
-        month = "0" + month;
-    if (day < 10)
-        day = "0" + day;
+	var nullDate = false;
+	if (!currentDate) {
+		nullDate = true;
+		currentDate = reminderOrTodo.date;
+	}
+	var outputStr = "";
 
-    if (reminderOrTodo.allDayEvent) {
-        if (!nullDate) {
-            outputStr = "DTEND;VALUE=DATE" + separator +
-                "" +
-                year +
-                month +
-                day +
-                newline;
-        }
-        else
-        if (isExport) {
-            // if we are exporting reminders, then add the end-date for all day events because
-            // some buggy clients don't understnand all-day events that have no end date even though
-            // that is correct in the ICS spec
-            currentDate.setDate(currentDate.getDate() + 1);
-            year = currentDate.getFullYear();
-            month = currentDate.getMonth() + 1;
-            day = currentDate.getDate();
-            if (month < 10)
-                month = "0" + month;
-            if (day < 10)
-                day = "0" + day;
-            outputStr += "DTEND;VALUE=DATE" + separator +
-                "" +
-                year +
-                month +
-                day +
-                newline;
-        }
-    }
-    else {
-        var hours = currentDate.getHours();
-        var minutes = currentDate.getMinutes();
-        if (hours < 10)
-            hours = "0" + hours;
-        if (minutes < 10)
-            minutes = "0" + minutes;
 
-        if (!nullDate) {
-            outputStr = "DTEND" + separator +
-                "" +
-                year +
-                month +
-                day +
-                "T" +
-                hours +
-                minutes +
-                "00" +
-                newline;
+	if (reminderOrTodo.allDayEvent) {
+	// DTEND is a whole day event, no time value
 
-//gwTEST
+		var year = currentDate.getFullYear();
+
+		var month = currentDate.getMonth() + 1;
+		if (month < 10)
+				month = "0" + month;
+
+		var day = currentDate.getDate();
+		if (day < 10)
+			day = "0" + day;
+
+		if (!nullDate) {
+			outputStr = "DTEND;VALUE=DATE" + separator +
+				"" +
+				year +
+				month +
+				day +
+				newline;
+		}
+
+		else if (isExport) {
+			// if we are exporting reminders, then add the end-date for all day events because
+			// some buggy clients don't understnand all-day events that have no end date even though
+			// that is correct in the ICS spec
+			currentDate.setDate(currentDate.getDate() + 1);
+
+			year = currentDate.getFullYear();
+
+			month = currentDate.getMonth() + 1;
+			if (month < 10)
+				month = "0" + month;
+
+			day = currentDate.getDate();
+			if (day < 10)
+				day = "0" + day;
+
+			outputStr += "DTEND;VALUE=DATE" + separator +
+				"" +
+				year +
+				month +
+				day +
+				newline;
+		}
+	}
+
+	// DTEND has a time value 
+	else {
+		if (!nullDate) {
+
+//gwUTC Format 
 //DTSTART:20150222T231500Z
 //DTEND:20150222T231500Z
+			if (reminderfox.core.utc == true) {
+				var dateZ = new Date(currentDate).toISOString().replace(/-/g,"").replace(/:/g,"").substring(0,15)+"Z"
+				outputStr = "DTEND" + separator + dateZ + newline;
 
-            var dateZ = new Date(currentDate).toISOString().replace(/-/g,"").replace(/:/g,"").substring(0,15)+"Z"
-            outputStr = "DTEND" + separator + dateZ + newline;
-        }
-        else
-        if (isExport) {
-            currentDate.setHours(currentDate.getHours() + 1);
-            year = currentDate.getFullYear();
-            month = currentDate.getMonth() + 1;
-            day = currentDate.getDate();
-            if (month < 10)
-                month = "0" + month;
-            if (day < 10)
-                day = "0" + day;
-            hours = currentDate.getHours();
-            minutes = currentDate.getMinutes();
-            if (hours < 10)
-                hours = "0" + hours;
-            if (minutes < 10)
-                minutes = "0" + minutes;
-            outputStr += "DTEND" + separator +
-                "" +
-                year +
-                month +
-                day +
-                "T" +
-                hours +
-                minutes +
-                "00" +
-                newline;
-        }
-    }
-    return outputStr;
+			} else {
+
+				var year = currentDate.getFullYear();
+				var month = currentDate.getMonth() + 1;
+				if (month < 10)
+						month = "0" + month;
+
+				var day = currentDate.getDate();
+				if (day < 10)
+					day = "0" + day;
+
+				var hours = currentDate.getHours();
+				if (hours < 10)
+					hours = "0" + hours;
+
+				var minutes = currentDate.getMinutes();
+				if (minutes < 10)
+					minutes = "0" + minutes;
+
+				outputStr = "DTEND" + separator +
+					"" +
+					year +
+					month +
+					day +
+					"T" +
+					hours +
+					minutes +
+					"00" +
+					newline;
+			}
+		}
+
+		else if (isExport) {
+			currentDate.setHours(currentDate.getHours() + 1);
+
+			if (reminderfox.core.utc == true) {
+				var dateZ = new Date(currentDate).toISOString().replace(/-/g,"").replace(/:/g,"").substring(0,15)+"Z"
+				outputStr = "DTEND" + separator + dateZ + newline;
+
+			} else {
+				year = currentDate.getFullYear();
+				month = currentDate.getMonth() + 1;
+				day = currentDate.getDate();
+	
+				if (month < 10)
+					month = "0" + month;
+				if (day < 10)
+					day = "0" + day;
+	
+				hours = currentDate.getHours();
+				minutes = currentDate.getMinutes();
+	
+				if (hours < 10)
+					hours = "0" + hours;
+				if (minutes < 10)
+					minutes = "0" + minutes;
+
+				outputStr += "DTEND" + separator +
+					"" +
+					year +
+					month +
+					day +
+					"T" +
+					hours +
+					minutes +
+					"00" +
+					newline;
+			}
+		}
+	}
+	return outputStr;
 };
 
 
@@ -3443,7 +3544,7 @@ reminderfox.core.writeOutRemindersAndTodos= function(isExport){
     }
 
     reminderfox.core.writeStringToFile(outputStr, file, false);
-	reminderfox.calDAV.accountsWrite(reminderfox.calDAV.accounts );
+	reminderfox.calDAV.accountsWrite(reminderfox.calDAV.accounts);
 };
 
 
@@ -3574,22 +3675,6 @@ reminderfox.core.filesystemTimeStampHasChanged= function(){
     else {
         return -1;
     }
-
-    // then do this...
-    /* ------
-     var windowEnumerator =  reminderfox.core.getWindowEnumerator();
-     if (windowEnumerator.hasMoreElements()) {
-     var oldestWindow = windowEnumerator.getNext();
-     oldestWindow.reminderfox.overlay.updateRemindersInWindow();
-     reminderfox.core.clearRemindersAndTodos();
-
-     while (windowEnumerator.hasMoreElements()) {
-     var currentWindow = windowEnumerator.getNext();
-     currentWindow.reminderfox.overlay.updateRemindersInWindow();
-     currentWindow.reminderfox.core.clearRemindersAndTodos();
-     }
-     }
-     ------*/
 };
 
 reminderfox.core.getQuickAlarms= function(){
@@ -6736,7 +6821,6 @@ reminderfox.core.statusSet= function(text, panel){
 
                 statusInfoPanel.removeAttribute('hidden');
                 statusInfoPanel.openPopup(anchor, 'after_end', 6, -24)
-                // XXX   using 'fade'  ?????
                 setTimeout(function() {reminderfox.core.statusReset ()},6000);
             }
         };
@@ -6748,8 +6832,9 @@ reminderfox.core.statusSet= function(text, panel){
  *  Generic function to reset 'RmFx Status'
  */
 reminderfox.core.statusReset= function(){
-    // -------------------------------------------------------------------------
-    document.getElementById("rmFx_status-panel").hidePopup();
+// -------------------------------------------------------------------------
+	document.getElementById("rmFx_status-panel-text").value = "";
+	document.getElementById("rmFx_status-panel").hidePopup();
 };
 
 
@@ -7350,8 +7435,6 @@ reminderfox.core.CalDAVaction = function(recentReminder, actionCode) {
 		var mWindow = reminderfox.core.getWindowEnumerator()
 		if (mWindow.hasMoreElements()) {
 			var xWindow = mWindow.getNext();
-
-			reminderfox.calDAV.accountsStatus ("reminderfox.core.CalDAVaction")
 
 			if (actionCode == REMINDERFOX_ACTION_TYPE.DELETE){
 				xWindow.rmFx_CalDAV_ReminderDelete(recentReminder)

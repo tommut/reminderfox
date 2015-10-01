@@ -1955,8 +1955,9 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
 
 reminderfox.overlay.updateRemindersInWindow= function(){
 //------------------------------------------------------------------------------
-    reminderfox.core.logMessageLevel("Updating reminders in window: " + new Date(),
-        reminderfox.consts.LOG_LEVEL_INFO);
+    var msg = ("Updating reminders in window: "
+         + "  in : " + document.documentElement.getAttribute('windowtype'))
+    reminderfox.util.Logger('checkData',msg);
 
     var text = document.getElementById('reminderFox-statusLabel');
     if (text != null) {

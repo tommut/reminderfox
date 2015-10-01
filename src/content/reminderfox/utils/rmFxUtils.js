@@ -6,7 +6,7 @@ if (!reminderfox.util)    reminderfox.util = {};
 if (!reminderfox.calDAV)    reminderfox.calDAV = {};
 
 reminderfox.calDAV.colorMap = [];
-reminderfox.calDAV.offlineReminders = false;
+reminderfox.calDAV.pendingReminders = false;
 
 
 if(!reminderfox.msgnr) reminderfox.msgnr = {};
@@ -1260,8 +1260,12 @@ reminderfox.util.fileCheck= function (filepath) {
 		sfile = Components.classes["@mozilla.org/file/local;1"]
 			.createInstance(Components.interfaces.nsIFile);
 	}
-	sfile.initWithPath(filepath);
-//	reminderfox.util.Logger('Alert', " .util.fileCheck: >>" + sfile.path + '<<')
+	//reminderfox.util.Logger('calDAV', " .util.fileCheck: >>" + filepath + '<<')   //XXXgW
+	try {
+		sfile.initWithPath(filepath);
+	} catch (ex){
+		return -2 // serious error with filepath, ev. wrong dir from old profile!
+	}
 
 	if (sfile.exists() === false) {
 		// check if parent directory exists
@@ -1735,7 +1739,7 @@ reminderfox.util.Logger = function (Log, msg) {
 		ALL:    0
 		};
 
-	if ((Log == 'alert') || (Log == 'Alert') || (Log == 'ALERT')){
+	if (Log.toLowerCase().search('alert') > -1){
 		var date = new Date();
 		logMsg = "\nReminderfox  ** Alert **    " + date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + "\n" + msg;
 		if (Log == 'ALERT') logMsg += "\n" + reminderfox.util.STACK();
@@ -1768,8 +1772,12 @@ reminderfox.util.Logger = function (Log, msg) {
 	logMsg = "\nReminderfox Logger : "+ rootID + "  [" + Log + " : " + logId + "]      "
 		+ date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + "\n" + msg;
 
-	if (logNum >= 50 /* 'Warn', 'Error', 'Fatal' */) logMsg += "\n" + reminderfox.util.STACK();
-
+	if (logNum >= 50 /* 'Warn', 'Error', 'Fatal' */) {
+		logMsg += "\n" + reminderfox.util.STACK();
+	} else {
+		logMsg += "\n" + reminderfox.util.STACK(1);
+	}
+	
 	if (logNum >= 40 /* 'Info' */)
 		reminderfox.util.LogToConsole(logMsg, Components.stack.caller.filename, "", Components.stack.caller.lineNumber);
 	else 
@@ -2226,78 +2234,78 @@ reminderfox.util.JS = {
 		Components.stack.caller.lineNumber + "]]";
 
 		switch (id) {	// *** XUL calls for dispachting and optional  fct call ***
-			case "getiCalMailed":{
-				this.dispatcher("iCal");
-				this.dispatcher("mail");
+			case 'getiCalMailed':{
+				this.dispatcher('iCal');
+				this.dispatcher('mail');
 				reminderfox.iCal.addReminder4Message(arg);
 				break;
 			}
-			case "addReminder4Contact":{
-				this.dispatcher("abCard");
-				this.dispatcher("mail");
+			case 'addReminder4Contact':{
+				this.dispatcher('abCard');
+				this.dispatcher('mail');
 				reminderfox.abCard.addReminder4Contact(arg);
 				break;
 			}
-			case "msgSendwReminder":{
-				this.dispatcher("sendPlus");
-				this.dispatcher("calDAV");
+			case 'msgSendwReminder':{
+				this.dispatcher('sendPlus');
+				this.dispatcher('calDAV');
 				reminderfox.sendPlus.reminder();
 				break;
 			}
 
 
 			// *** just loading ****
-			case "mail":{
-				this.dispatcher("mail");
-				this.dispatcher("tagging");
+			case 'mail':{
+				this.dispatcher('mail');
+				this.dispatcher('tagging');
 				break;
 			}
-			case "iCalMail":{
-				this.dispatcher("mail");
-				this.dispatcher("iCal");
+			case 'iCalMail':{
+				this.dispatcher('mail');
+				this.dispatcher('iCal');
 				break;
 			}
-			case "sendPlus":{
-				this.dispatcher("sendPlus");
-				this.dispatcher("tagging");
-				this.dispatcher("mail");
-				this.dispatcher("calDAV");
+			case 'sendPlus':{
+				this.dispatcher('sendPlus');
+				this.dispatcher('tagging');
+				this.dispatcher('mail');
+				this.dispatcher('calDAV');
 				break;
 			}
-			case "tagging":{
-				this.dispatcher("tagging");
-				this.dispatcher("sendPlus");
+			case 'tagging':{
+				this.dispatcher('tagging');
+				this.dispatcher('sendPlus');
 				break;
 			}
-			case "tag":{
-				this.dispatcher("tagging");
+			case 'tag':{
+				this.dispatcher('tagging');
 				break;
 			}
-			case "network":{
-				this.dispatcher("network.upload");
-				this.dispatcher("network.download");
-				this.dispatcher("network.services");
-				this.dispatcher("network.password");
+			case 'network':{
+				this.dispatcher('network.upload');
+				this.dispatcher('network.download');
+				this.dispatcher('network.services');
+				this.dispatcher('network.password');
 				break;
 			}
-			case "userIO":{
-				this.dispatcher("userIO");
+			case 'userIO':{
+				this.dispatcher('userIO');
 				reminderfox.userIO.go(arg);
 				break;
 			}
-			case "addDialog":{
-				this.dispatcher("addDialog");
-				this.dispatcher("iCal");
+			case 'addDialog':{
+				this.dispatcher('addDialog');
+				this.dispatcher('iCal');
 				break;
 			}
 
-			case "addDialog0":{
-				this.dispatcher("addDialog");
+			case 'addDialog0':{
+				this.dispatcher('addDialog');
 				break;
 			}
 
-			case "http":{
-				this.dispatcher("http");
+			case 'http':{
+				this.dispatcher('http');
 				break;
 			}
 		}
@@ -2475,7 +2483,7 @@ reminderfox.versionCompare = {
 			this.contentType  = 'text/xml';
 			this.headers      = null;
 
-			this.username     = null;  //""
+			this.username     = "";
 			this.password     = "";
 
 			this.timeout      = 30;
@@ -2689,15 +2697,19 @@ reminderfox.colorMap.setup= function () {
  *  from file stored parallel to the current 'reminderfox.ics' with extension .ics.dav
  *  @param {string}  ics fileName
  */
-reminderfox.calDAV.getAccounts = function (thisFile) {
+reminderfox.calDAV.getAccounts = function () {
 //-----------------------------------------------------
 	var calDAVfile;
-	var msg = ("  ....  calDAV.getAccounts   ")
+	var icsFile = reminderfox.core.getReminderStoreFile().path;
+
+	var msg = "  ....  calDAV.getAccounts  "
 
 	// no calDAV accounts? Or a file is given? --> read file
-	if ((reminderfox.calDAV.accounts != null) && (Object.keys(reminderfox.calDAV.accounts ).length === 0) || (thisFile != null)){
+	if ((reminderfox.calDAV.accounts != null) && (Object.keys(reminderfox.calDAV.accounts ).length === 0)){
 
-		calDAVfile = reminderfox.calDAV.accountsFile(thisFile);
+//reminderfox.util.Logger('calDAV', " .calDAV.getAccounts   dir/file check: " + icsFile)
+
+		calDAVfile = reminderfox.calDAV.accountsFile(icsFile);
 		try {
 			reminderfox.calDAV.accounts = JSON.parse(reminderfox.core.readInFileContents (calDAVfile));
 			msg += "   read from file: " + calDAVfile.path
@@ -2706,16 +2718,22 @@ reminderfox.calDAV.getAccounts = function (thisFile) {
 			msg += "   new array!"
 		}
 
+		var calDAVstatus = reminderfox.calDAV.accountsStatus()
+		msg += "  .... on windowtype  >>" + document.documentElement.getAttribute('windowtype') 
+			+ "\n  count#:" + calDAVstatus.count + "  active#: " + calDAVstatus.active 
+			+ "  .pendingReminders: " + calDAVstatus.pendingReminders
+			+ "\n  snap: " + calDAVstatus.snap
+		reminderfox.util.Logger('calDAVaccount', msg)
+
 	} else {
-		msg += "   already loaded!"
+		// "   already loaded!"
 	}
 
-	reminderfox.calDAV.accountsStatus(msg)
 	return reminderfox.calDAV.accounts
 }
 
 
-reminderfox.calDAV.accountsStatus = function (msg, calDAVaccounts) {
+reminderfox.calDAV.accountsStatus = function (calDAVaccounts) {
 //-----------------------------------------------------
 	if (calDAVaccounts == null) {
 		calDAVaccounts = reminderfox.calDAV.accounts
@@ -2734,19 +2752,12 @@ reminderfox.calDAV.accountsStatus = function (msg, calDAVaccounts) {
 
 	var sCalDAVaccounts = JSON.stringify (calDAVaccounts);
 
-	calDAVstatus.offlineReminders = false
+	calDAVstatus.pendingReminders = false
 	if ((sCalDAVaccounts.search('"status":"0"') != -1) 			//Add
 		|| (sCalDAVaccounts.search('"status":"-1"') != -1)		//Delete
 		|| (sCalDAVaccounts.search('"status":"-2"') != -1)){	//Edit/Update
-		calDAVstatus.offlineReminders = true;
+		calDAVstatus.pendingReminders = true;
 	}
-
-	msg += ("\n  ....  calDAV.accountsStatus on windowtype: " + document.documentElement.getAttribute('windowtype') 
-		+ "\n  count#:" + calDAVstatus.count +"  active#: " + calDAVstatus.active 
-		+ "  .offlineReminders: " + calDAVstatus.offlineReminders)
-		+"\n  snap: " + calDAVstatus.snap + "\n"
-
-	reminderfox.util.Logger('calDAVaccount', msg)
 
 	return calDAVstatus;
 };
@@ -2775,7 +2786,7 @@ reminderfox.calDAV.accountsWrite= function (calDAVaccounts) {
     var windowManager = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService();
     var windowManagerInterface = windowManager.QueryInterface(Components.interfaces.nsIWindowMediator);
 
-	msg = "  ....  enum xulWindows"
+	msg = " ....  enum xulWindows"
 
 	for (var aWin in xWin) {
 		var windowEnumerator = windowManagerInterface.getEnumerator(xWin[aWin]);
@@ -2795,13 +2806,12 @@ reminderfox.calDAV.accountsWrite= function (calDAVaccounts) {
 	var outputStr = JSON.stringify (calDAVaccounts);
 	var file = reminderfox.calDAV.accountsFile();
 
-	var mssg = "\n  WriteOut calDAVaccounts to file: " + file.path + "\n" + msg;
+	var mssg = " .... WriteOut calDAVaccounts to file: " + file.path + "\n" + msg;
 	reminderfox.util.Logger('calDAVaccount',  mssg);
 
 	reminderfox.util.makeFile8(outputStr, file.path)
 	return calDAVaccountsNo;
 };
-
 
 
 /**
@@ -3140,23 +3150,26 @@ reminderfox.online = {
 //--------------------------------------------------------------------------
 	status : function () {
 
+			var foxy = document.getElementById("rmFx-foxy-icon-small");
+			var msg = "  System status"
+
 			if (navigator.onLine) {
-				var msg = " Reminderfox:  System status   +++ ONLINE +++"
-				reminderfox.util.Logger('calDAV',msg)
-				var foxy = document.getElementById("rmFx-foxy-icon-small");
 				if (foxy != null) 
 					foxy.setAttribute('mode', 'online');
 
-				rmFx_CalDAV_update4Offline();
-
-			} else {
-				var msg = " Reminderfox:  System status   --- OFFINE ---"
+				msg += " +++ ONLINE +++"
 				reminderfox.util.Logger('calDAV',msg)
 
-				reminderfox.core.statusSet("System is Offline!", true)
-				var foxy = document.getElementById("rmFx-foxy-icon-small");
+				rmFx_CalDAV_updatePending();
+
+			} else {
 				if (foxy != null) 
 					foxy.setAttribute('mode', 'offline');
+
+				msg += " --- OFFINE ---"
+				reminderfox.util.Logger('calDAV',msg)
+				reminderfox.core.statusSet(msg, true)
+
 			}
 	}
 

@@ -11,6 +11,7 @@
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 	<script type="application/x-javascript" src="chrome://reminderfox/content/reminderFoxCore.js" />
+	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/rmFxUserIO.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/rmFxUtils.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/HTTP.js" />
 
@@ -69,8 +70,30 @@
 	</groupbox>
 
 	<hbox>
+		<button label="icalx get" oncommand='reminderfox_Networking("getICS","http://icalx.com/private/neandr/reminder.ics","neandr")' />
+		<button label="icalx err" oncommand='reminderfox_Networking("getICS","http://icalx.com/private/neandr/reminder.ics","neandrx")' />
+
+		<button label="icalx put" oncommand='reminderfox.userIO.putRemoteCalendar()' />
+
+		<button label="Steelers" oncommand='reminderfox_Networking("getICS","http://www.southendzone.com/ical/steelers.ics", "")' />
+		<button label="call4Err" oncommand='reminderfox_Networking("getICS","http://www.southend.com/ical/xx.ics", "")' />
+
 		<spacer flex="1" />
 		<button label="&rf.about.close.label;" oncommand="window.close();" />
 	</hbox>
+
+	<script type="application/x-javascript">
+		function reminderfox_Networking (fct, url, user) {
+		//------------------------------------------------------------------------------
+
+		var details = {};
+		details.url = url;
+		details.user = user;
+		details.summary = url
+
+		reminderfox.userIO.addOrSubscribe(details, "About ReminderFox :: Networking_Test")
+		}
+
+	</script>
 
 </window>

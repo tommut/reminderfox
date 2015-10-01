@@ -105,20 +105,16 @@ if(!reminderfox.userIO)		reminderfox.userIO = {};
 		//-------------------------------------------------------
 		if (event.dataTransfer.types.contains("text/uri-list")) {
 
-			logInfo = "URL link  with .ics  or webcal (Subscription)";
+			logInfo = "URL link  with ICS/webcal (Subscription)";
 			//-------------------------------------------------------
 			if (event.dataTransfer.getData("text/x-moz-url")) {
 
 				details.url         = event.dataTransfer.getData("text/x-moz-url-data")
 				details.summary     = event.dataTransfer.getData("text/x-moz-url-desc")
 
-		//		if ((((details.url.toLowerCase().indexOf('http') == 0)||(details.url.toLowerCase().indexOf('https') == 0)) && (details.url.toLowerCase().indexOf(".ics") == (details.url.length - 4))
-		//			|| (details.url.toLowerCase().indexOf('webcal:') == 0))) {
-
-					logInfo = logInfo + " ##### ICS/webcal " + details.summary
-					reminderfox.userIO.addOrSubscribe(details, logInfo);
-					return;
-		//		}
+				logInfo = logInfo + details.summary
+				reminderfox.userIO.addOrSubscribe(details, logInfo);
+				return;
 			}
 
 			logInfo = "FX/TB a 'normal' Link"
@@ -161,20 +157,20 @@ if(!reminderfox.userIO)		reminderfox.userIO = {};
 
 
 /**
- * userIO.defaultMode
+ * userIO.defaultMode    adds a Reminder/Todo with ADD/EDIT dialog
  * 
  * @param {Object} details
  */
 reminderfox.userIO.defaultMode = function (details, logInfo) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	reminderfox.util.JS.dispatch('tag');
-//reminderfox.util.Logger('ALERT', logInfo);
+	reminderfox.util.Logger('ALERT', logInfo);
 
 	var newDate = new Date();
 	newDate.setDate(newDate.getDate());  // default to using today's date for reminder
 	var reminderId =reminderfox.core.generateUniqueReminderId( newDate);
 
-	var summary = (!details.summary) ? details.infos.subject : details.summary;
+	var summary = ('summary' in details) ? details.summary : "";
 	var newReminderToBeAdded = new reminderfox.core.ReminderFoxEvent(reminderId, newDate, summary);
 
 
@@ -304,21 +300,21 @@ reminderfox.userIO.addReminder4WebPage = function(){
 			if ((details.url.indexOf(".ics") != -1)
 			    || (details.url.indexOf("ical") != -1)
 				|| (details.url.toLowerCase().indexOf('webcal:') == 0)) {
-				var logInfo = "userIO.addReminder4WebPage --> subscribeOrAddReminder";
+				var logInfo = " userIO.addReminder4WebPage  --> subscribeOrAddReminder";
 				reminderfox.userIO.addOrSubscribe(details, logInfo);
 				return;
 			}
 		}
 	}
 
-	var logInfo = "userIO.addReminder4WebPage 2  --> defaultMode"
+	var logInfo = " userIO.addReminder4WebPage  --> defaultMode"
 	reminderfox.userIO.defaultMode (details, logInfo);
 }
 
 
 //          *** Subscription / Add Reminder **** 
-reminderfox.userIO.icsOrwebcalURL = null;
-reminderfox.userIO.icsOrwebcalURLname = null;
+//reminderfox.userIO.icsOrwebcalURL = null;
+//reminderfox.userIO.icsOrwebcalURLname = null;
 reminderfox.userIO.details = null;
 
 
@@ -339,7 +335,7 @@ reminderfox.userIO.addOrSubscribe = function (details, logInfo) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	window.setCursor('wait')
 
-	// reminderfox.util.Logger('userIO', logInfo)
+	reminderfox.util.Logger('userIO', logInfo)
 
 	var url0 = details.url.toUpperCase();
 	if (url0  && url0.length > 0) {
@@ -355,10 +351,10 @@ reminderfox.userIO.addOrSubscribe = function (details, logInfo) {
 
 		this.body         = '';
 		this.contentType  = 'text/xml';
-		this.headers      = null
+		this.headers      = null;
 
-		this.username     = null; // ""
-		this.password     = ""
+		this.username     = ('user' in details) ? details.user : "";
+		this.password     = ('password' in details) ? details.password : "";
 
 		this.timeout      = 30;
 		this.id           = new Date().getTime();
@@ -377,23 +373,41 @@ reminderfox.userIO.getICS = function (status, xml, text, headers, statusText, ca
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	window.setCursor('auto')
 
-	if (status==0 || (status>=200 && status<300)) {
-		var logInfo = ("reminderfox.userIO.callback   success  status:" + status + "  text \n" + text + "\n")
-	//	reminderfox.util.Logger('userIO', logInfo)
+	if (status>=200 && status<300) {
+		var timeStamp = +reminderfox.core.getFileTimeStampFromString(text)
+
+		var logInfo = ("[.userIO.getICS]   callback  status:" + status + " timeStamp: " + (timeStamp)
+			+ "\n  text \n  >>\n" + text + "\n  <<")
+
+		call.details.timeStamp = ((timeStamp > 1) ? timeStamp : "--")
+		reminderfox.util.Logger('userIO', logInfo)
 		reminderfox.userIO.readICSdata (text, call)
 
 	} else {  // ERROR Handling
-		// do some formatting with 'text' .. expecting 'text' is http type 
-		var parser = new DOMParser();
-		var aText = parser.parseFromString(text, "text/html");
-		var msg = aText.body.textContent.replace(/\n /g,'\n').replace(/\n \n/g,'\n').replace(/n\n/g,'\n').replace(/\n\n\n/g,'\n');
 	
-		reminderfox.util.PromptAlert ("[reminderfox.userIO.getICS] HTTP callback ERROR : " + status
-		+ "\n " + msg)
+		if (status == 0) {
+		var msg = "url >>" + call.urlstr + "<<   user >>" + call.username + "<<"
+		var statusText = "No answer from requested page, check login details. "
+
+
+		} else {
+			// do some formatting with 'text' .. expecting 'text' is http type 
+			var parser = new DOMParser();
+			var aText = parser.parseFromString(text, "text/html");
+			var msg = aText.body.textContent.replace(/\n /g,'\n').replace(/\n \n/g,'\n').replace(/n\n/g,'\n').replace(/\n\n\n/g,'\n');
+		}
+		reminderfox.util.PromptAlert (statusText + " (" + status + ")  "
+		 /* + "\n user  >>" + call.user + "<<   pw >>" + call.password + "<<"  */
+			+ "\n\n" + msg + "\n\nHTTP callback error [.userIO.getICS]")
 	}
 }
 
-
+/*
+ * Read Reminders/Todos from a string (previously read from stream/file)
+ * and presents for 
+ *   multiple reminders/todos:  on the 'rmFxImportHandling' dialog,
+ *   single reminder/todo:      on the ADD/EDIT dialog
+ */
 reminderfox.userIO.readICSdata = function (icsData, call) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	var reminderEvents = [];
@@ -411,6 +425,11 @@ reminderfox.userIO.readICSdata = function (icsData, call) {
 	}
 	else { // ('one or none event or has todos') 
 		logInfo = " read in of   #reminderEvents : " + reminderEvents.length + "  #Todos : " + reminderTodosArr.length
+
+		// if no reminders/todos are read, do nothing ... but .... ?????    //TODO  //XXX
+		if ((reminderEvents.length == 0) && (reminderTodosArr.length == 0)) {
+			return
+		}
 
 		if ((reminderEvents.length == 1) && (reminderTodosArr.length == 0)) {
 			reminderfox.core.addReminderHeadlessly( reminderEvents[0]);
@@ -438,4 +457,189 @@ reminderfox.userIO.readICSfile = function () {
 
 	var icsData = reminderfox.util.readInFileContents(localFile)
 	reminderfox.userIO.readICSdata (icsData, call);
+}
+
+
+//=========================================================
+
+/*
+ * @info   updated 2015-09-29 to use http Requests
+ *
+ * @param   .getSubscription(subsName, subscribedCal)   the pw is read from FX/TN PWmanager
+ *       normal return: text string;
+ *       error  return: 
+ */
+reminderfox.userIO.getSubscription = function (subsName, subscribedCal) {
+// --------------------------------------------------------------------------
+// sync 'em up
+// var statusTxt = document.getElementById("reminderFox-network-status");
+
+	var subscriptions = reminderfox.core.getSubscriptions();
+	var url = subscriptions[subsName];
+	if (url != null && url.length > 0) {
+		reminderfox.core.statusSet(reminderfox.string("rf.options.customlist.subscribe.retrieve.title")
+			+ " " + url);
+		var webcalIndex = url.indexOf("webcal://"); // handle webcal address
+		if (webcalIndex != -1) {
+			url = "http://" + url.substring("webcal://".length);
+		}
+		//reminderfox.network.download.reminderFox_download_Startup_headless_URL(reminderfox.consts.UI_MODE_HEADLESS_SHOW_ERRORS, reminderFox_downloadSubscribedCalendarCallback, url, subscribedCal, null);
+
+		this.ID = new Date().getTime();
+
+		this.method       = 'GET';
+		this.contentType  = 'text/xml';
+
+		this.body         = '';
+		this.headers      = null;
+
+		this.urlstr       = url;
+		this.username     = "";
+		this.password     = "";
+
+		this.timeout      = 30;
+
+		this.callback     = "subscribedICS";
+		this.onError      = 'onError';
+
+		reminderfox.HTTP.request(this);
+	};
+};
+
+reminderfox.userIO.subscribedICS = function (status, xml, text, headers, statusText, call) {
+//------------------------------------------------------------------------------
+		if (status === 0 || (status >= 200 && status < 300)) {
+			var statustxtString = statusText + "  (" + status + ")"
+
+			reminderEvents = new Array();
+			reminderTodos = new Array();
+			var originalExtraInfos = reminderfox.core.reminderFox_reminderFoxExtraInfo;
+
+			var timeStamp = reminderfox.core.getFileTimeStampFromString(text)
+
+			reminderfox.core.readInRemindersAndTodosICSFromString(reminderEvents, reminderTodos, text, originalExtraInfos);
+
+			reminderfox.util.Logger('TEST', ' dnLoaded  status:' + statustxtString + " timeStamp " + timeStamp
+			+ "\n >> reminders; " + reminderEvents.length + "  todos " + reminderTodos.length + "\n  <<");
+
+			var tabName = reminderfox.tabInfo.tabName;
+			var tabID = reminderfox.tabInfo.tabID;
+			var index = tabID.indexOf(':');
+			name = tabID.substring(index + 1, tabID.length);
+
+			var subscribedCalArr = getSubscribedCalendars();		//TODO   Check version of dnLoaded ICS data
+			//if (subscribedCalArr[name] == null) {
+				subscribedCalArr[name] = new Array();
+			//}
+			subscribedCalArr[name] = reminderEvents;
+
+			reminderfox.calendar.ui.selectDay();
+
+			selectCalendarSync = false;
+			// remove all of the calendar items and re-add them
+			removeAllListItems(true, false);
+			calendarReminderArray = null; // null out in case reminder columns are sorted
+			fillList(true, false);
+			selectCalendarSync = true;
+
+			var msg = (name + "  downLoaded " + statustxtString);
+
+		} else {
+			var msg = ("general Downloading : ERROR " + status + "  " + statusText)
+			reminderfox.util.Logger('userIO', msg);
+		}
+		reminderfox.core.statusSet(msg);
+	};
+
+
+	reminderfox.userIO.onResult = function (status, xml, text, headers, statusText, call) {
+		if (status === 0 || (status >= 200 && status < 300)) {
+
+			var dnText = text;
+			var lenText = text.length
+			if (lenText > 2000) dnText = text.substring(0,2000) + "\n ....\n" + text.substring(lenText-2000,lenText)
+			reminderfox.util.Logger('userIO', ' status:' + status + 
+			"\n text " + text.length + " >>\n" + dnText + "\n<<");
+		}
+	};
+
+	reminderfox.userIO.onError = function (status, xml, text, headers, statusText) {
+		var msg = ("general Networking : ERROR " + status + "  " + statusText)
+
+		reminderfox.util.Logger('userIO', msg);
+		alert (msg);
+	};
+
+
+reminderfox.userIO.getRemoteCalendar = function () {
+// --------------------------------------------------------------------------
+	reminderFox_saveNetworkOptions();
+
+	var details = {}
+	var proto = reminderfox._prefsBranch.getCharPref(reminderfox.consts.PROTO);
+	details.url = proto + "://" + reminderfox._prefsBranch.getCharPref(reminderfox.consts.ADDRESS);
+	details.user = reminderfox._prefsBranch.getCharPref(reminderfox.consts.USERNAME);
+	details.password = ""
+
+	reminderfox.util.Logger('ALERT', "userIO.getRemoteCalendar   url >>" + details.url + "<<     uname >>" + details.user + "<<")
+
+	details.summary = details.url
+	
+	var logInfo = ".userIO.getRemoteCalendar"
+
+	reminderfox.userIO.addOrSubscribe (details, logInfo)
+
+}
+
+
+reminderfox.userIO.putRemoteCalendar = function () {
+//------------------------------------------------------------------
+	//reminderFox_saveNetworkOptions();
+
+	// get text string from current ICS data file
+	var _reminderEvents = reminderfox.core.getReminderEvents();
+	var _todosArray = reminderfox.core.getReminderTodos();
+	this.body =  reminderfox.core.constructReminderOutput(_reminderEvents, _todosArray, true);
+
+	this.method       = "PUT"
+	this.callback     = 'putRemoteCal';
+	this.onError      = 'putRemoteCal';
+
+	var proto = reminderfox._prefsBranch.getCharPref(reminderfox.consts.PROTO);
+	this.urlstr = proto + "://" + reminderfox._prefsBranch.getCharPref(reminderfox.consts.ADDRESS);
+
+	this.contentType  = 'text/xml';
+	this.headers      = null;
+
+	this.username     = reminderfox._prefsBranch.getCharPref(reminderfox.consts.USERNAME);
+	this.password     = ""
+
+	this.timeout      = 30;
+	this.id           = new Date().getTime();
+
+
+   var msg;
+	msg  = "  Remote Calendar   (" + this.callback + ")"
+	msg += "\n  call.urlstr: " + this.urlstr;
+	msg += "\n  url >>" + this.urlstr + "<<     user name >>" + this.username + "<<"
+	msg += "\n  ContentType: " + this.contentType + "   Content length: " + this.body.length;
+
+	reminderfox.util.Logger('userIO',  " .userIO.putRemoteCalendar   " + msg);
+
+	reminderfox.util.JS.dispatch('http');		//??????????????
+	reminderfox.HTTP.request(this)
+}
+
+
+reminderfox.userIO.putRemoteCal = function (status, xml, text, headers, statusText, call) {
+	if (status === 0 || (status >= 200 && status < 300)) {
+			var parser = new DOMParser();
+			var aText = parser.parseFromString(text, "text/html");
+			var msg = aText.body.textContent.replace(/\n /g,'\n').replace(/\n \n/g,'\n').replace(/n\n/g,'\n').replace(/\n\n\n/g,'\n');
+
+		reminderfox.util.PromptAlert (statusText + " (" + status + ") \n " + msg);
+	} else {
+		var msg = ("general Networking  ERROR " )
+		reminderfox.util.PromptAlert (statusText + " (" + status + ")  " + msg)
+	}
 }

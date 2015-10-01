@@ -46,6 +46,7 @@
 	<script type="application/x-javascript"
 		src="chrome://reminderfox/content/calendar/calendarWidget.js" />
 
+	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/rmFxUserIO.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/rmFxUtils.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/HTTP.js" />
 	<script type="application/x-javascript"
@@ -127,9 +128,9 @@
 		<key id="key_reload" key="R" modifiers="accel"
 			oncommand="rmFx_mainDialogLoadReload();" />		<!-- //gWSync -->
 
-		<!-- TEST area only, disable for offical release -->
+		<!-- gwTEST   TEST area only, disable for offical release -->
 			<key id="key_reload" key="F" modifiers="accel" 
-				oncommand="rmFx_CalDAV_update4Offline('calDAVofflineUpdate')"/>
+				oncommand="rmFx_CalDAV_updatePending('calDAVpendingUpdate')"/>
 			<key id="key_reload" key="O" modifiers="accel" 
 				oncommand="reminderfox.online.status()"/>
 
@@ -813,11 +814,6 @@
 	<script type="application/x-javascript">
 	function rmFx_mainDialogLoadX() {
 
-		var updateWindow = reminderfox.util.getWindow("window:rmFxCaldavUpdate");
-		if (updateWindow != null) {
-			updateWindow.close()
-		}
-
 		var textFilter = document.documentElement.attributes["textFilter"].value
 	//	reminderfox.util.Logger('ALERT', " textFiltering on XUL start" + textFilter )
 		reminderfox.search.textSearchType = textFilter
@@ -829,15 +825,6 @@
 		reminderfox.search.viewsFilterLists  = viewsFilterLists
 
 		rmFx_mainDialogLoad();
-	}
-
-
-	function openNewDoc(xThis){
-		if (xThis.label.search('Dokumentation') == 0) {
-			reminderfox.util.docRmFX('documentation-german/neue-funktionen/');
-		} else {
-			reminderfox.util.docRmFX('new-functions/');
-		}
 	}
 
 	</script>

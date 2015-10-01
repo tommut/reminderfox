@@ -66,17 +66,12 @@
 					<hbox align="center">
 						<label id="descLabel" value="&rf.reminderoptions.description.label;"
 							align="bottom" />
-						<toolbarbutton id="displayCalDAV" style="display: none;"
-							type="checkbox" oncommand="calDavInAlarm()" />
-						<toolbarbutton id="displayMail" style="display: none;"
-							type="checkbox" oncommand="showMailInAlarm()" />
+
 						<textbox id="reminderDescriptionText" readonly="true"
 							align="bottom" flex="2" />
 					</hbox>
-					<hbox id="notesHbox" orient="vertical" flex="100" hidden="true">
-						<textbox width="305px" flex="2" readonly="true" id="notesText"
-							multiline="true" rows="4" hidden="true" />
-					</hbox>
+
+<!--
 					<hbox align="center">
 						<label id="reminderDateLabel" value="&rf.reminderoptions.date.label;"
 							align="bottom" />
@@ -86,10 +81,33 @@
 						<label id="timeDescLabel" value="&rf.reminderoptions.time.label;" />
 						<label id="reminderTimeText" align="bottom" />
 					</hbox>
+-->
+					<hbox align="center">
+						<label id="reminderDateLabel" value="&rf.reminderoptions.date.label;"
+							align="bottom" />
+						<label id="reminderDateText" align="bottom" />
+
+						<label id="timeDescLabel" value=" / " />
+						<label id="reminderTimeText" align="bottom" />
+					</hbox>
+
+
+
+
 					<!-- show Time Until if there is one -->
 					<hbox align="center" id="timeUntilHBox" hidden="true">
 						<label id="timeUntilLabel" value="&rf.alarm.occursIn.label;" />
 						<label id="timeUntilText" align="bottom" />
+					</hbox>
+
+
+
+					<hbox align="center" id="attributeIcons" hidden="false">
+					</hbox>
+
+					<hbox id="notesHbox" orient="vertical" flex="100" hidden="true">
+						<textbox width="305px" flex="2" readonly="true" id="notesText"
+							multiline="true" rows="4" hidden="true" />
 					</hbox>
 
 					<!-- show location if there is one -->
@@ -98,19 +116,17 @@
 						<label id="locationText" align="bottom" />
 					</hbox>
 
-					<!-- show calDAV if there is one -->
-					<hbox id="calDavHbox" align="center" hidden="true">
-						<label id="calDavLabel" value="Remote Calendar"/>
-						<label id="calDavText" align="bottom" />
-					</hbox>
-
 					<!-- show URL if there is one -->
 					<hbox id="urlhbox" align="center" hidden="true">
 						<label id="urlLabel" value="&rf.reminderoptions.url.label;" />
 						<label id="urlText" align="bottom" class="text-link" href=""
 							onclick="reminderFox_launchAlarmURL();" />
 					</hbox>
+
+
 					<spacer flex="3" />
+
+
 					<!-- snooze and acknowlege buttons -->
 					<hbox align="center">
 						<groupbox>

@@ -1218,7 +1218,6 @@ function reminderFox_updateOptions() {
 	// save CalDAVaccounts from tab:'Sync'
 	var calDAV_calendars = document.getElementById("calDAV_calendars");
 	rmFx_CalDAV_accounts = calDAV_calendars.children.length -1;
-//	var _accounts = rmFx_CalDAV_accounts		// need to correct number of accounts if 'toDelete'
 
 	for (var i=0; i < rmFx_CalDAV_accounts; i++) {
 		var elem = calDAV_calendars.children[i];
@@ -1228,13 +1227,12 @@ function reminderFox_updateOptions() {
 		// OR if the 'ID' is equal '?'
 		if ((elem.getAttribute('toDelete') == 'true') || (ID == '?')){
 			reminderfox.calDAV.accounts = reminderfox.util.removeObjectFromObject(reminderfox.calDAV.getAccounts(), ID);
-//			_accounts = _accounts -1
 		} else {
 
 			// if this is a new account make new and set CTag
-			if (!reminderfox.calDAV.accounts [ID]) {
-				reminderfox.calDAV.accounts [ID] = {};
-				reminderfox.calDAV.accounts [ID].CTag = 0;
+			if (!reminderfox.calDAV.accounts[ID]) {
+				reminderfox.calDAV.accounts[ID] = {};
+				reminderfox.calDAV.accounts[ID].CTag = 0;
 			}
 
 			var query = elem.querySelector(".calDAV_Name");
@@ -1242,14 +1240,14 @@ function reminderFox_updateOptions() {
 				reminderfox.calDAV.accounts [ID].Name   = query.value;
 	
 				var x = elem.querySelector(".calDAV_Name").getAttribute('color');
-				reminderfox.calDAV.accounts [ID].Color  = (x == null) ? "" : x;
+				reminderfox.calDAV.accounts[ID].Color  = (x == null) ? "" : x;
 	
-				reminderfox.calDAV.accounts [ID].ID     = ID;
-				reminderfox.calDAV.accounts [ID].Typ    = elem.querySelector(".calDAV_Active").getAttribute('typ');
-				reminderfox.calDAV.accounts [ID].Active = elem.querySelector(".calDAV_Active").checked;
+				reminderfox.calDAV.accounts[ID].ID     = ID;
+				reminderfox.calDAV.accounts[ID].Typ    = elem.querySelector(".calDAV_Active").getAttribute('typ');
+				reminderfox.calDAV.accounts[ID].Active = elem.querySelector(".calDAV_Active").checked;
 	
-				reminderfox.calDAV.accounts [ID].Url    = elem.querySelector(".calDAV_Url").value;
-				reminderfox.calDAV.accounts [ID].Login  = elem.querySelector(".calDAV_Login").value;
+				reminderfox.calDAV.accounts[ID].Url    = elem.querySelector(".calDAV_Url").value;
+				reminderfox.calDAV.accounts[ID].Login  = elem.querySelector(".calDAV_Login").value;
 			}
 		}
 	}
@@ -1369,24 +1367,24 @@ function reminderFox_calDAVsave() {
 		} else {
 
 			// if this is a new account make new and set CTag
-			if (!reminderfox.calDAV.accounts [ID]) {
-				reminderfox.calDAV.accounts [ID] = {};
-				reminderfox.calDAV.accounts [ID].CTag = 0;
+			if (!reminderfox.calDAV.accounts[ID]) {
+				reminderfox.calDAV.accounts[ID] = {};
+				reminderfox.calDAV.accounts[ID].CTag = 0;
 			}
 
 			var query = elem.querySelector(".calDAV_Name");
 			if ( query != null ) {
-				reminderfox.calDAV.accounts [ID].Name   = elem.querySelector(".calDAV_Name").value;
+				reminderfox.calDAV.accounts[ID].Name   = elem.querySelector(".calDAV_Name").value;
 	
 				var x = elem.querySelector(".calDAV_Name").getAttribute('color');
-				reminderfox.calDAV.accounts [ID].Color  = (x == null) ? "" : x;
+				reminderfox.calDAV.accounts[ID].Color  = (x == null) ? "" : x;
 	
-				reminderfox.calDAV.accounts [ID].ID     = ID;
-				reminderfox.calDAV.accounts [ID].Typ    = elem.querySelector(".calDAV_Active").getAttribute('typ');
-				reminderfox.calDAV.accounts [ID].Active = elem.querySelector(".calDAV_Active").checked;
+				reminderfox.calDAV.accounts[ID].ID     = ID;
+				reminderfox.calDAV.accounts[ID].Typ    = elem.querySelector(".calDAV_Active").getAttribute('typ');
+				reminderfox.calDAV.accounts[ID].Active = elem.querySelector(".calDAV_Active").checked;
 	
-				reminderfox.calDAV.accounts [ID].Url    = elem.querySelector(".calDAV_Url").value;
-				reminderfox.calDAV.accounts [ID].Login  = elem.querySelector(".calDAV_Login").value;
+				reminderfox.calDAV.accounts[ID].Url    = elem.querySelector(".calDAV_Url").value;
+				reminderfox.calDAV.accounts[ID].Login  = elem.querySelector(".calDAV_Login").value;
 			}
 		}
 	}
@@ -1452,8 +1450,9 @@ function rmFx_calDAVfileCheckAndSave() {
 	//2014-07-18  need to check directory and file name!
 
 	var cStatus = reminderfox.util.fileCheck (rmFx_icsFileLocationNew)
+
 	if (cStatus == -2) {
-//		reminderfox.util.Logger('Alert', "  dir/file check: " + cStatus + " dir/f: " + rmFx_icsFileLocationNew)
+		reminderfox.util.Logger('calDAV', "  dir/file check: " + cStatus + " dir/f: " + rmFx_icsFileLocationNew)
 		alert("The 'directory' for the ICS file isn't valid!");
 		return -2;
 	}

@@ -54,15 +54,36 @@
 
 			<spacer height="10px"/>
 
-			<hbox>
-				<button id="reminderFox_go4OptionSync" 
+			<hbox id="reminderFox_go4NextSync" >
+				<button id="reminderFox_go4NextSyncX" 
 					class="reminderfox-iconLabel"
 					oncommand="go4NextSync(true);"
 					label="&rf.caldavupdate.next.calendars.label;" tooltiptext="&rf.caldavupdate.skip.this.calendar.tooltip;"/>
 
 				<spacer flex="1"/>
+			</hbox>
 
-				<button id="reminderFox_go4OptionSync" 
+			<vbox id="reminderFox_calDAV412" hidden="true">
+
+					<description  class="reminderfox_TextNote">Remote reminder may have changed.
+					</description>
+				
+					<hbox>
+						<button id="reminderFox_calDAV412local"
+							class="reminderfox-iconLabel"
+							oncommand="go412handling(true);"
+							label="Use Local" tooltiptext="Ignore remote reminder!"/>
+	
+						<button id="reminderFox_calDAV412remote"
+							class="reminderfox-iconLabel"
+							oncommand="go412handling(false);"
+							label="Use Remote" tooltiptext="Download remote reminder!"/>
+					</hbox>
+			</vbox>
+			<spacer flex="1"/>
+
+			<hbox id="reminderFox_go4OptionSync">
+				<button id="reminderFox_go4OptionSyncX" 
 					class="reminderfox-iconLabel"
 					oncommand="go4OptionSync(true);"
 					label="&rf.caldavupdate.configure.calendar.label;" tooltiptext="&rf.caldavupdate.open.options.sync.tooltip;"/>
@@ -73,6 +94,9 @@
 	<spacer height="10px"/>
 
 	<script type="application/x-javascript"><![CDATA[
+
+		var currentCall, rHeaders;
+
 		function calDAVupdate () {
 			var updateWindow = reminderfox.util.getWindow("window:rmFxCaldavUpdate");
 			updateWindow.screenX= 10;
@@ -82,6 +106,19 @@
 			document.getElementById('account').value           = window.arguments[0].aMsg;
 			document.getElementById('url').value               = window.arguments[0].uMsg;
 			document.getElementById('rmFxCaldavUpdate').hidden = false;
+
+			rHeaders= window.arguments[0].rHeaders
+			currentCall = window.arguments[0].call
+			if (window.arguments[0].status == "412") {
+				document.getElementById('reminderFox_go4NextSync').hidden = true;
+				document.getElementById('reminderFox_go4OptionSync').hidden = true;
+				document.getElementById('reminderFox_calDAV412').hidden = false;
+
+				// if Etag isn't returned (as with GCal) hide button
+				if (rHeaders.Etag == null) {
+					document.getElementById('reminderFox_calDAV412local').hidden = true;
+				}
+			}
 		}
 
 		function go4OptionSync() {
@@ -93,6 +130,31 @@
 		function go4NextSync() {
 			rmFx_CalDAV_SyncActiveAccountsNext(false);
 		}
+
+		// handle err 412 Precaution
+		function go412handling(mode) {
+
+			document.getElementById('reminderFox_go4NextSync').setAttribute('disabled', 'true');
+			document.getElementById('reminderFox_calDAV412local').setAttribute('disabled', 'true');
+			document.getElementById('reminderFox_calDAV412remote').setAttribute('disabled', 'true');
+
+			var id = currentCall.account.ID
+			if (mode == false) {
+				// update the account with remote reminders
+				rmFx_CalDAV_SyncAccount (id, true)
+
+			} else {
+				// ignore remote and send new local
+				var accounts = reminderfox.calDAV.getAccounts()
+				accounts[id][currentCall.ics].status = -2
+				accounts[id][currentCall.ics].etag = '"'+reminderfox.util.trim(rHeaders.Etag).replace(/\"/g,'')+'"'
+				reminderfox.calDAV.accountsWrite(accounts);
+
+				reminderfox.core.updateMainDialog (currentCall.reminder[0])
+			}
+
+		}
+
 
 	]]></script>
 

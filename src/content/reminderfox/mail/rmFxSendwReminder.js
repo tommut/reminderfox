@@ -318,7 +318,7 @@ reminderfox.sendPlus.reminder4mailList = function () {
  *  @param:  {object} msgHdr
  **/
 reminderfox.sendPlus.getRmRef = function (msgHdr) {
-	reminderfox.util.JS.dispatch ('mail');
+	reminderfox.util.JS.dispatch('mail');
 
 	if ((msgHdr == "") || (msgHdr == null)) {
 		msgHdr = gDBView.hdrForFirstSelectedMessage;

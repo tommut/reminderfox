@@ -624,7 +624,7 @@
 			var grant ='authorization_code';
 			var token = reminderfox.util.copyTextfromClipboard();
 
-			var myRequest = new reminderfoxX.XcalDAVrequest();
+			var myRequest = new reminderfoxX.calDAVrequest();
 			myRequest.gcal2Token(this, grant, token);
 		},
 

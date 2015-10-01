@@ -66,7 +66,7 @@ pref("extensions.reminderFox.todoLists", "");
 pref("extensions.reminderFox.quickAlarms", "");
 pref("extensions.reminderFox.sortColumns", "");
 
-
+pref("extensions.reminderFox.utcFormat", true);
 
 
 //pref("extensions.reminderFox.lastAlert", 0);

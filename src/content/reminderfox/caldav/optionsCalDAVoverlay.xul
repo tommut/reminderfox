@@ -16,6 +16,7 @@
 	<script type="application/x-javascript" src="chrome://reminderfox/content/caldav/calDAVrequester.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/caldav/calDAVcalls.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/HTTP.js" />
+	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/HTTP.js" />
 
 	<vbox id="reminderFoxNetworkTab">
 
@@ -78,8 +79,9 @@
 						<hbox align="center">
 							<menulist id="reminderFox-proto">
 								<menupopup>
-									<menuitem label="&rf.options.synchronization.ftp.label;"
+				<!--					<menuitem label="&rf.options.synchronization.ftp.label;"
 										value="0" />
+				-->
 									<menuitem label="&rf.options.synchronization.http.label;"
 										value="1" />
 									<menuitem label="&rf.options.synchronization.https.label;"
@@ -101,9 +103,9 @@
 						</hbox>
 						<hbox>
 							<button id="reminderFox_network_import_settings" label="&rf.options.synchronization.import;"
-								flex="1" oncommand="downloadReminders()" />
+								flex="1" oncommand="reminderfox.userIO.getRemoteCalendar()" />  <!-- downloadReminders() -->
 							<button id="reminderFox_network_export_settings" label="&rf.options.synchronization.export;"
-								flex="1" oncommand="uploadReminders()" />
+								flex="1" oncommand="reminderfox.userIO.putRemoteCalendar()" />
 						</hbox>
 					</groupbox>
 					<groupbox id="reminderFox-network-sync-group" style="width: 300px;">
@@ -407,7 +409,7 @@
 			if (callOptions.ID == "%%") return;
 
 			if (callOptions.ID != oldID) {
-				reminderfox.calDAV.accounts = reminderfox.util.removeObjectFromObject(reminderfox.calDAV.accounts , oldID);
+				reminderfox.calDAV.accounts = reminderfox.util.removeObjectFromObject(reminderfox.calDAV.accounts, oldID);
 			}
 
 			elem.querySelector("#calDAV_ID").value = callOptions.ID;
@@ -773,7 +775,7 @@
 			call.callback   = 'onResult';
 			call.onError    = 'onResult';
 
-			var myHTTP = new reminderfoxX.XcalDAVhttp();
+			var myHTTP = new reminderfoxX.calDAVhttp();
 			myHTTP.ID = new Date().getTime();
 			myHTTP.sendContentToURL(this, call);
 		},
