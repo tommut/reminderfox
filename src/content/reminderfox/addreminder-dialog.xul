@@ -54,6 +54,8 @@
 	<script type="application/x-javascript"
 		src="chrome://reminderfox/content/categories/rmFxViews.js" />
 
+	<!--script type="application/x-javascript" src="chrome://reminderfox/content/utils/testtest.js" 
+		/ -->
 
 	<script type="application/x-javascript" src="chrome://reminderfox/content/network/download.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/network/upload.js" />
@@ -127,6 +129,8 @@
 
 		<key id="key_reload" key="R" modifiers="accel"
 			oncommand="rmFx_mainDialogLoadReload();" />		<!-- //gWSync -->
+
+		<!-- key id="key_reload" key="U" modifiers="accel" oncommand="calDAVupdate()"/-->
 
 		<!-- gwTEST   TEST area only, disable for offical release -->
 			<key id="key_reload" key="F" modifiers="accel" 
@@ -215,10 +219,6 @@
 					label="&rf.calendar.menu.options.open;"
 					tooltiptext="&rf.calendar.menu.options.open;" />
 
-				<menuitem label="&rf.main.help.label;"
-					onclick="reminderfox.util.launchHelp();reminderfox.calendar.ui.panelClose(); "
-					tooltiptext="&rf.calendar.menu.options.docu;" />
-
 				<menu id="backupMenu" label="&rf.add.file.menu.backup.title;">
 					<menupopup id="backupMenuPopup" >
 						<menuitem id="rmFxBackup" label="&rf.options.file.backup;"
@@ -229,6 +229,15 @@
 								   tooltiptext="&rf.options.file.Pick;"/>
 					</menupopup>
 				</menu>
+
+				<menuseparator />
+
+				<menuitem label="Reminderfox News" id="newsMenu"
+					 oncommand="reminderfox.go4news.get('go4_news');" />
+
+				<menuitem label="&rf.main.help.label; / Documentation"
+					onclick="reminderfox.util.launchHelp();reminderfox.calendar.ui.panelClose(); "
+					tooltiptext="&rf.calendar.menu.options.docu;" />
 
 				<menuitem label="&rf.main.about.label;" id="calendar-foxy-contextmenu-gotoAbout"
 					onclick="reminderfox.overlay.openAboutReminderFoxDialog();reminderfox.calendar.ui.panelClose(); " />
@@ -814,6 +823,11 @@
 	<script type="application/x-javascript">
 	function rmFx_mainDialogLoadX() {
 
+		var updateWindow = reminderfox.util.getWindow("window:rmFxCaldavUpdate");
+		if (updateWindow != null) {
+			updateWindow.close()
+		}
+
 		var textFilter = document.documentElement.attributes["textFilter"].value
 	//	reminderfox.util.Logger('ALERT', " textFiltering on XUL start" + textFilter )
 		reminderfox.search.textSearchType = textFilter
@@ -823,6 +837,8 @@
 	//	reminderfox.util.Logger('ALERT', " viewsFilters on XUL start   Events|Lists : " + viewsFilterEvents + "|" + viewsFilterLists)
 		reminderfox.search.viewsFilterEvents = viewsFilterEvents
 		reminderfox.search.viewsFilterLists  = viewsFilterLists
+
+		reminderfox.go4news.setButton();
 
 		rmFx_mainDialogLoad();
 	}

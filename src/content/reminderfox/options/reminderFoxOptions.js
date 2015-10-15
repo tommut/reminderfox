@@ -1237,7 +1237,7 @@ function reminderFox_updateOptions() {
 
 			var query = elem.querySelector(".calDAV_Name");
 			if ( query != null ) {
-				reminderfox.calDAV.accounts [ID].Name   = query.value;
+				reminderfox.calDAV.accounts[ID].Name   = query.value;
 	
 				var x = elem.querySelector(".calDAV_Name").getAttribute('color');
 				reminderfox.calDAV.accounts[ID].Color  = (x == null) ? "" : x;
@@ -1464,7 +1464,7 @@ function rmFx_calDAVfileCheckAndSave() {
 		// check if Remote Calendar/CalDAV accounts are already defined for 
 		// the 'new' file selection, if so, readin
 		if (reminderfox.util.fileCheck(rmFx_calDAVaccountsFileLocationNew) > 0) { 
-			reminderfox.calDAV.getAccounts (rmFx_icsFileLocationNew)
+			reminderfox.calDAV.getAccounts(rmFx_icsFileLocationNew)
 		}
 
 		else { // NO .dav file, ask user how to 

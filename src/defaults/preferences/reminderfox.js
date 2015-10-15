@@ -1,4 +1,8 @@
 // ReminderFox Prefs
+pref("extensions.reminderFox.news", true);
+pref("extensions.reminderFox.newsStamp", "1443869890924");
+pref("extensions.reminderFox.newsLink", "https://dl.dropbox.com/u/35444930/rmFX/XPI/news.txt");
+
 pref("extensions.reminderFox.alarmSound", true);
 pref("extensions.reminderFox.alertSound", false);
 pref("extensions.reminderFox.network.synchronize", false);
@@ -68,6 +72,7 @@ pref("extensions.reminderFox.sortColumns", "");
 
 pref("extensions.reminderFox.utcFormat", true);
 
+pref("extensions.reminderFox.intervalTimer", 1800000);   // set to 30 min; 
 
 //pref("extensions.reminderFox.lastAlert", 0);
 //pref("extensions.reminderFox.lastModified", 0);

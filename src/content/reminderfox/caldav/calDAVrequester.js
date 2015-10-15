@@ -35,7 +35,6 @@ reminderfoxX.calDAVhttp = function () {}
 	//---------------------------------------------------------------
 		if ((call.password === "") && (call.username !== "")) {
 
-			reminderfox.util.JS.dispatch('network')	//gW  2014-08-05
 			return reminderFox_getPassword ({
 				ljURL    : call.url,
 				username : call.username,
@@ -170,6 +169,7 @@ reminderfoxX.calDAVhttp = function () {}
 					caller[call.callback](status, xml, text, headers, statusText, call);
 					}
 			});
+			return;
 	};
 
 

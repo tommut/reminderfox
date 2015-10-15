@@ -8,6 +8,9 @@ reminderfox.HTTP = {
 
 	reminderfox.HTTP.request = function (caller) {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		reminderfox.util.Logger('ALERT', " HTTP.js   .HTTP.request .... "
+		    + " username >>" + caller.username + "<<   url >>" + caller.urlstr + "<<")
+
 		var request      = caller.callback
 		caller.ID        = new Date().getTime()
 
@@ -19,11 +22,17 @@ reminderfox.HTTP = {
 			    + "\n" + caller.urlstr;
 			xml = {}; headers = {};
 			caller[caller.onError](status,xml,text,headers,statusText, caller)
+			return
 		}
+
+		reminderfox.util.Logger('ALERT', "HTTP.js    reminderfox.HTTP.call .... ")
 
 		reminderfox.HTTP.call(caller.method, caller.urlstr, { /* options */
 				username      : encodeURIComponent(caller.username ),   // ; caller.username,
 				password      : encodeURIComponent (callerPW.password),
+
+			//	username      : (caller.username ),   // ; caller.username,
+			//	password      : (callerPW.password),
 
 				timeout       : parseInt(caller.timeout) * 1000,
 
@@ -308,7 +317,6 @@ reminderfox.HTTP = {
 	//---------------------------------------------------------------
 		if ((call.password === "") && (call.username !== "")) {
 
-			reminderfox.util.JS.dispatch('network')	//gW  2014-08-05
 			var callDetails = reminderFox_getPassword ({
 				ljURL    : call.urlstr,
 				username : call.username,

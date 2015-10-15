@@ -48,7 +48,7 @@
 
 
 if (!reminderfoxX)     var reminderfoxX = {};
-if (!reminderfox.calDAVcalls)  reminderfox.calDAVcalls = { 
+if (!reminderfox.calDAVcalls)  reminderfox.calDAVcalls = {
 
 // ======================= call definitions ====================================
 	getCTAG			: ['PROPFIND', 
@@ -327,7 +327,7 @@ function rmFx_CalDAV_AccountListing (call, rAccounts) {
 	reminderfox.util.Logger('calDAV', msg)
 
 	if (rmFx_UIDpending.length == 0){
-		rmFx_CalDAV_SyncActiveAccounts('Reminderfox  Reminders pending [#2]   NONE')
+		rmFx_CalDAV_SyncActiveAccounts()
 	}
 
 }
@@ -483,7 +483,7 @@ function rmFx_CalDAV_updatePendingNext() {
 	console.log(msg)
 
 	if (rmFx_UIDpending.length == 0) {
-		rmFx_CalDAV_SyncActiveAccounts("  Reminderfox  Reminders pending (#1)   NONE")
+		rmFx_CalDAV_SyncActiveAccounts()
 	}
 }
 
@@ -494,7 +494,6 @@ function rmFx_CalDAV_updatePendingNext() {
  */
 function  rmFx_CalDAV_SyncActiveAccounts() {
 //------------------------------------------------------------------------------
-//console.log("rmFx_CalDAV_SyncActiveAccounts  trace: " + trace)
 	rmFx_CalDAV_ActiveAccountsList = "";
 	rmFx_CalDAV_ActiveAccountsUpdate = false;
 
@@ -687,9 +686,9 @@ function rmFx_CalDAV_ReminderDelete(reminder, caller, calDAVid2Delete) {
 
 	var accounts = reminderfox.calDAV.getAccounts()
 
-reminderfox.util.Logger('ALERT', " rmFx_CalDAV_ReminderDelete   " 
-	+ reminder.summary + "   >>" + reminder.calDAVid + "<<"
-	+ "  cAccounts\n" + accounts);
+	reminderfox.util.Logger('calDAV', " rmFx_CalDAV_ReminderDelete   " 
+		+ reminder.summary + "   >>" + reminder.calDAVid + "<<"
+		+ "  cAccounts\n" + accounts);
 
 	if (((!reminder.calDAVid) || (reminder.calDAVid === "")) 
 		&& (reminder.calDAVidOriginal))
@@ -1079,7 +1078,7 @@ reminderfoxX.calDAVrequest = function () {}
 			if (!xml) {
 				msg = callMsg
 					+  "  Principal: " + status + "\n" + text;
-				reminderfox.util.Logger('calDAVprincipal', msg);
+				reminderfox.util.Logger('calDAV', msg);
 				return;
 			}
 			var jXml = new reminderfox.HTTP.JXONTree(xml); 
@@ -1180,7 +1179,7 @@ reminderfoxX.calDAVrequest = function () {}
 
 			var msg = callMsg
 				+  "  Principal: " + status + "\n" + text;
-			reminderfox.util.Logger('calDAVprincipal', msg);
+			reminderfox.util.Logger('calDAV', msg);
 
 			if (!xml)  return;
 
@@ -1887,7 +1886,7 @@ reminderfoxX.calDAVrequest = function () {}
 
 			if (!call.account[call.ics]) {
 				msg = " event with UID doesn't exist in '.dav' !" + call.ics;
-				reminderfox.util.Logger("Alert", msg);
+				reminderfox.util.Logger('calDAV', msg);
 				rmFX_calDAV_progressmeterOnMain();
 				return;
 			}
@@ -2004,7 +2003,7 @@ reminderfoxX.calDAVrequest = function () {}
 
 //var mssg = ("  .prototype.UpdateReminder    call:" + call.toSource())
 //+ " is call.account known? >>" + (call.account != null )+ "<<"
-//reminderfox.util.Logger("calDAV", mssg)
+//reminderfox.util.Logger('calDAV', mssg)
 
 
 

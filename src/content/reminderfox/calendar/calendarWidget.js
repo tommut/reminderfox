@@ -111,7 +111,7 @@ reminderfox.calendar.layout.XY= function (info, layout) { // used only for debug
 //------------------------------------------------------------------------------
 	var docu = document.documentElement;
 /*
-	reminderfox.util.Logger('Alert', info +"     set layout.type:" + layout + "   current: " + reminderfox.calendar.layout.status
+	//reminderfox.util.Logger('Alert', info +"     set layout.type:" + layout + "   current: " + reminderfox.calendar.layout.status
 		+ "\n   width:" + docu.attributes["width"].value + "  height:" + docu.attributes["height"].value
 		+ "\n   SMALL_width:" + docu.attributes["SMALL_width"].value + "  WIDE_width:" + docu.attributes["WIDE_width"].value
 		+ "\n   screenX:" + docu.attributes["screenX"].value + "   screenY:" + docu.attributes["screenY"].value
@@ -549,7 +549,7 @@ var newDayBox;
 	var logMsg = (' .ui.selectDay   .drawList: '     + reminderfox.calendar.drawList + " layout: " + layout + " holdGrid: " + holdGrid
 		+ "\n  111>>> old: " + oldDateNum      + "  " + reminderfox.date.getDateObject(oldDateNum)
 		+ "\n  111>>> new: " + selectedDateNum + "  " + reminderfox.date.getDateObject(changeToDate));
-//reminderfox.util.Logger('calGrid', logMsg)
+//reminderfox.util.Logger('calndrGrid', logMsg)
 
 	reminderfox.calendar.ui.panelClose();
 	reminderfox.datePicker.StartingDayOfWeek();
@@ -676,7 +676,7 @@ reminderfox.calendar.ui.mouseDayOnGrid= function(xThis, xEvent) {
 	var logMsg = (' .ui.mouseDayOnGrid   .drawList: ' + reminderfox.calendar.drawList + " layout: " + layout
 		+ "\n   222>>>   oldDate: " + oldDateNum + "  " + reminderfox.datePicker.gSelectedDate
 		+ "\n   222>>>   newDate: " + selectedDateNum + "  " + selectedDate);
-//reminderfox.util.Logger('calGrid', logMsg)
+//reminderfox.util.Logger('calndrGrid', logMsg)
 
 	if (layout != 0) { // called with calendar collapsed ==================
 
@@ -760,7 +760,7 @@ reminderfox.calendar.ui.selectDayOnCalndr= function(selectedDate) {
 	var logMsg =(' .ui.selectDayOnCalndr   .drawList: ' + reminderfox.calendar.drawList  + " layout: " + layout
 		+ "\n   333>>>   oldDate: " +oldDateNum + "  " + reminderfox.datePicker.gSelectedDate
 		+ "\n   333>>>   newDate: " + selectedDateNum + "  " + reminderfox.date.getDateObject(selectedDate));
-//reminderfox.util.Logger('calGrid', logMsg)
+//reminderfox.util.Logger('calndrGrid', logMsg)
 
 
 	// if the new selected Date day is on the months-grid reload the grid
@@ -1975,10 +1975,10 @@ reminderfox.calendar.dayPanel= function(anchor, mode, xEvent){
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	var numDate = anchor.getAttribute('gridDayNum')
 
-//	var msg = 'calendar.dayPanel  mode>' + mode + "<  numDate:" + numDate 
-//		+ "\n  reminderfox.datePicker.gSelectedDate  " + reminderfox.datePicker.gSelectedDate
-  //  + "  " + reminderfox.date.localeDate(reminderfox.date.convertDate(numDate));
-//reminderfox.util.Logger('ALERT', msg);
+	var msg = 'calendar.dayPanel  mode>' + mode + "<  numDate:" + numDate 
+		+ "\n  reminderfox.datePicker.gSelectedDate  " + reminderfox.datePicker.gSelectedDate
+		+ "  " + reminderfox.date.localeDate(reminderfox.date.convertDate(numDate));
+	// reminderfox.util.Logger('ALERT', msg);
 
 	// before poping the daybox panel, close all other panels
 	window.clearTimeout(reminderfox.calendar.popupID);	
@@ -2211,7 +2211,7 @@ reminderfox.calendar.ttt.addReminder= function(dayPanel, reminder, n, mode, add2
 		var logMsg =  '.ttt.addReminder   summary:' + reminder.summary + '  allDay:' + reminder.allDayEvent 
 		   + '\n    reminder.date   :' + reminderfox.date.convertDate(reminder.date) + "  " + reminder.date 
 		   + '\n    reminder.endDate:' + reminderfox.date.convertDate(reminder.endDate) + "  " + reminder.endDate
-//reminderfox.util.Logger('calGrid', logMsg)
+//reminderfox.util.Logger('calndrGrid', logMsg)
 
 		if (reminder.allDayEvent) {	// all Day event
 			if (reminderDateNum == (reminderEndDateNum -1)) { // not for oneDay event

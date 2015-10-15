@@ -640,8 +640,6 @@ reminderfox.mail.folderListener = {
 
 		} // folder size
 	}  // OnItemIntPropertyChanged
-
-
 }
 
 
@@ -1476,8 +1474,6 @@ if(!reminderfox.msgnr) reminderfox.msgnr={};
 		var footer		= msgString[4].substring(7);
 		var priority		= msgString[5].substring(9);
 		var refID			= msgString[6].substring(6);
-
-//reminderfox.util.Logger('Darwin', "composeMSGgo icsFile string >>" + msgString[7] + "<<");
 
 		var mailFile = null;
 		if (msgString[7] != null) {

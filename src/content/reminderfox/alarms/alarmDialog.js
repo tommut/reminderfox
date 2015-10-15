@@ -409,25 +409,6 @@ var msg = "initializeAlarm   calDAVaccounts: " + calDAVaccounts.toSource()
 	};
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	if(recentReminder != null && recentReminder.priority == reminderfox.consts.PRIORITY_IMPORTANT) {
 		getChildElementById(tabPanel, "reminderDescriptionText").setAttribute("style", "color: red;");
 	} else {
@@ -992,14 +973,10 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 			// window (otherwise we have to keep this window open until the network function callback returns)
 			var tabList = document.getElementById("tabList");
 			var index = tabList.selectedIndex;
-			var syncCallback = reminderAlarmArray[index].synccallback;
+			var syncCallback = reminderAlarmArray[index].synccallback;    //TODO Networking
 			if(syncCallback != null) {
-				var networkSync = reminderfox.consts.NETWORK_SYNCHRONIZE_DEFAULT;
+				var networkSync = reminderfox.core.getPreferenceValue(reminderfox.consts.NETWORK_SYNCHRONIZE, reminderfox.consts.NETWORK_SYNCHRONIZE_DEFAULT); 
 
-				try {
-					networkSync = reminderfox._prefsBranch.getBoolPref(reminderfox.consts.NETWORK_SYNCHRONIZE);
-				} catch (e) {
-				}
 				if(networkSync) {
 					reminderfox.util.JS.dispatch('network');
 					syncCallback();
@@ -1132,6 +1109,7 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 				currentWindow.reminderfox.core.reminderFoxTodosArray = reminderfox.core.reminderFoxTodosArray;
 
 				currentWindow.reminderfox.overlay.updateRemindersInWindow();
+		//XXX ???		currentWindow.reminderfox.core.clearRemindersAndTodos();
 			}
 		}
 	}
@@ -1279,13 +1257,13 @@ function reminderFox_snooze() {
 					if(reminderAlarmArray[index].quickAlarmNotes != null && reminderAlarmArray[index].quickAlarmNotes.length > 0 && reminderAlarmArray[index].quickAlarmNotes != "null") {
 						notes = reminderAlarmArray[index].quickAlarmNotes.replace(new RegExp(/\n/g), "\\n");
 
-						reminderfox.core.logMessageLevel(new Date() + "; alarm: Setting showAlarm timeout1: " + quickAlarmText + "--" + snoozeTime + " --> " + (snoozeTime * 60000) + "--" + setSnoozeTime, reminderfox.consts.LOG_LEVEL_SUPER_FINE);
+						reminderfox.core.logMessageLevel("  alarm: Setting showAlarm timeout1: " + quickAlarmText + "--" + snoozeTime + " --> " + (snoozeTime * 60000) + "--" + setSnoozeTime, reminderfox.consts.LOG_LEVEL_SUPER_FINE);
 						//TODO
 						oldestWindow.setTimeout(function() {
 							oldestWindow.reminderfox.overlay.showQuickAlarm(quickAlarmText, snoozeTime, notes)
 						}, setSnoozeTime);
 					} else {
-						reminderfox.core.logMessageLevel(new Date() + "; alarm: Setting showAlarm timeout2: " + quickAlarmText + "--" + snoozeTime + " --> " + (snoozeTime * 60000) + "--" + setSnoozeTime, reminderfox.consts.LOG_LEVEL_SUPER_FINE);
+						reminderfox.core.logMessageLevel("  alarm: Setting showAlarm timeout2: " + quickAlarmText + "--" + snoozeTime + " --> " + (snoozeTime * 60000) + "--" + setSnoozeTime, reminderfox.consts.LOG_LEVEL_SUPER_FINE);
 						//TODO
 						oldestWindow.setTimeout(function() {
 							oldestWindow.reminderfox.overlay.showQuickAlarm(quickAlarmText, snoozeTime)
@@ -1327,7 +1305,7 @@ function reminderFox_snooze() {
 				if(setSnoozeTime == 0) {
 					setSnoozeTime = 1000;
 				}
-				reminderfox.core.logMessageLevel(new Date() + "; alarm: Setting reminderfox.overlay.showMissedAlarmsSnooze timeout3: " + reminderAlarmArray[index].alarmRecentReminder.id + "--" + setSnoozeTime, reminderfox.consts.LOG_LEVEL_SUPER_FINE);
+				reminderfox.core.logMessageLevel( "  alarm: Setting reminderfox.overlay.showMissedAlarmsSnooze timeout3: " + reminderAlarmArray[index].alarmRecentReminder.id + "--" + setSnoozeTime, reminderfox.consts.LOG_LEVEL_SUPER_FINE);
 				//TODO
 
 				// if snooze time is > minutes * 60 *24 * 24 (60mins*24hrs*24 days) then don't set the timeout

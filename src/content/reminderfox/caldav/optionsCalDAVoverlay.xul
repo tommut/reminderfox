@@ -16,7 +16,6 @@
 	<script type="application/x-javascript" src="chrome://reminderfox/content/caldav/calDAVrequester.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/caldav/calDAVcalls.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/HTTP.js" />
-	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/HTTP.js" />
 
 	<vbox id="reminderFoxNetworkTab">
 
@@ -79,9 +78,8 @@
 						<hbox align="center">
 							<menulist id="reminderFox-proto">
 								<menupopup>
-				<!--					<menuitem label="&rf.options.synchronization.ftp.label;"
+									<menuitem label="&rf.options.synchronization.ftp.label;"
 										value="0" />
-				-->
 									<menuitem label="&rf.options.synchronization.http.label;"
 										value="1" />
 									<menuitem label="&rf.options.synchronization.https.label;"
@@ -103,9 +101,9 @@
 						</hbox>
 						<hbox>
 							<button id="reminderFox_network_import_settings" label="&rf.options.synchronization.import;"
-								flex="1" oncommand="reminderfox.userIO.getRemoteCalendar()" />  <!-- downloadReminders() -->
+								flex="1" oncommand="downloadReminders()" />
 							<button id="reminderFox_network_export_settings" label="&rf.options.synchronization.export;"
-								flex="1" oncommand="reminderfox.userIO.putRemoteCalendar()" />
+								flex="1" oncommand="uploadReminders()" />
 						</hbox>
 					</groupbox>
 					<groupbox id="reminderFox-network-sync-group" style="width: 300px;">

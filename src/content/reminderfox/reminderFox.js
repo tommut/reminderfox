@@ -10,7 +10,9 @@ reminderfox.overlay.consts.TOOLTIP_WITH_TODOS_LINE_LENGTH = 65;
 reminderfox.overlay.consts.ALERT_TEXT_MAX_LENGTH = 100;
 reminderfox.overlay.consts.MONTHLY_WILDCARD = "*";
 
-reminderfox.overlay.consts.HOUR_TIMEOUT = 1800000; // changed to half hour instead of 1 hour= 3600000  // dump: externalize this to a pref (read it first time only; then store it)
+// reminderfox.overlay.consts.HOUR_TIMEOUT = 1800000; // changed to half hour instead of 1 hour= 3600000  // dump: externalize this to a pref (read it first time only; then store it)
+reminderfox.overlay.consts.HOUR_TIMEOUT = 60000; // changed to 2 min instead of 1 hour= 3600000  
+// // dump: externalize this to a pref (read it first time only; then store it)
 
 // global vars
 reminderfox.overlay.alarmList = new Array();
@@ -327,7 +329,7 @@ reminderfox.overlay.processAlarm= function( recentReminderOrTodo, isReminder, li
                     alarmIsReminder: isReminderString,
                     alarmIsTodo: isTodo,
                     alarmAlarmMissed: missedAlarmString,
-                    synccallback: reminderfox.core.networkSynchronizeCallback,
+                    synccallback: reminderfox.core.networkSynchronizeCallback,		//.overlay.processAlarm
                     clearLabelCallback: reminderfox.overlay.clearMailLabelCallback,
                     alarmCurrentAlarmId: alarmReminderId,
                     reminderTime: recentReminderOrTodo.date.getTime(),
@@ -408,7 +410,7 @@ reminderfox.overlay.showMissedAlarmsSnooze= function( alarmSnoozeTime, alarmRece
         alarmIsReminder: isReminder,
         alarmIsTodo: isTodo,
         alarmAlarmMissed: alarmMissed,
-        synccallback: reminderfox.core.networkSynchronizeCallback,
+        synccallback: reminderfox.core.networkSynchronizeCallback,		//.overlay.showMissedAlarmsSnooze
         clearLabelCallback: reminderfox.overlay.clearMailLabelCallback,
         alarmCurrentAlarmId: alarmRecentReminderID,
         reminderTime: reminderTime,
@@ -460,7 +462,7 @@ reminderfox.overlay.showMissedAlarmsSnooze2= function( alarmSnoozeTime, alarmRec
         alarmIsReminder: isReminder,
         alarmIsTodo: isTodo,
         alarmAlarmMissed: alarmMissed,
-        synccallback: reminderfox.core.networkSynchronizeCallback,
+        synccallback: reminderfox.core.networkSynchronizeCallback,		//.overlay.showMissedAlarmsSnooze2
         clearLabelCallback: reminderfox.overlay.clearMailLabelCallback,
         alarmCurrentAlarmId: alarmRecentReminderID,
         reminderTime: reminderTime,
@@ -832,7 +834,7 @@ reminderfox.overlay.showQuickAlarm= function( lastAlarmText, lastSnoozeTime, las
             alarmIsReminder: false,
             alarmIsTodo: false,
             alarmAlarmMissed: false,
-            synccallback: reminderfox.core.networkSynchronizeCallback,
+            synccallback: reminderfox.core.networkSynchronizeCallback,		//.overlay.showQuickAlarm
             clearLabelCallback: reminderfox.overlay.clearMailLabelCallback,
             alarmCurrentAlarmId: null,
             reminderTime: null,
@@ -1836,8 +1838,10 @@ reminderfox.overlay.initializeReminderFoxHourlyTimer = {
         //do stuff here, this stuff will finish and then timer will start countdown of myTimerInterval.
         //This is nice because if used TYPE_REPEATING_PRECISE will trigger this call back every myTimerInterval. TYPE_REPEATING_PRECISE_SKIP will trigger this call back every myTimerInterval, but if myTimerInterval is up and the callback from last time myTimerInterval went off is still running, it will skip running this call back.
         //TYPE_REPEATING_SLACK i don't trust because on MDN they said "note that this is not guaranteed: the timer can fire at any time." so I go with TYPE_ONE_SHOT.
+
+			var timeout = reminderfox.core.getPreferenceValue(reminderfox.consts.INTERVAL_TIMER, reminderfox.consts.INTERVAL_TIMER_INKREMENT);
         timer.initWithCallback(reminderfox.overlay.initializeReminderFoxHourlyTimer,
-            reminderfox.overlay.consts.HOUR_TIMEOUT, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+            timeout /*reminderfox.overlay.consts.HOUR_TIMEOUT*/, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
     }
 }
 
@@ -1867,18 +1871,29 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
                 lastTime = "";
                 reminderfox.overlay.reminderFox_initialized = true;
             }
+
             currentDate = new Date();
             var currentTime = currentDate.getTime();
             var lastTimeElapsed = null;
+
+            var timeout = reminderfox.core.getPreferenceValue(reminderfox.consts.INTERVAL_TIMER, reminderfox.consts.INTERVAL_TIMER_INKREMENT);
+
             if (lastTime != null && lastTime != "") {
-                lastTimeElapsed = parseInt(lastTime) + reminderfox.overlay.consts.HOUR_TIMEOUT;
+         //       lastTimeElapsed = parseInt(lastTime) + reminderfox.overlay.consts.HOUR_TIMEOUT;
+                lastTimeElapsed = parseInt(lastTime) + timeout;
             }
-            reminderfox.core.logMessageLevel(currentDate + "check - should Initialize: " + (lastTime == null || lastTime == "" || (currentTime + 1500) >= lastTimeElapsed) + " ==  lastTime " + lastTime + " -- currentTime: " + currentTime + " -- lastTimeElapsed: " + lastTimeElapsed + " - Difference (currentTime+1500) - lastTimeElapsed:" + ((currentTime + 1500) - lastTimeElapsed), reminderfox.consts.LOG_LEVEL_FINE);
+            reminderfox.core.logMessageLevel("  Check - should Initialize: " + (lastTime == null || lastTime == "" || (currentTime + 1500) >= lastTimeElapsed) + " ==  lastTime " 
+                + lastTime + " -- currentTime: " + currentTime 
+                + " -- lastTimeElapsed: " + lastTimeElapsed 
+                + " - Difference (currentTime+1500) - lastTimeElapsed:" + ((currentTime + 1500) - lastTimeElapsed)
+                + " - Inkrement timer: " + timeout,
+                 reminderfox.consts.LOG_LEVEL_FINE);
 
             // make sure that the HOURLY_TIMEOUT has passed before we continue.
             // Also add a 1.5 second buffer, as it seems sometimes Mozilla doesn't call the setTimeout at the
             // exact time, but sometimes ~800ms early or late.
             //if (lastTime == null || lastTime == "" || (currentTime + 1500) >= lastTimeElapsed) {
+
             var updateWindows = false;
             var fileChanged = reminderfox.core.timeStampHasChanged();
             if (fileChanged != -1) {
@@ -1887,7 +1902,9 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
 
             var waitForResponse = reminderfox.overlay.ensureRemoteRemindersSynchronized(true);
 
-            reminderfox.core.logMessageLevel("network: waitForResponse:  " + waitForResponse, reminderfox.consts.LOG_LEVEL_SUPER_FINE); //TODO
+            reminderfox.core.logMessageLevel("  network: waitForResponse:  " + waitForResponse, 
+                reminderfox.consts.LOG_LEVEL_SUPER_FINE); //TODO
+
             var changed = false;
             try {
                 if (!waitForResponse) {
@@ -1911,7 +1928,14 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
             if (reminderfox.overlay.lastDay != day) {
                 updateWindows = true;
             }
-            reminderfox.core.logMessageLevel("Initialize: " + currentDate + " --Update?: " + updateWindows + " -- fileChanged: " + fileChanged + ",  changed: " + changed + ", dayChanged: " + (reminderfox.overlay.lastDay != day), reminderfox.consts.LOG_LEVEL_INFO);
+
+            reminderfox.core.logMessageLevel("  Initialize ! "
+                + "  UpdateWindows ?: " + updateWindows 
+                + ";  file Changed: " + fileChanged 
+                + ";  reminders Changed: " + changed 
+                + ";  day Changed: " + (reminderfox.overlay.lastDay != day), 
+                reminderfox.consts.LOG_LEVEL_INFO);
+
             if (updateWindows) {
                 oldestWindow.reminderfox.overlay.updateRemindersInWindow();
                 if (clearReminders) {
@@ -1934,7 +1958,10 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
                 reminderfox.core.clearRemindersAndTodos();
             }
             reminderfox.overlay.lastDay = day;
-            reminderfox.core.logMessageLevel(currentDate + ": Setting Hourly timeout!", reminderfox.consts.LOG_LEVEL_FINE);
+
+            reminderfox.core.logMessageLevel(" Setting Hourly timeout!", 
+                reminderfox.consts.LOG_LEVEL_FINE);
+
             reminderfox.overlay.storeTimeOfLastProcessed();
 
             // 08/03/2014 update: now using reminderfox.overlay.timerObject which should be reliable and do not need
@@ -1950,6 +1977,12 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
             //}
         }
     }
+
+	//gW 2015-10-13 -- CalDAV Update all active Remote Calendars
+   //reminderfox.core.logMessageLevel(" .overlay.initializeReminderFox --> CalDAV Update all active Remote Calendars ! ", 
+   //    reminderfox.consts.LOG_LEVEL_INFO);
+   reminderfox.online.status();
+
 }
 
 
@@ -2281,10 +2314,12 @@ reminderfox.overlay.showAlertSlider= function(){
                 var currentDate = new Date();
                 var currentTime = currentDate.getTime();
 
-                reminderfox.core.logMessageLevel("Show AlertSlider? " + ((currentTime + 100) >= lastTimeElapsed) + "...  Last time: " + lastTime + " - lastTimeElapsed: " +
-                    lastTimeElapsed +
-                    " - currentTime: " +
-                    currentTime, reminderfox.consts.LOG_LEVEL_INFO);
+                reminderfox.core.logMessageLevel("  Show AlertSlider? " + ((currentTime + 100) >= lastTimeElapsed) 
+                   + "...  Last time: " + lastTime 
+                   + ";  lastTimeElapsed: " + lastTimeElapsed
+                   + ";  currentTime: " + currentTime, 
+                   reminderfox.consts.LOG_LEVEL_INFO);
+
                 // TODO: setInterval - can remove these lastTime checks
                 // 08/03/2014 update: now using reminderfox.overlay.timerObject which should be reliable and do not need
                 // these checks like we did to kick off setTimeout's if they failed
@@ -2358,7 +2393,7 @@ reminderfox.overlay.showAlertSlider= function(){
                 }
 
                 //checkData  gW:disable this for testing 2014-05-11			reminderfox.core.clearRemindersAndTodos();
-                reminderfox.core.logMessageLevel("AlertSlider: " + currentDate, reminderfox.consts.LOG_LEVEL_INFO);
+                reminderfox.core.logMessageLevel("AlertSlider ! ", reminderfox.consts.LOG_LEVEL_INFO);
                 reminderfox.overlay.storeTimeOfLastAlert();
 
 
@@ -2531,7 +2566,7 @@ reminderfox.overlay.processQuickAlarms= function(returnMissed){
                     alarmIsReminder: false,
                     alarmIsTodo: false,
                     alarmAlarmMissed: false,
-                    synccallback: reminderfox.core.networkSynchronizeCallback,
+                    synccallback: reminderfox.core.networkSynchronizeCallback,		//.overlay.processQuickAlarms
                     clearLabelCallback: reminderfox.overlay.clearMailLabelCallback,
                     alarmCurrentAlarmId: null,
                     reminderTime: null,
@@ -2563,7 +2598,7 @@ reminderfox.overlay.processQuickAlarms= function(returnMissed){
                 else {
                     oldestWindow.setTimeout(oldestWindow.reminderfox.overlay.showQuickAlarm, actualAlarmTime, alarmText, snoozeTime, notesText);
 
-                    reminderfox.core.logMessageLevel(new Date() + ": Setting quickalarm for " + alarmText + " -- snoozeTime: " + snoozeTime + " -- actualAlarmTime: " + actualAlarmTime, reminderfox.consts.LOG_LEVEL_FINE);
+                    reminderfox.core.logMessageLevel("  Setting quickalarm for : " + alarmText + " -- snoozeTime: " + snoozeTime + " -- actualAlarmTime: " + actualAlarmTime, reminderfox.consts.LOG_LEVEL_FINE);
                 }
             }
         }
@@ -2684,6 +2719,10 @@ reminderfox.overlay.start_postInit= function() {
     // the very first time we install reminderfox, we do not need to show the alert slider.
     // This is because all we have is the "Welcome" reminder which does not make sense to
     // surface
+
+	//support News 
+	setTimeout (function() {reminderfox.go4news.status();},200);
+
     var ignoreFirstRun = false;
     var oldVersionNumber = reminderfox._prefsBranch.getCharPref(reminderfox.consts.MIGRATED_PREF);
     if (oldVersionNumber == null || oldVersionNumber == "") {
@@ -2743,9 +2782,10 @@ reminderfox.overlay.start_postInit= function() {
 //    window.setInterval(reminderfox.overlay.initializeReminderFoxHourly,
 //        reminderfox.overlay.consts.HOUR_TIMEOUT); // 10000 == 10 sec min
 
-    reminderfox.overlay.initializeReminderFoxHourlyTimer.notify(reminderfox.overlay.timerObject); //this is how we start the timer, we start off by running the callback, then from there every 5 sec it will call
-//if want to start off by waiting 5sec first then comment out line 20 and uncomment line 18
-//}
+    reminderfox.overlay.initializeReminderFoxHourlyTimer.notify(reminderfox.overlay.timerObject); //this is how 
+    // we start the timer, we start off by running the callback, then from there every 5 sec it will call
+    //if want to start off by waiting 5sec first then comment out line 20 and uncomment line 18
+    //}
 
     // Initialize reminder fox for the browser window
     var windowEnumerator =  reminderfox.core.getWindowEnumerator();

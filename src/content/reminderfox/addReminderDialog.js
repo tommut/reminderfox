@@ -766,7 +766,7 @@ function rmFx_mainDialogLoad(restartSkip){
 	var networkSync = reminderfox.core.getPreferenceValue(reminderfox.consts.NETWORK_SYNCHRONIZE, reminderfox.consts.NETWORK_SYNCHRONIZE_DEFAULT);
 
 	var calDAVstatus = reminderfox.calDAV.accountsStatus ()
-	reminderfox.util.Logger('sync',"Sync settings  ..   networkSync: " + networkSync + "   CalDAV  accounts: " + calDAVstatus.count)
+	reminderfox.util.Logger('network',"Sync settings  ..   networkSync: " + networkSync + "   CalDAV  accounts: " + calDAVstatus.count)
 
 	document.getElementById('rmFx_progress-panel').hidden = true;
 
@@ -775,6 +775,11 @@ function rmFx_mainDialogLoad(restartSkip){
 	setTimeout(function () { reminderfox.calendar.ui.selectDay('today')}, 0);
 
 	// start synchronizing in background (if that network option is set) if no CalDAV active
+
+	reminderfox.util.Logger('userIO', " [reminderFox_ensureRemoteRemindersSynchronizedInEditWindow] "
+		+"  networkSync " + networkSync 
+		+"  calDAVstatus.active >" + calDAVstatus.active + "<")
+
 	if (calDAVstatus.active == 0)
 		setTimeout(reminderFox_ensureRemoteRemindersSynchronizedInEditWindow, 1);
 
@@ -817,12 +822,10 @@ function reminderFox_updateFoxyBadge(){
 
 function reminderFox_ensureRemoteRemindersSynchronizedInEditWindow(){
 	// sync 'em up
-	var networkSync = reminderfox.consts.NETWORK_SYNCHRONIZE_DEFAULT;
-	try {
-		networkSync = reminderfox._prefsBranch.getBoolPref(reminderfox.consts.NETWORK_SYNCHRONIZE);
-	}
-	catch (e) {
-		}
+	var networkSync = reminderfox.core.getPreferenceValue(reminderfox.consts.NETWORK_SYNCHRONIZE, reminderfox.consts.NETWORK_SYNCHRONIZE_DEFAULT); 
+
+	reminderfox.util.Logger('userIO', " [reminderFox_ensureRemoteRemindersSynchronizedInEditWindow]  networkSync " + networkSync)
+
 	if (networkSync) {
 		reminderfox.core.statusSet(reminderfox.string("rf.add.network.status.label"));
 		reminderfox.network.download.reminderFox_download_Startup_headless(reminderfox.consts.UI_MODE_HEADLESS_SHOW_ERRORS, reminderFox_synchronizeEditWindowCallback);
@@ -2632,6 +2635,67 @@ function getSubscribedCalendars(){
 }
 
 
+
+function reminderFox_downloadSubscribedCalendar(subsName, subscribedCal){
+	// sync 'em up
+	// var statusTxt = document.getElementById("reminderFox-network-status");
+
+
+	var subscriptions = reminderfox.core.getSubscriptions();
+	var url = subscriptions[subsName];
+	if (url != null && url.length > 0) {
+		reminderfox.core.statusSet(reminderfox.string("rf.options.customlist.subscribe.retrieve.title")
+			+ " " + url);
+		var webcalIndex = url.indexOf("webcal://"); // handle webcal address
+		if (webcalIndex != -1) {
+			url = "http://" + url.substring("webcal://".length);
+		}
+		reminderfox.network.download.reminderFox_download_Startup_headless_URL(reminderfox.consts.UI_MODE_HEADLESS_SHOW_ERRORS, reminderFox_downloadSubscribedCalendarCallback, url, subscribedCal, null);
+	}
+
+}
+
+
+function reminderFox_downloadSubscribedCalendarCallback(statustxtString, actionID, downloadedReminders){
+
+	if (actionID == 1) { // completed successfully (remote and local are equal, or were uploaded)
+		reminderfox.core.statusSet("");
+	}
+	else
+		if (actionID == 2) { // reminders were downloaded,  need to refresh reminders
+			var subscribedCalArr = getSubscribedCalendars();
+
+			var tabName = reminderfox.tabInfo.tabName;
+			var tabID = reminderfox.tabInfo.tabID;
+
+
+			var index = tabID.indexOf(':');
+			name = tabID.substring(index + 1, tabID.length);
+
+			var subscribedCal = subscribedCalArr[name];
+			if (subscribedCal == null) {
+				subscribedCal = new Array();
+				subscribedCalArr[name] = subscribedCal;
+			}
+			subscribedCal = downloadedReminders;
+
+			reminderfox.calendar.ui.selectDay();
+
+			selectCalendarSync = false;
+			// remove all of the calendar items and re-add them
+			removeAllListItems(true, false);
+			calendarReminderArray = null; // null out in case reminder columns are sorted
+			fillList(true, false);
+			selectCalendarSync = true;
+		}
+		else {
+			reminderfox.core.statusSet(statustxtString);
+		}
+
+}
+
+
+
 function createUIListItemTodo(todo, sort, todaysDate, addToArray){
 //	if (document.documentElement.attributes["layout"].value == 0) return;    // Calendar only mode
 	if (reminderfox.calendar.layout.status < 1) return; // call from menu icon or Calndr only
@@ -3425,6 +3489,7 @@ function removeAllListItems(removeReminders, removeTodos){
 /**
  * Saves modified/new events/todos and some seettings ..
  *  ... and closes the 'Main Dialog' (showing List and Calendar)
+ * sync with remote server if necessary
  */
 function rmFx_mainDialogSaveAndClose(isCloseDemanded){
 //----------------------------------------------------------------
@@ -3462,8 +3527,8 @@ function rmFx_mainDialogSaveAndClose(isCloseDemanded){
 	if (reminderfox.core.remindersModified || daysChanged) {
 
 		reminderfox.core.writeOutRemindersAndTodos(false);  // (isExport)			// within try  .. does update all browsers  and  networking 
-
 		reminderfox.overlay.processRecentReminders(true);
+
 		try {
 			// update all of the browsers
 			windowEnumerator = reminderfox.core.getWindowEnumerator();
@@ -3482,12 +3547,8 @@ function rmFx_mainDialogSaveAndClose(isCloseDemanded){
 				syncCallback = window.arguments[1].callback;
 			}
 			if (syncCallback != null) {
-				var networkSync = reminderfox.consts.NETWORK_SYNCHRONIZE_DEFAULT;
-				try {
-					networkSync = reminderfox._prefsBranch.getBoolPref(reminderfox.consts.NETWORK_SYNCHRONIZE);
-				}
-				catch (e) {
-								}
+				var networkSync = reminderfox.core.getPreferenceValue(reminderfox.consts.NETWORK_SYNCHRONIZE, reminderfox.consts.NETWORK_SYNCHRONIZE_DEFAULT)
+
 				if (networkSync) {
 					syncCallback();
 				}
@@ -3495,19 +3556,23 @@ function rmFx_mainDialogSaveAndClose(isCloseDemanded){
 		}
 		catch (e) {
 				}
+
 	}
 	else {
-		reminderfox.core.ensureRemindersSynchronized();
+		reminderfox.core.ensureRemindersSynchronized();	  // sync with closing the Main Dialog  //TODO Networking
 
 		// call reminderFox_intializeReminderFox to check in case the timers have stopped; this will restart
 		// it and process any reminders if necessary (such as alarms, etc)
-		var processRemindersCallback = null;
-		if (window.arguments != null) {
-			processRemindersCallback = window.arguments[1].processRemindersCallback;
+		//gW   excecution of processRemindersCallback was already disabled in reminderFox.js  #85
+		/*---------
+		// var processRemindersCallback = null;
+		// if (window.arguments != null) {
+		// 	processRemindersCallback = window.arguments[1].processRemindersCallback;
+		// }
+		// if (processRemindersCallback != null) {
+		// 	processRemindersCallback(true);
 		}
-		if (processRemindersCallback != null) {
-			processRemindersCallback(true);
-		}
+		-------------*/
 	}
 
 	// clear reminders from memory
@@ -4160,6 +4225,7 @@ function reminderTreeTooltip(event){
 		}
 
 		if ((reminder.calDAVid != null) && (reminder.calDAVid != "")) {
+			var calDAVaccounts = reminderfox.calDAV.getAccounts()
 			var account = calDAVaccounts[reminder.calDAVid];
 			if (account != null) {
 				addTooltipWithLabel(tooltipItem, null, '[ ' + reminder.calDAVid + ' ] ' + account.Name, false, false, reminderfox.string("rf.caldav.account.remote"));
@@ -6264,7 +6330,7 @@ function sortcolumn(column){
 
 
 function isTabSorted(info){
-//reminderfox.util.Logger('calGrid', " isTabSorted    info: " + info)
+//reminderfox.util.Logger('calndrGrid', " isTabSorted    info: " + info)
 	var tabName = reminderfox.tabInfo.tabName;
 
 	// get hashmap - check for tabname

@@ -35,6 +35,7 @@ reminderfox.sendPlus.reminder = function () {
 
 	reminderfox.core.lastReminderID = rmFx_SwRm_Reference   //gW2015-01-22
 
+
 	var org_References = gMsgCompose.compFields.references;
 	if (gMsgCompose.compFields.references == null || gMsgCompose.compFields.references == "") {
 		gMsgCompose.compFields.references  =  "<" + rmFx_SwRm_Reference + reminderfox.mail.ReferenceID +">";
@@ -74,6 +75,7 @@ reminderfox.sendPlus.reminder = function () {
 	if ((msgCompFields.priority == "Highest") || (msgCompFields.priority == "High")) {
 			newReminderToBeAdded.priority = 1;		// set RmFx 'Important'=1
 	}
+
 	var added = reminderfox.core.addReminderHeadlessly(newReminderToBeAdded);
 
 	if (added == false) {	// [CANCEL] NOT 'added' --> reset the 'References' and don't send

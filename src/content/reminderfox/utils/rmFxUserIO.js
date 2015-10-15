@@ -113,7 +113,7 @@ if(!reminderfox.userIO)		reminderfox.userIO = {};
 				details.summary     = event.dataTransfer.getData("text/x-moz-url-desc")
 
 				logInfo = logInfo + details.summary
-				reminderfox.userIO.addOrSubscribe(details, logInfo);
+				reminderfox.userIO.downloadICSdata(details, logInfo);
 				return;
 			}
 
@@ -142,7 +142,7 @@ if(!reminderfox.userIO)		reminderfox.userIO = {};
 				details.summary =  htmlLinks[0].text;
 
 				if ((details.url.toLowerCase().indexOf(".ics") == (details.url.length - 4))) {
-					setTimeout(function() {reminderfox.userIO.addOrSubscribe(details, logInfo);},0)
+					setTimeout(function() {reminderfox.userIO.downloadICSdata(details, logInfo);},0)
 				} else {
 					details.infos.notes = event.dataTransfer.getData("text/plain")
 					reminderfox.userIO.defaultMode(details, logInfo);
@@ -264,8 +264,7 @@ reminderfox.userIO.addReminder4Email = function (xthis) {
 // webcal://www.tirol.fr/index.php?option=com_jevents&task=icals.export&format=ical&catids=0&years=0&k=254a061439c8e2a966a94aaa2683f74d
 
 		if (details.url)  {
-			var logInfo = " userIO.addReminder4Email   #1: subscribeOrAddReminder"
-			reminderfox.userIO.addOrSubscribe(details, logInfo);
+			reminderfox.userIO.downloadICSdata(details, " userIO.addReminder4Email   #1: subscribeOrAddReminder")
 			return;
 		}
 	}
@@ -298,10 +297,10 @@ reminderfox.userIO.addReminder4WebPage = function(){
 
 		if (details.url) {
 			if ((details.url.indexOf(".ics") != -1)
-			    || (details.url.indexOf("ical") != -1)
+				|| (details.url.indexOf("ical") != -1)
 				|| (details.url.toLowerCase().indexOf('webcal:') == 0)) {
-				var logInfo = " userIO.addReminder4WebPage  --> subscribeOrAddReminder";
-				reminderfox.userIO.addOrSubscribe(details, logInfo);
+
+				reminderfox.userIO.downloadICSdata(details, " userIO.addReminder4WebPage  --> subscribeOrAddReminder");
 				return;
 			}
 		}
@@ -319,7 +318,9 @@ reminderfox.userIO.details = null;
 
 
 /**
- *  Support a URL download link (ICS/webcal) with context menu and D&D 
+ *  Download from a remote system the ICS data file
+ *  Used with 'Remote Server' and
+ *  supports a URL download link (ICS/webcal) with context menu and D&D 
  *  to Foxy/bow to 'Subscribe' or 'add reminders', load ICS data async
  *  and passes to rmFxImportHandling dialog
  * Link examples:
@@ -327,11 +328,13 @@ reminderfox.userIO.details = null;
  *    webcal://sports.yahoo.com/nfl/teams/pit/ical.ics
  *
  *  @since	2013-07-15 rework (using http requester)
+ *  @since  2015-10  also used for Remote Server (http/https) downloading, subscription, ..
  *
- *  @param	{string}  details
+ *  @param	{array}  details.url, .user/pw, .callnext
+ *      .callnext  used as second 'callback'
  *  @param  {string}  logInfo string for tracing
   */
-reminderfox.userIO.addOrSubscribe = function (details, logInfo) {
+reminderfox.userIO.downloadICSdata = function (details, logInfo) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	window.setCursor('wait')
 
@@ -361,6 +364,8 @@ reminderfox.userIO.addOrSubscribe = function (details, logInfo) {
 
 		this.callback     = "getICS"
 		this.onError      = "getICS"
+		this.callnext     =  ('callnext' in details) ? details.callnext : null;
+
 		this.details      = details
 
 	reminderfox.HTTP.request(this)
@@ -372,31 +377,37 @@ reminderfox.userIO.addOrSubscribe = function (details, logInfo) {
 reminderfox.userIO.getICS = function (status, xml, text, headers, statusText, call) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	window.setCursor('auto')
+	var statustxtString = statusText + "  (" + status + ")"
 
 	if (status>=200 && status<300) {
-		var timeStamp = +reminderfox.core.getFileTimeStampFromString(text)
-
-		var logInfo = ("[.userIO.getICS]   callback  status:" + status + " timeStamp: " + (timeStamp)
-			+ "\n  text \n  >>\n" + text + "\n  <<")
-
+		var timeStamp = +reminderfox.core.getICSXLastmodifiedFromString(text)
 		call.details.timeStamp = ((timeStamp > 1) ? timeStamp : "--")
+
+		var logInfo = ("[.userIO.getICS]   callback  status:" + statustxtString 
+			+ "\n  getICSXLastmodified  >" + (timeStamp) + "<  text.length   >" + text.length + "<")
 		reminderfox.util.Logger('userIO', logInfo)
+
+		if (call.callnext != null) {
+			call[call.callnext](text, call)
+			return
+		}
+
 		reminderfox.userIO.readICSdata (text, call)
 
 	} else {  // ERROR Handling
 	
 		if (status == 0) {
-		var msg = "url >>" + call.urlstr + "<<   user >>" + call.username + "<<"
-		var statusText = "No answer from requested page, check login details. "
-
+			var msg = "url >>" + call.urlstr + "<<   user >>" + call.username + "<<"
+			var statusText = "No answer from requested page, check login details. "
 
 		} else {
-			// do some formatting with 'text' .. expecting 'text' is http type 
+			// do some formatting with 'text' .. expected 'text' could be http type 
 			var parser = new DOMParser();
 			var aText = parser.parseFromString(text, "text/html");
 			var msg = aText.body.textContent.replace(/\n /g,'\n').replace(/\n \n/g,'\n').replace(/n\n/g,'\n').replace(/\n\n\n/g,'\n');
 		}
-		reminderfox.util.PromptAlert (statusText + " (" + status + ")  "
+
+		reminderfox.util.PromptAlert (statusText + "  (" + status + ")"
 		 /* + "\n user  >>" + call.user + "<<   pw >>" + call.password + "<<"  */
 			+ "\n\n" + msg + "\n\nHTTP callback error [.userIO.getICS]")
 	}
@@ -404,9 +415,9 @@ reminderfox.userIO.getICS = function (status, xml, text, headers, statusText, ca
 
 /*
  * Read Reminders/Todos from a string (previously read from stream/file)
- * and presents for 
- *   multiple reminders/todos:  on the 'rmFxImportHandling' dialog,
- *   single reminder/todo:      on the ADD/EDIT dialog
+ * and opens a dialog
+ *  -- multiple reminders/todos:  on the 'rmFxImportHandling' dialog,
+ *  -- single reminder/todo:      on the ADD/EDIT dialog
  */
 reminderfox.userIO.readICSdata = function (icsData, call) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -460,8 +471,6 @@ reminderfox.userIO.readICSfile = function () {
 }
 
 
-//=========================================================
-
 /*
  * @info   updated 2015-09-29 to use http Requests
  *
@@ -483,7 +492,6 @@ reminderfox.userIO.getSubscription = function (subsName, subscribedCal) {
 		if (webcalIndex != -1) {
 			url = "http://" + url.substring("webcal://".length);
 		}
-		//reminderfox.network.download.reminderFox_download_Startup_headless_URL(reminderfox.consts.UI_MODE_HEADLESS_SHOW_ERRORS, reminderFox_downloadSubscribedCalendarCallback, url, subscribedCal, null);
 
 		this.ID = new Date().getTime();
 
@@ -500,27 +508,29 @@ reminderfox.userIO.getSubscription = function (subsName, subscribedCal) {
 		this.timeout      = 30;
 
 		this.callback     = "subscribedICS";
-		this.onError      = 'onError';
+		this.onError      = 'subscribedICS';
 
 		reminderfox.HTTP.request(this);
 	};
 };
 
+
 reminderfox.userIO.subscribedICS = function (status, xml, text, headers, statusText, call) {
 //------------------------------------------------------------------------------
+		var statustxtString = statusText + "  (" + status + ")  "
+
 		if (status === 0 || (status >= 200 && status < 300)) {
-			var statustxtString = statusText + "  (" + status + ")"
 
 			reminderEvents = new Array();
 			reminderTodos = new Array();
 			var originalExtraInfos = reminderfox.core.reminderFox_reminderFoxExtraInfo;
 
-			var timeStamp = reminderfox.core.getFileTimeStampFromString(text)
+			var timeStamp = reminderfox.core.getICSXLastmodifiedFromString(text)
 
 			reminderfox.core.readInRemindersAndTodosICSFromString(reminderEvents, reminderTodos, text, originalExtraInfos);
 
-			reminderfox.util.Logger('TEST', ' dnLoaded  status:' + statustxtString + " timeStamp " + timeStamp
-			+ "\n >> reminders; " + reminderEvents.length + "  todos " + reminderTodos.length + "\n  <<");
+			//reminderfox.util.Logger('TEST', ' dnLoaded  status:' + statustxtString + " timeStamp " + timeStamp
+			// + "\n >> reminders; " + reminderEvents.length + "  todos " + reminderTodos.length + "\n  <<");
 
 			var tabName = reminderfox.tabInfo.tabName;
 			var tabID = reminderfox.tabInfo.tabID;
@@ -545,35 +555,29 @@ reminderfox.userIO.subscribedICS = function (status, xml, text, headers, statusT
 			var msg = (name + "  downLoaded " + statustxtString);
 
 		} else {
-			var msg = ("general Downloading : ERROR " + status + "  " + statusText)
+			var msg = ("general Downloading : ERROR  " + statustxtString)
 			reminderfox.util.Logger('userIO', msg);
 		}
 		reminderfox.core.statusSet(msg);
 	};
 
 
-	reminderfox.userIO.onResult = function (status, xml, text, headers, statusText, call) {
-		if (status === 0 || (status >= 200 && status < 300)) {
-
-			var dnText = text;
-			var lenText = text.length
-			if (lenText > 2000) dnText = text.substring(0,2000) + "\n ....\n" + text.substring(lenText-2000,lenText)
-			reminderfox.util.Logger('userIO', ' status:' + status + 
-			"\n text " + text.length + " >>\n" + dnText + "\n<<");
-		}
-	};
-
-	reminderfox.userIO.onError = function (status, xml, text, headers, statusText) {
-		var msg = ("general Networking : ERROR " + status + "  " + statusText)
-
-		reminderfox.util.Logger('userIO', msg);
-		alert (msg);
-	};
-
-
-reminderfox.userIO.getRemoteCalendar = function () {
+/*
+ * Get Remote Calendar from 'Remote Server' like http://icalx.com
+ *  -- was  downloadReminders()  using old /network
+ *     replaced with httprequest    gW 2015-10
+ */
+reminderfox.userIO.getRemoteCalendar = function (mode) {
 // --------------------------------------------------------------------------
-	reminderFox_saveNetworkOptions();
+//   check if on Options 
+	if (mode == true)
+		reminderFox_saveNetworkOptions();
+
+//XXX   Check if unsaved Reminders (Main Dailog should not be open, if yes, skip)
+	if (reminderfox.core.checkModified()) {
+		reminderfox.util.PromptAlert ("Unsaved Reminders. \n\nDownload from Remote Server stopped!");
+		return;
+	}
 
 	var details = {}
 	var proto = reminderfox._prefsBranch.getCharPref(reminderfox.consts.PROTO);
@@ -584,14 +588,71 @@ reminderfox.userIO.getRemoteCalendar = function () {
 	reminderfox.util.Logger('ALERT', "userIO.getRemoteCalendar   url >>" + details.url + "<<     uname >>" + details.user + "<<")
 
 	details.summary = details.url
-	
-	var logInfo = ".userIO.getRemoteCalendar"
+	details.callnext = "replaceICSdata"
 
-	reminderfox.userIO.addOrSubscribe (details, logInfo)
-
+	reminderfox.userIO.downloadICSdata (details, "  .userIO.getRemoteCalendar")
 }
 
 
+/*
+ *   (next) callback from .userIO.getRemoteCalendar 
+ */
+reminderfox.userIO.replaceICSdata = function (text, call) {
+// --------------------------------------------------------------------------
+
+	var reminderEvents = new Array();
+	var reminderTodos = new Array();
+	var originalExtraInfos = reminderfox.core.reminderFox_reminderFoxExtraInfo;
+	reminderfox.core.readInRemindersAndTodosICSFromString(reminderEvents, reminderTodos, text, false /*ignoreExtraInfo*/)
+
+	// check to see if any todos in remote file...
+	var hasTodos = false;
+	for(var n in reminderTodos ) {
+		var reminderFoxTodos = reminderTodos[n];
+		if(reminderFoxTodos.length > 0) {
+			hasTodos = true;
+			break;
+		}
+	}
+	var localFileStamp = +reminderfox.core.getICSXLastmodifiedFromFile()
+
+		//reminderfox.util.Logger('TEST', '  .userIO.replaceICSdata    '
+		//	+ '\n  timeStamp Local : ' + localFileStamp + "  " + new Date(localFileStamp)
+		//	+ '\n  timeStamp Remote: ' + call.details.timeStamp + "  " + new Date(call.details.timeStamp)
+		//	+ "  reminders/events: " + reminderEvents.length + "  todos:" + reminderFoxTodos.length
+		//	+ "  text.len:" + text.length)
+
+	// safety check: if there are no events and no todo's in the remote file, 
+	// we will assume that this an error condition and will 
+	// NOT overwrite the local reminders
+	// (this happens frequently with icalx.com where the remote file gets cleared)
+	if(reminderEvents.length == 0 && !hasTodos) {
+
+		reminderfox.util.PromptAlert( "FAILED: Remote file with timestamp " 
+			+ call.details.timeStamp + " has no events or todo's..."
+			+ "\n\n [ .userIO.replaceICSdata ] ");
+
+		reminderfox.core.reminderFox_reminderFoxExtraInfo = originalExtraInfos;
+		// switch back to original extra info
+		// WE DON'T WANT TO OVERWRITE LOCAL IF NO REMOTE...
+	} else {
+		// Overwrite
+
+			//reminderfox.util.Logger('TEST', '  .userIO.replaceICSdata  '
+			//  + "\n All OK ... going to replace current ICS data")
+		
+		reminderfox.core.reminderFoxEvents = reminderEvents;
+		reminderfox.core.reminderFoxTodosArray = reminderTodos;
+		reminderfox.core.importRemindersUpdateAll(true, call.details.timeStamp);
+	}
+}
+
+
+/*
+ * Send local ICS data/ Calendar to  'Remote Server' like http://icalx.com
+ *  -- was  uploadReminders()  using old /network
+ *     replaced with httprequest    gW 2015-10
+ */
 reminderfox.userIO.putRemoteCalendar = function () {
 //------------------------------------------------------------------
 	//reminderFox_saveNetworkOptions();
@@ -618,28 +679,25 @@ reminderfox.userIO.putRemoteCalendar = function () {
 	this.id           = new Date().getTime();
 
 
-   var msg;
-	msg  = "  Remote Calendar   (" + this.callback + ")"
-	msg += "\n  call.urlstr: " + this.urlstr;
-	msg += "\n  url >>" + this.urlstr + "<<     user name >>" + this.username + "<<"
-	msg += "\n  ContentType: " + this.contentType + "   Content length: " + this.body.length;
-
+   var msg = "  Remote Calendar   (" + this.callback + ")"
+		 + "\n  call.urlstr: " + this.urlstr
+		 + "\n  url >>" + this.urlstr + "<<     user name >>" + this.username + "<<"
+		 + "\n  ContentType: " + this.contentType + "   Content length: " + this.body.length;
 	reminderfox.util.Logger('userIO',  " .userIO.putRemoteCalendar   " + msg);
 
-	reminderfox.util.JS.dispatch('http');		//??????????????
 	reminderfox.HTTP.request(this)
 }
 
 
 reminderfox.userIO.putRemoteCal = function (status, xml, text, headers, statusText, call) {
+	var statustxtString = statusText + "  (" + status + ")  "
+
 	if (status === 0 || (status >= 200 && status < 300)) {
 			var parser = new DOMParser();
 			var aText = parser.parseFromString(text, "text/html");
 			var msg = aText.body.textContent.replace(/\n /g,'\n').replace(/\n \n/g,'\n').replace(/n\n/g,'\n').replace(/\n\n\n/g,'\n');
-
-		reminderfox.util.PromptAlert (statusText + " (" + status + ") \n " + msg);
 	} else {
 		var msg = ("general Networking  ERROR " )
-		reminderfox.util.PromptAlert (statusText + " (" + status + ")  " + msg)
 	}
+	reminderfox.util.PromptAlert (statustxtString  + "\n" + msg);
 }

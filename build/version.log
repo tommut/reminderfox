@@ -1,26 +1,71 @@
 
 	Reminderfox  [2.1.5.2] wip
-	   as of:    Tue, 3 Feb 2015 18:15:12 +0100 (CET)
-	'reminderfox_2.1.5.2_wip_20150203_1815.xpi'   <'20150203_1815'>
-	
+	   as of:    Wed, 7 Oct 2015 23:02:05 +0200 (CEST)
+	'reminderfox_2.1.5.2_wip_20151007_2302.xpi'   <'20151007_2302'>
+		   Please note:  Add-ons in FX >41 need to be signed by Mozilla AMO!
+	   For testing FX development version is required.
 
-wip 2015-02-03 __ version 2.1.5.2 (wip)
-	CalDAV Offline mode
-		while offline a new reminder can be added; sync with remote is automatically
-		done with remote available
+
+wip 2015-10-05 
+	OwnCloud
+	-- Using FX 40.0.3 OC works fine, also with FX dev version 43.0a2
+	
+	Reminderfox News
+	-- Testing a "Reminderfox News" feature which is shown on Main Dialog
+	   (For details see: rmFxUtils.js  and search for //go4news)
+
+wip 2015-10-03  rework of Remote Server (ftp/http)
+	Since FX 40 the downloading from Remote Server failed
+	Rework to replace the old RmFX networking with http requests
+
+	OwnCloud failed with FX 40 and OV vers. 8.1.3: OC doesn't return 
+	any CalDAV items (Ctag/Etag etc) so no setup or sync possible.  
+
+wip 2015-06-04 __ version 2.1.5.2 (wip)
+	CalDAV Error 412
+	-- Precaution warning with reminder changed on remote but not updated locally,
+	   a local change send to remote would mismatch the etag/ctag
+	   "Remote Calendar Sync" extended handling
+	Note: Testing with GCal showed a GCal/Alarm handling doesn't change the CTag/ETag,
+	      consequently a RmFX update/change of such an event would not produce 412
+
+	CalDAV Error 409
+	-- ??? 
+
+	correction of ICS/DAV File location handling after profile move
+	-- new FX/TB install could only use old profile after resetting the RmFX
+	   store location prefs
+
+
+wip 2015-03-02 __ version 2.1.5.2 (wip)
+	CalDAV
+	-- with GCal error 401 just the token was updated, not the pending reminder
+
+
+wip 2015-02-23 __ version 2.1.5.2 (wip)
+	CalDAV
+	-- update accounts on all XUL windows with write to .dav
+
+	DTSTART/DTEND changed to Z-time format with storing/syncing to be compatible
+	with systems like fruux (values are converted for 'local' time for UI and 
+	internal RmFX use) 
+
+
+wip 2015-02-14 __ version 2.1.5.2 (wip)
+	Auto sync at FX/TB startup and also with open RmFX MainDialog
+	Offline mode (Foxy symbol changes, status line in MainDialog)
+
+	CalDAV 
+	-- Alarm dialog functions with CalDAV didn't worked correctly
+	-- Renew reminders of a selected account 
+	   (Foxy menu on Main Dialog --> 'Sync Remote Calendars' --> Select account with Cntrl)
 
 	Alarm dialog
-		alarmed reminders are show with icon/account id
+		alarmed reminders are shown with icon/account id
 
-	Fix
-		Alarm with CalDAV/remote didn't worked with 'Delete'
 
 
 wip  2015-01-27 __ version 2.1.5.2 (wip)
-	Sent++ lost reminder attributes added with "Add Reminder" compose
-
-
-wip  2015-01-25 __ version 2.1.5.2 (wip)
 	Sent++ supporting IMAP Sent folder
 
 

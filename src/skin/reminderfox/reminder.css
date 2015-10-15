@@ -287,6 +287,10 @@ treechildren::-moz-tree-cell-text(odd, selected) { color: #000000; }
     font-weight: bold;
     color: red;
 }
+.reminderFox_BoldBlue {
+    font-weight: bold;
+    color: blue;
+}
 
 .reminderfox_TextNormal {
     color: black;
@@ -334,6 +338,11 @@ treechildren::-moz-tree-cell-text(odd, selected) { color: #000000; }
         height              : 18px  !important;
         width               : 18px  !important;
     }
+
+    .image-button[id="rmFx-foxy-icon-small"] {
+        list-style-image    : url("chrome://reminderfox/skin/images/foxy-head-20.png");
+    }
+
 
    #rmFx-foxy-icon-small {
 		list-style-image    : url("chrome://reminderfox/skin/images/foxy-head-20.png");

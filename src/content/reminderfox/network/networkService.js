@@ -1,10 +1,12 @@
 if (!reminderfox)     var reminderfox = {};
 if (!reminderfox.network)    reminderfox.network = {};
-if (!reminderfox.network.services)    reminderfox.network.services = {};
+//if (!reminderfox.network.services)    reminderfox.network.services = {};
 
 //upload.xul, download.xul, and browser.xul(Overlay)
-var gUploadService=
+var XXXgUploadService=
 {
+
+
   _channel:null,
   _callback:null,
   _data:"",
@@ -13,6 +15,8 @@ var gUploadService=
 
   start:function(aStr,aURI,aType,aCallback)
   {
+reminderfox.util.Logger('ALERT', "gUploadService ....start ")
+
     if( !aStr || !aURI)
       return false;
     this._callback=aCallback;
@@ -57,6 +61,8 @@ var gUploadService=
     const sis=Components.classes["@mozilla.org/scriptableinputstream;1"]
                       .createInstance(Components.interfaces.nsIScriptableInputStream);
 
+reminderfox.util.Logger('ALERT', "gUploadService ....onDataAvailable ")
+
     sis.init(input);
     this._errorData +=sis.read(count);
   },
@@ -88,7 +94,7 @@ var gUploadService=
   }
 };
 
-var gDownloadService=
+var XXXgDownloadService=
 {
   _channel:null,
   streamLoader:null,
@@ -101,6 +107,9 @@ var gDownloadService=
 
   start:function(aURI,aCallback)
   {
+
+reminderfox.util.Logger('ALERT', "gDownloadService ....onStreamComplete ")
+
     if( !aURI )
       return false;
 
@@ -140,6 +149,9 @@ var gDownloadService=
   
    onStreamComplete :function ( loader , ctxt , status , resultLength , result )
   {
+
+reminderfox.util.Logger('ALERT', "gDownloadService ....onStreamComplete ")
+
     this.data="";
     this._endTime=(new Date()).getTime();
     if(status==0)
