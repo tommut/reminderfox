@@ -6,11 +6,12 @@ if (!reminderfox.util)    reminderfox.util = {};
 if (!reminderfox.calDAV)    reminderfox.calDAV = {};
 
 reminderfox.calDAV.colorMap = [];
+reminderfox.calDAV.pendingReminders = false;
+
 
 if(!reminderfox.msgnr) reminderfox.msgnr = {};
 if (!reminderfox.msgnr.name) reminderfox.msgnr.name = "";
 
-//reminderfox.msgnr.pageHistorie = [];
 
 // ***************** Reminderfox date functions    .date.  <<<<<<<<<<<<<<<<<<<<<
 
@@ -1259,8 +1260,12 @@ reminderfox.util.fileCheck= function (filepath) {
 		sfile = Components.classes["@mozilla.org/file/local;1"]
 			.createInstance(Components.interfaces.nsIFile);
 	}
-	sfile.initWithPath(filepath);
-//	reminderfox.util.Logger('Alert', " .util.fileCheck: >>" + sfile.path + '<<')
+	//reminderfox.util.Logger('calDAV', " .util.fileCheck: >>" + filepath + '<<')   //XXXgW
+	try {
+		sfile.initWithPath(filepath);
+	} catch (ex){
+		return -2 // serious error with filepath, ev. wrong dir from old profile!
+	}
 
 	if (sfile.exists() === false) {
 		// check if parent directory exists
@@ -1397,10 +1402,10 @@ reminderfox.util.pickFileICSfile= function (extension, xthis) {
 		var reminderEvents = new Array();
 		var reminderTodos = new Array();
 		reminderfox.core.readInRemindersAndTodosICSFromFile(reminderEvents, reminderTodos, file, false /*ignoreExtraInfo IfImportingAdditionalEvents*/);
-		//gWCalDAV
+
 		// With CalDAV enabled, each event/todo connected to a CalDAV account will 
 		// be traced in  'reminderfox.calDAV.accounts' 
-		reminderfox.calDAV.accountsReadIn();
+		reminderfox.calDAV.getAccounts();
 
 		// check if we've successfully imported any reminders or todo events
 		var importedSuccess = reminderEvents.length !== 0;
@@ -1591,7 +1596,7 @@ reminderfox.util.makeMsgFile= function(xcontent, tempFile){
 };
 
 
-reminderfox.util.makeMsgFile8= function(outputStr, file){
+reminderfox.util.makeFile8= function(outputStr, file){
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	var sfile = Components.classes["@mozilla.org/file/local;1"]
 		.createInstance(Components.interfaces.nsIFile);
@@ -1666,6 +1671,9 @@ reminderfox.util.STACK= function (aDepth) {
 	if (aDepth === 0) return stack;
 
 	for (var i = 1; i <= depth && frame; i++) {
+
+		var x = (frame.filename != null) ? frame.filename : ""
+		if (x.search("reminderfox") == -1) break		//gW2015 to clean the log from not relevant lines
 		stack += (i + ": [" + frame.filename + " # " +
 			frame.lineNumber + "] " + frame.name + "\n");
 		if (!frame.filename) break;
@@ -1731,13 +1739,13 @@ reminderfox.util.Logger = function (Log, msg) {
 		ALL:    0
 		};
 
-	if ((Log == 'alert') || (Log == 'Alert') || (Log == 'ALERT')){
+	if (Log.toLowerCase().search('alert') > -1){
 		var date = new Date();
-		logMsg = "Reminderfox  ** Alert **    " + date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + "\n" + msg;
+		logMsg = "\nReminderfox  ** Alert **    " + date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + "\n" + msg;
 		if (Log == 'ALERT') logMsg += "\n" + reminderfox.util.STACK();
 		if (Log == 'Alert') logMsg += "\n" + reminderfox.util.STACK(1);
 		if (Log == 'alert') logMsg += "\n";
-		reminderfox.util.LogToConsole(logMsg);
+		reminderfox.util.LogToConsole(logMsg, Components.stack.caller.filename, "", Components.stack.caller.lineNumber);
 		return;
 	}
 
@@ -1761,15 +1769,16 @@ reminderfox.util.Logger = function (Log, msg) {
 
 
 	var date = new Date();
-	logMsg = "Reminderfox Logger : "+ rootID + "  [" + Log + " : " + logId + "]      "
+	logMsg = "\nReminderfox Logger : "+ rootID + "  [" + Log + " : " + logId + "]      "
 		+ date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + "\n" + msg;
 
-	if (logNum >= 50 /* 'Warn', 'Error', 'Fatal' */) logMsg += "\n" + reminderfox.util.STACK();
+	if (logNum >= 50 /* 'Warn', 'Error', 'Fatal' */) {
+		logMsg += "\n" + reminderfox.util.STACK();
+	} else {
+		logMsg += "\n" + reminderfox.util.STACK(1);
+	}
 
-	if (logNum >= 40 /* 'Info' */)
-		reminderfox.util.LogToConsole(logMsg, Components.stack.caller.filename, "", Components.stack.caller.lineNumber);
-	else 
-		reminderfox.util.LogToConsole(logMsg);
+	reminderfox.util.LogToConsole(logMsg, Components.stack.caller.filename, "", Components.stack.caller.lineNumber);
 };
 
 
@@ -1780,8 +1789,7 @@ reminderfox.util.LogToConsole= function (aMessage, aSourceName, aSourceLine, aLi
 		.getService(Components.interfaces.nsIConsoleService);
 	var scriptError = Components.classes["@mozilla.org/scripterror;1"]
 		.createInstance(Components.interfaces.nsIScriptError);
-//	scriptError.init(aMessage, aSourceName, aSourceLine, aLineNumber, 
-//		aColumnNumber, aFlags, aCategory);
+
 	scriptError.init(aMessage, aSourceName, aSourceLine, aLineNumber,
 		aColumnNumber, 
 		Components.interfaces.nsIScriptError.warningFlag, "component javascript");
@@ -2222,78 +2230,79 @@ reminderfox.util.JS = {
 		Components.stack.caller.lineNumber + "]]";
 
 		switch (id) {	// *** XUL calls for dispachting and optional  fct call ***
-			case "getiCalMailed":{
-				this.dispatcher("iCal");
-				this.dispatcher("mail");
+			case 'getiCalMailed':{
+				this.dispatcher('iCal');
+				this.dispatcher('mail');
 				reminderfox.iCal.addReminder4Message(arg);
 				break;
 			}
-			case "addReminder4Contact":{
-				this.dispatcher("abCard");
-				this.dispatcher("mail");
+			case 'addReminder4Contact':{
+				this.dispatcher('abCard');
+				this.dispatcher('mail');
 				reminderfox.abCard.addReminder4Contact(arg);
 				break;
 			}
-			case "msgSendwReminder":{
-				this.dispatcher("sendPlus");
-				this.dispatcher("calDAV");
+			case 'msgSendwReminder':{
+				this.dispatcher('sendPlus');
+				this.dispatcher('calDAV');
 				reminderfox.sendPlus.reminder();
 				break;
 			}
 
 
 			// *** just loading ****
-			case "mail":{
-				this.dispatcher("mail");
-				this.dispatcher("tagging");
+			case 'mail':{
+				this.dispatcher('mail');
+				this.dispatcher('tagging');
 				break;
 			}
-			case "iCalMail":{
-				this.dispatcher("mail");
-				this.dispatcher("iCal");
+			case 'iCalMail':{
+				this.dispatcher('mail');
+				this.dispatcher('iCal');
 				break;
 			}
-			case "sendPlus":{
-				this.dispatcher("sendPlus");
-				this.dispatcher("tagging");
-				this.dispatcher("mail");
-				this.dispatcher("calDAV");
+			case 'sendPlus':{
+				this.dispatcher('sendPlus');
+				this.dispatcher('tagging');
+				this.dispatcher('mail');
+				this.dispatcher('calDAV');
 				break;
 			}
-			case "tagging":{
-				this.dispatcher("tagging");
-				this.dispatcher("sendPlus");
+			case 'tagging':{
+				this.dispatcher('tagging');
+				this.dispatcher('sendPlus');
 				break;
 			}
-			case "tag":{
-				this.dispatcher("tagging");
+			case 'tag':{
+				this.dispatcher('tagging');
 				break;
 			}
-			case "network":{
-				this.dispatcher("network.upload");
-				this.dispatcher("network.download");
-				this.dispatcher("network.services");
-				this.dispatcher("network.password");
+
+			case 'network':{
+				this.dispatcher('network.upload');
+				this.dispatcher('network.download');
+				this.dispatcher('network.services');
+				this.dispatcher('network.password');
 				break;
 			}
-			case "userIO":{
-				this.dispatcher("userIO");
+			case 'userIO':{
+				this.dispatcher('userIO');
 				reminderfox.userIO.go(arg);
 				break;
 			}
-			case "addDialog":{
-				this.dispatcher("addDialog");
-				this.dispatcher("iCal");
+			case 'addDialog':{
+				this.dispatcher('addDialog');
+				this.dispatcher('iCal');
 				break;
 			}
 
-			case "addDialog0":{
-				this.dispatcher("addDialog");
+			case 'addDialog0':{
+				this.dispatcher('addDialog');
 				break;
 			}
 
-			case "http":{
-				this.dispatcher("http");
+			case 'http':{
+				this.dispatcher('http');
 				break;
 			}
 		}
@@ -2471,7 +2480,7 @@ reminderfox.versionCompare = {
 			this.contentType  = 'text/xml';
 			this.headers      = null;
 
-			this.username     = null;  //""
+			this.username     = "";
 			this.password     = "";
 
 			this.timeout      = 30;
@@ -2535,71 +2544,14 @@ reminderfox.aboutXPI= function () {
 };
 
 
-//CalDAV _________________________________________
-if (!reminderfox.calDAV.accounts)   reminderfox.calDAV.accounts = {};    //calDAV  main definition of accounts
-
-// CalDAV  working with JSON
-//		var calDAVaccounts    = reminderfox.calDAV.accounts;
-//		var calDAVaccountsStr = JSON.stringify(calDAVaccounts);
-//		var calDAVaccounts    = JSON.parse(calDAVaccountsStr);
-
-//CalDAV.account definitions ___________________________
-/*  to access a specfic detail use:
- *
- *   .calDAV.accounts[ "calDAV account.ID" ] .ID               = [string]
- *   .calDAV.accounts[ "calDAV account.ID" ] .Type             = [string]
- *   .calDAV.accounts[ "calDAV account.ID" ] .Name             = [string]
- *   .calDAV.accounts[ "calDAV account.ID" ] .Login            = [string]
- *   .calDAV.accounts[ "calDAV account.ID" ] .Url              = [string]
- *   .calDAV.accounts[ "calDAV account.ID" ] .Active           = [boolean]
- *   .calDAV.accounts[ "calDAV account.ID" ] .CTag             = [string]
- *   .calDAV.accounts[ "calDAV account.ID" ] .Color            = [integer]  //optional
- *   .calDAV.accounts[ "calDAV account.ID" ] [ "UID" ].etag    = [string]
- *   .calDAV.accounts[ "calDAV account.ID" ] [ "UID" ].status  = [integer]
- *
- *   'status' parameter used to control the deletion of local reminders, for
- *      details see function rmFx_CalDAV_AccountListing/calDAVcalls.js
-
-   _________ EXAMPLE ______________________________
-	R : / * calDAV account.ID * / {
-		ID:    "R",
-		Typ:   "VTODO",
-		Name:  "myProject",
-		Login: "thisFox@yxc.de",
-		Url:   "https://dav.fruux.com/calendars/a1234567/calendar/",
-		Active: true,
-		CTag:  "4567gt",
-		Color:  "2",
-		"132603-873892222" : {etag: "", status: 1361576110326},
-		"567899-54321456z" : {etag: "", status: 1361576110326}
-	},
-
-	G : {
-		ID:    "G",
-		Typ:   "VEVENT",
-		Name:  "ourProject",
-		Login: "gabc@asd.de",
-		Url:   "https://dav.fruux.com/calendars/a9876543/calendar/",
-		Active: true,
-		CTag:  "etgt67",
-			"132829-456228787" : {etag: "36456-876", status: 1361747817888},
-			"123454-654345677" : {etag: "45862-3e3", status: 1361747817888},
-			"134523-876543233" : {etag: "45862-6gf", status: 1361747817888},
-			"153233-999342777" : {etag: "45862-eds", status: 1361747817888}
-	}
----------------------------*/
-// Get the CalDAV account using the 'calDAVid'
-// just use   reminderfox.calDAV.accounts[calDAVid]
-//------------------------------------------------------------------------------
-
-
 /**
  * Get the file object for the colorMap
  * read it from ProfD/reminder/calDAVmap.css
  * if not exsist, copy a default definition from extDir
  * return {object}  calDAVmap.css
  */
-reminderfox.calDAV.calDAVmapFile= function(){
+if (!reminderfox.colorMap)   reminderfox.colorMap = {};
+reminderfox.colorMap.cssFileGet= function(){
 //-------------------------------------------------------------
 	var cssfile = reminderfox.util.ProfD_extend("reminderfox");
 	cssfile.append("calDAVmap.css");
@@ -2620,9 +2572,9 @@ reminderfox.calDAV.calDAVmapFile= function(){
 /**
  * Read the calDAV account color map 
  */
-reminderfox.calDAV.calDAVmapReadIn= function() {
+reminderfox.colorMap.cssFileRead= function() {
 //-------------------------------------------------------------
-	var cssString = reminderfox.core.readInFileContents (reminderfox.calDAV.calDAVmapFile());
+	var cssString = reminderfox.core.readInFileContents (reminderfox.colorMap.cssFileGet());
 	var colorCode;
 	var pos = 0;
 	var num = 0;
@@ -2654,11 +2606,11 @@ reminderfox.calDAV.calDAVmapReadIn= function() {
 	}
 	// reminderfox.util.Logger('calDAV',  ".calDAVmapReadIn " + msg);
 
-	reminderfox.calDAV.writeOutColorMap();
+	reminderfox.colorMap.cssFileWrite();
 };
 
 
-reminderfox.calDAV.writeOutColorMap= function () {
+reminderfox.colorMap.cssFileWrite= function () {
 //-----------------------------------------------------
 	var out = '/*-- tree color selectors --*/\n';
 
@@ -2707,9 +2659,8 @@ reminderfox.calDAV.writeOutColorMap= function () {
 	out +=  '\n/* http://www.colorpicker.com */';
 	out +=  '\ncolorpicker {color: #626262;}';
 
-	var cssFile = reminderfox.calDAV.calDAVmapFile();
-	reminderfox.calDAV.fileWriteOut (out, cssFile);
-
+	var cssFile = reminderfox.colorMap.cssFileGet();
+	reminderfox.util.makeFile8(out, cssFile.path)
 
 		function hsl(colorHue) {
 			var saturation = reminderfox.core.getPreferenceValue(reminderfox.consts.CALDAV_SATURATION, 40);
@@ -2720,19 +2671,18 @@ reminderfox.calDAV.writeOutColorMap= function () {
 /*
 * load calDAVcolorMap and set the CSS file to respect prefs saturation  --------
 */
-reminderfox.calDAV.setupColorMap= function () {
+reminderfox.colorMap.setup= function () {
 //-----------------------------------------------------
-	reminderfox.calDAV.calDAVmapReadIn();
+	reminderfox.colorMap.cssFileRead();
 
-	var cssfile = reminderfox.calDAV.calDAVmapFile();
+	var cssfile = reminderfox.colorMap.cssFileGet();
 	var sss = Components.classes["@mozilla.org/content/style-sheet-service;1"]
 						.getService(Components.interfaces.nsIStyleSheetService);
 	var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
 
 	var uri = ios.newURI("file:" + cssfile.path, null, null);
 	try {
-//reminderfox.util.Logger('calDAVcss',' calDAVmapFile  cssfile: ' + cssfile.path)
-	sss.loadAndRegisterSheet(uri, sss.USER_SHEET);
+		sss.loadAndRegisterSheet(uri, sss.USER_SHEET);
 	} catch (ex) {
 		Components.utils.reportError(ex);
 	}
@@ -2740,38 +2690,72 @@ reminderfox.calDAV.setupColorMap= function () {
 
 
 /**
- *  Read the reminderfox.calDAV.accounts from file stored parallel to the
- *  current 'reminderfox.ics' with extension .ics.dav
+ *  Check reminderfox.calDAV.accounts. If accounts found, just return, if not read
+ *  from file stored parallel to the current 'reminderfox.ics' with extension .ics.dav
  *  @param {string}  ics fileName
  */
-reminderfox.calDAV.accountsReadIn= function (thisFile) {
-//-------------------------------------------------------------
-	var calDAVfile = reminderfox.calDAV.accountsFile(thisFile);
-	var calDAVaccounts;
+reminderfox.calDAV.getAccounts = function () {
+//-----------------------------------------------------
+	var calDAVfile;
+	var icsFile = reminderfox.core.getReminderStoreFile().path;
 
-	try {
-		calDAVaccounts = reminderfox.core.readInFileContents (calDAVfile);
-	} catch(ex) {
-		calDAVaccounts = "";
+	var msg = "  ....  calDAV.getAccounts  "
+
+	// no calDAV accounts? Or a file is given? --> read file
+	if ((reminderfox.calDAV.accounts != null) && (Object.keys(reminderfox.calDAV.accounts ).length === 0)){
+
+//reminderfox.util.Logger('calDAV', " .calDAV.getAccounts   dir/file check: " + icsFile)
+
+		calDAVfile = reminderfox.calDAV.accountsFile(icsFile);
+		try {
+			reminderfox.calDAV.accounts = JSON.parse(reminderfox.core.readInFileContents (calDAVfile));
+			msg += "   read from file: " + calDAVfile.path
+		} catch(ex) {
+			reminderfox.calDAV.accounts = {};
+			msg += "   new array!"
+		}
+
+		var calDAVstatus = reminderfox.calDAV.accountsStatus()
+		msg += "  .... on windowtype  >>" + document.documentElement.getAttribute('windowtype') 
+			+ "\n  count#:" + calDAVstatus.count + "  active#: " + calDAVstatus.active 
+			+ "  .pendingReminders: " + calDAVstatus.pendingReminders
+			+ "\n  snap: " + calDAVstatus.snap
+		reminderfox.util.Logger('calDAVaccount', msg)
+
+	} else {
+		// "   already loaded!"
 	}
 
-	if ((!calDAVaccounts) || (calDAVaccounts === ""))
-		reminderfox.calDAV.accounts = {};
-	else {
-		reminderfox.calDAV.accounts = JSON.parse(calDAVaccounts);
-	}
-	return calDAVaccounts;
-};
+	return reminderfox.calDAV.accounts
+}
 
 
-reminderfox.calDAV.accountsActive = function (_calDAVaccounts) {
+reminderfox.calDAV.accountsStatus = function (calDAVaccounts) {
+//-----------------------------------------------------
+	if (calDAVaccounts == null) {
+		calDAVaccounts = reminderfox.calDAV.accounts
+	} 
 	var calDAVstatus = [];
+
 	calDAVstatus.count = 0;
-	calDAVstatus.active = false;
-	for (var account in _calDAVaccounts) {
-		if (_calDAVaccounts[account].Active === true) calDAVstatus.active = true;
-		calDAVstatus.count ++;
+	calDAVstatus.active = 0;
+	calDAVstatus.snap=""
+	for (var account in calDAVaccounts) {
+		if (calDAVaccounts[account].Active === true) calDAVstatus.active++;
+		calDAVstatus.snap += "["+calDAVaccounts[account].ID + "] CTag:" + calDAVaccounts[account].CTag + ";  "
+
+		calDAVstatus.count++;
 	}
+
+	var sCalDAVaccounts = JSON.stringify (calDAVaccounts);
+
+	calDAVstatus.pendingReminders = false
+	if ((sCalDAVaccounts.search('"status":"0"') != -1) 			//Add
+		|| (sCalDAVaccounts.search('"status":"-1"') != -1)		//Delete
+		|| (sCalDAVaccounts.search('"status":"-2"') != -1)){	//Edit/Update
+		calDAVstatus.pendingReminders = true;
+	}
+
 	return calDAVstatus;
 };
 
@@ -2780,51 +2764,50 @@ reminderfox.calDAV.accountsActive = function (_calDAVaccounts) {
  *  Write the reminderfox.calDAV.accounts to 'reminderfox.ics.dav' 
  *  in same dir as 'reminderfox.ics'
  *  @param {object} the CalDAVaccounts definition objects
- *  @param {string} thisFile, optional: a file/path, if null: the current .ics location is used
  */
-reminderfox.calDAV.accountsWriteOut= function (calDAVaccounts) {
+reminderfox.calDAV.accountsWrite= function (calDAVaccounts) {
 //-------------------------------------------------------------
+	var msg = "  ....  calDAV.accountsWrite   .. "
+	reminderfox.calDAV.accountsStatus (msg, calDAVaccounts) 
+
 	if (!calDAVaccounts) calDAVaccounts = {};
 
-	var rmFx_CalDAV_accounts = 0;
+	var xulWin =
+			"window:reminderFoxEdit,window:reminderFoxOptions"
+		+ ",window:reminderFoxAlarmDialog,window:reminderFoxReminderOptionsDialog"
+		+ ",window:rmFxCaldavUpdate,navigator:browser"
+		+ ",mail:3pane,mail:messageWindow"
+		//+ ",calendarMainWindow"
+	var xWin = xulWin.split(",")
+
+    var windowManager = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService();
+    var windowManagerInterface = windowManager.QueryInterface(Components.interfaces.nsIWindowMediator);
+
+	msg = " ....  enum xulWindows"
+
+	for (var aWin in xWin) {
+		var windowEnumerator = windowManagerInterface.getEnumerator(xWin[aWin]);
+		while (windowEnumerator.hasMoreElements()) {
+
+			msg += "   >> " + xWin[aWin] 
+			var currentWindow = windowEnumerator.getNext();
+			currentWindow.reminderfox.calDAV.accounts = calDAVaccounts
+		}
+	}
+
+	var calDAVaccountsNo = 0;
 	for (var account in calDAVaccounts) {
-		rmFx_CalDAV_accounts++;
+		calDAVaccountsNo++;
 	}
 
 	var outputStr = JSON.stringify (calDAVaccounts);
 	var file = reminderfox.calDAV.accountsFile();
 
-	reminderfox.calDAV.fileWriteOut (outputStr, file);
-	return rmFx_CalDAV_accounts;
-};
+	var mssg = " .... WriteOut calDAVaccounts to file: " + file.path + "\n" + msg;
+	reminderfox.util.Logger('calDAVaccount',  mssg);
 
-
-reminderfox.calDAV.fileWriteOut= function (outputStr, thisFile) {
-//-------------------------------------------------------------
-	var msg = "\n___ Reminderfox WriteOut ________ file: " + thisFile.path;
-	reminderfox.util.Logger('calDAV',  msg);
-
-	var outputStream = Components.classes["@mozilla.org/network/file-output-stream;1"]
-		.createInstance(Components.interfaces.nsIFileOutputStream);
-	outputStream.init(thisFile, 0x04 | 0x08 | 0x20, 420, 0);
-
-	var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
-		.createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-	converter.charset = "UTF-8";
-
-	var chunk = null;
-	try {
-		chunk = converter.ConvertFromUnicode(outputStr);
-	}
-	catch (e) {
-		chunk = outputStr;
-	}
-	outputStream.write(chunk, chunk.length);
-
-	var fin = converter.Finish();
-	if (fin.length > 0)
-		outputStream.write(fin, fin.length);
-	outputStream.close();
+	reminderfox.util.makeFile8(outputStr, file.path)
+	return calDAVaccountsNo;
 };
 
 
@@ -2838,23 +2821,15 @@ reminderfox.calDAV.accountsFile= function (currentFilePath) {
 	if (!currentFilePath) {
 		currentFilePath = reminderfox.core.getReminderStoreFile().path;
 	}
-reminderfox.util.Logger('calDAV', " reminderfox.calDAV.accountsFile   currentFilePath   >>" + currentFilePath + "<<")
-	var cStatus = reminderfox.util.fileCheck (currentFilePath)
-//	reminderfox.util.Logger('Alert', "  dir/file check: " + cStatus + " dir/f: " + currentFilePath)
-
-
-	var calDAVpath = currentFilePath + ".dav";
-
 	var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
-	file.initWithPath(calDAVpath);
+	file.initWithPath(currentFilePath + ".dav");
 	return file;
 };
 
 
 /**
  *  Clear all reminder details from all accounts in "reminderfox.calDAV.accounts"
- *  @param  {object} calDAVaccouts objects with all aacouts ans it's definitios and reminder relations
- *  @return {object} calDAVaccouts  -- only account defintions, no reminder relations
+ *  @param  {object} calDAVaccouts objects with all accouts and it's definitios and reminder relations
  */
 reminderfox.calDAV.accountsClearReminderDetails= function (calDAVaccounts) {
 //-------------------------------------------------------------
@@ -3163,3 +3138,329 @@ function reminderfox_isSubscribedCalendarTabSelected(){
 				tabbox.selectedIndex = tabbox.selectedIndex;
 			}
 		}
+
+
+/**
+ * Query a remote system (Mozilla)  to check on/offline
+ */
+reminderfox.online = {
+//--------------------------------------------------------------------------
+	status : function () {
+
+			var foxy = document.getElementById("rmFx-foxy-icon-small");
+			var msg = "  System status"
+
+			if (navigator.onLine) {
+				if (foxy != null) 
+					foxy.setAttribute('mode', 'online');
+
+				msg += " +++ ONLINE +++"
+				reminderfox.util.Logger('calDAV',msg)
+
+				rmFx_CalDAV_updatePending();
+
+			} else {
+				if (foxy != null) 
+					foxy.setAttribute('mode', 'offline');
+
+				msg += " --- OFFINE ---"
+				reminderfox.util.Logger('calDAV',msg)
+				reminderfox.core.statusSet(msg, true)
+
+			}
+	}
+
+};
+
+// ========= was in /network/passwordManagerUtils.js ================= begin === 
+/* ---------------------
+if(!reminderfox)              var reminderfox = {};
+if(!reminderfox.network)          reminderfox.network = {};
+if(!reminderfox.network.password) reminderfox.network.password = {};
+
+var REMINDERFOX_PASSWORD_CID = "@mozilla.org/passwordmanager;1";
+
+var gReminderFox_PasswordManager;
+var gReminderFox_PasswordManagerInternal;
+
+function reminderFox_getPasswordManager() {
+	if(!gReminderFox_PasswordManager) {
+		try {
+			gReminderFox_PasswordManager = Components.classes[REMINDERFOX_PASSWORD_CID].getService();
+			gReminderFox_PasswordManager = gReminderFox_PasswordManager.QueryInterface(Components.interfaces.nsIPasswordManager);
+		} catch (e) {
+			reminderfox.core.logMessageLevel("reminderFox_getPasswordManager() failed: " + e.name + " -- " + e.message, reminderfox.consts.LOG_LEVEL_INFO);
+
+		}
+	}
+	return gReminderFox_PasswordManager;
+}
+
+function reminderFox_getPasswordManagerInternal() {
+	try {
+		gReminderFox_PasswordManagerInternal = Components.classes[REMINDERFOX_PASSWORD_CID].getService();
+		gReminderFox_PasswordManagerInternal = gReminderFox_PasswordManagerInternal.QueryInterface(Components.interfaces.nsIPasswordManagerInternal);
+	} catch (e) {
+		reminderfox.core.logMessageLevel("reminderFox_getPasswordManagerInternal() failed: " + e.name + " -- " + e.message, reminderfox.consts.LOG_LEVEL_INFO);
+	}
+
+	return gReminderFox_PasswordManagerInternal;
+}
+
+function reminderFox_getPassword(loginData) {
+	if(!loginData) {
+		return null;
+	}
+
+	if("@mozilla.org/passwordmanager;1" in Components.classes) {
+		var pmInternal = reminderFox_getPasswordManagerInternal();
+		if(!pmInternal) {
+			return null;
+		}
+
+		var host = {
+			value : ''
+		};
+		var user = {
+			value : ''
+		};
+		var password = {
+			value : ''
+		};
+
+		try {
+			pmInternal.findPasswordEntry(loginData.ljURL, '', '', host, user, password);
+			loginData.username = user.value;
+			loginData.password = password.value;
+			return loginData;
+		} catch(e) {
+			reminderfox.core.logMessageLevel("findPasswordEntry() failed: " + e.name + " -- " + e.message, reminderfox.consts.LOG_LEVEL_INFO);
+		}
+
+
+	} else if("@mozilla.org/login-manager;1" in Components.classes) {
+		// Login Manager exists so this is Firefox 3
+		// Login Manager code
+		try {
+			// Get Login Manager
+			var myLoginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
+
+			// Find users for the given parameters
+			// var logins = myLoginManager.findLogins({}, hostname, formSubmitURL, httprealm);
+
+			// Find users for the given parameters
+			if (loginData.httpRealm != null) {
+				var logins = myLoginManager.findLogins({}, loginData.ljURL, null, loginData.httpRealm);
+			} else {
+				var logins = myLoginManager.findLogins({}, loginData.ljURL, "User login", null);
+			}
+
+			// Find user from returned array of nsILoginInfo objects
+			for(var i = 0; i < logins.length; i++) {
+				if(logins[i].username == loginData.username) {
+					loginData.password = logins[i].password;
+					return loginData;
+				}
+			}
+		} catch(ex) {
+			// This will only happen if there is no nsILoginManager component class
+		}
+
+	}
+	return null;
+}
+
+function reminderFox_savePassword(loginData) {
+	if(!loginData || !loginData.ljURL || !loginData.username)
+		return false;
+
+	if("@mozilla.org/passwordmanager;1" in Components.classes) {
+		// Password Manager exists so this is not Firefox 3 (could be Firefox 2, Netscape, SeaMonkey, etc).
+		// Password Manager code
+		var pm = reminderFox_getPasswordManager();
+
+		if(!pm)
+			return false;
+
+		try {
+			pm.removeUser(loginData.ljURL, loginData.username);
+		} catch(e) {
+			reminderfox.core.logMessageLevel("removeUser() failed: " + e.name + " -- " + e.message, reminderfox.consts.LOG_LEVEL_INFO);
+		}
+
+		if(loginData.savePassword) {
+			try {
+				pm.addUser(loginData.ljURL, loginData.username, loginData.password);
+			} catch(e) {
+				reminderfox.core.logMessageLevel("addUser failed: " + e.name + " -- " + e.message, reminderfox.consts.LOG_LEVEL_INFO);
+			}
+			return true;
+		}
+	} else if("@mozilla.org/login-manager;1" in Components.classes) {
+		// Login Manager exists so this is Firefox 3
+		// Login Manager code
+
+		// Get Login Manager
+		var myLoginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
+
+		var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1", Components.interfaces.nsILoginInfo, "init");
+
+		// remove existing user
+		// Find users for this extension
+		var logins = myLoginManager.findLogins({}, loginData.ljURL, "User login", null);
+		// Find user from returned array of nsILoginInfo objects
+		for(var i = 0; i < logins.length; i++) {
+			if(logins[i].username == loginData.username) {
+				myLoginManager.removeLogin(logins[i]);
+				break;
+			}
+		}
+		if(loginData.savePassword) {
+			if(loginData.password != null && loginData.password.length > 0) {// check: can't save null/empty password
+				var login_info = new nsLoginInfo(loginData.ljURL, "User login", null, loginData.username, loginData.password, "", "");
+				myLoginManager.addLogin(login_info);
+			}
+		}
+	}
+
+	return false;
+}
+
+function reminderFox_deleteAccount(loginData) {
+	if(!loginData || !loginData.ljURL || !loginData.username)
+		return false;
+
+	try {
+		// Get Login Manager
+		var passwordManager = Components.classes["@mozilla.org/login-manager;1"].
+				getService(Components.interfaces.nsILoginManager);
+
+		// Find users for this extension
+		var logins = passwordManager.findLogins({}, loginData.ljURL,  "User login" / *formSubmitURL* /, null / *httprealm* /);
+
+		for (var i = 0; i < logins.length; i++) {
+			if (logins[i].username == loginData.username) {
+				passwordManager.removeLogin(logins[i]);
+				break;
+			}
+		}
+	}
+	catch(ex) {
+		// This will only happen if there is no nsILoginManager component class
+	}
+};
+// ========= was in /network/passwordManagerUtils.js =================== end === 
+------------------------*/
+
+
+//go4news   functions to support a "Reminderfox News"  on the Main Dialog -----
+if (!reminderfox.go4news)    reminderfox.go4news = {};
+
+// in /defaults/preferences/reminderfox.js
+//pref("extensions.reminderFox.news", true);   // last news status, set after reading to false
+//pref("extensions.reminderFox.newsStamp", <2015-10-01);   // last news date
+//pref("extensions.reminderFox.newsLink", "https://dl.dropbox.com/u/35444930/rmFX/XPI/");
+
+// in reminderFoxCore.js
+//reminderfox.consts.NEWS
+//reminderfox.consts.NEWSSTAMP
+//reminderfox.consts.NEWSLINK
+
+
+reminderfox.go4news = {
+//------------------------------------------------------------------------------
+	currentNews : "--",
+
+
+	setButton : function () {
+		var newsStatus = reminderfox.core.getPreferenceValue(reminderfox.consts.NEWS, false)
+		if (newsStatus == true) {
+			document.getElementById('reminderfox-News-box').removeAttribute("hidden");
+		}
+	},
+
+
+	status : function () {  // this run *only* at FX/TB startup !
+		this.get('go4_news', 'status2')
+	},
+
+	status2 : function () {
+
+		var nLines = this.currentNews
+		var n1 = nLines.search('<')
+		var n2 = nLines.search('>') +1
+		var newsStampRemote = nLines.substring(n1,n2)
+
+		var newsStatus = reminderfox.core.getPreferenceValue(reminderfox.consts.NEWS, false)
+		var newsStamp = reminderfox.core.getPreferenceValue(reminderfox.consts.NEWSSTAMP, "")
+		var newsLink = reminderfox.core.getPreferenceValue(reminderfox.consts.NEWSLINK, "")
+
+		//reminderfox.util.Logger('ALERT'," Reminderfox News    #1 stamps ::" +n1 + " " + n2
+		//		+ " \n" + newsStatus + "  >"  + newsLink + "<  " 
+		//		+ newsStampRemote + "::" + newsStamp + " "  + (newsStampRemote > newsStamp))
+
+		if ((newsLink != "") && (newsStampRemote >= newsStamp)){ 
+			// there is NEWS available, update items to let button shown with MainDialog
+
+			reminderfox.core.setPreferenceValue(reminderfox.consts.NEWSSTAMP, newsStampRemote)
+			reminderfox.core.setPreferenceValue(reminderfox.consts.NEWS, true)
+		}
+
+		else {
+			// no NEWS, disable the button/icon on RmFX Main List
+			reminderfox.core.getPreferenceValue(reminderfox.consts.NEWS, false)
+		}
+
+		return
+	},
+
+
+	get : function (callback, callnext) {
+
+			this.method       = 'GET';
+			this.urlstr       = reminderfox.core.getPreferenceValue(reminderfox.consts.NEWSLINK, "")
+
+			this.body         = '';
+			this.contentType  = 'text/xml';
+			this.headers      = null;
+
+			this.username     = "";
+			this.password     = "";
+
+			this.timeout      = 30;
+
+			this.callback     = callback;
+			this.onError      = callback;
+			this.callnext     = callnext
+
+		reminderfox.HTTP.request(this);
+	},
+
+	go4_news : function (status, xml, text, headers, statusText, call) {
+
+		var parser = new DOMParser();
+
+		var aText = parser.parseFromString(text, "text/html");
+		atext = aText.body.textContent.replace(/\n /g,'\n').replace(/\n \n/g,'\n').replace(/n\n/g,'\n').replace(/\n\n\n/g,'\n');
+
+		if (status === 0 || (status >= 200 && status < 300)) {
+
+			this.currentNews = atext;
+
+			if (call.callnext != null) {
+				call[call.callnext]()
+				return
+			}
+
+			reminderfox.util.PromptAlert (atext);
+
+		} else {  // ERROR Handling
+
+			reminderfox.util.PromptAlert ("\n Reminderfox News missing!" + atext);
+		}
+
+		// set for 'News has been read' and hide button
+		reminderfox.core.setPreferenceValue(reminderfox.consts.NEWS, false)
+		document.getElementById('newsButton').setAttribute( "hidden", true);
+	}
+};

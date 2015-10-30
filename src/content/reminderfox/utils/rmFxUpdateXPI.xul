@@ -88,7 +88,7 @@
 			document.getElementById('remoteText').value = remoteText;
 			document.getElementById('localText').value = localText;
 
-reminderfox.util.Logger('Alert', "Update check  remote|local: " + remoteStamp +"|"+ localStamp )
+			reminderfox.util.Logger('Alert', "rmFxUpdateXPI.xul  check remote|local: " + remoteStamp +"|"+ localStamp )
 
 			if (remoteStamp > localStamp) {
 

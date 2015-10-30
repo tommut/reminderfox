@@ -346,7 +346,7 @@
 		//-------------------------------------------
 			if (reminderfox.core.checkModified()) return;
 
-			reminderfox.calDAV.setupColorMap();
+			reminderfox.colorMap.setup();
 
 			var callOptions = {
 				Active: true,
@@ -382,7 +382,7 @@
 		//-------------------------------------------
 		var style;
 
-			reminderfox.calDAV.setupColorMap();
+			reminderfox.colorMap.setup();
 			var elem = xthis.parentNode;
 
 			var oldID = elem.querySelector("#calDAV_ID").value;
@@ -501,7 +501,7 @@
 		function rmFx_calDAV_AddNew(_calDAVaccounts) {
 		//-------------------------------------------
 			calDAVaccounts = _calDAVaccounts;
-			reminderfox.calDAV.setupColorMap();
+			reminderfox.colorMap.setup();
 
 			var calDAV = [];
 			calDAV.active = false;
@@ -517,7 +517,7 @@
 		function rmFx_calDAV_AddAccount (accounts, accountID, newAccount) {
 		//-------------------------------------------
 
-		reminderfox.util.Logger("calDAV", "  rmFx_calDAV_AddAccount   accounts: " + accounts
+		reminderfox.util.Logger('calDAV', "  rmFx_calDAV_AddAccount   accounts: " + accounts
 		 + "\n  accountID: " + accountID  +"  newAccount: " + newAccount );
 
 
@@ -773,7 +773,7 @@
 			call.callback   = 'onResult';
 			call.onError    = 'onResult';
 
-			var myHTTP = new reminderfoxX.XcalDAVhttp();
+			var myHTTP = new reminderfoxX.calDAVhttp();
 			myHTTP.ID = new Date().getTime();
 			myHTTP.sendContentToURL(this, call);
 		},

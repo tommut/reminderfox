@@ -39,16 +39,16 @@
 
 		<groupbox flex="1">
 			<!-- 'textContent' is used for 'infoText' -->
-
+<!-- 
 			<caption>
 				<label value="   &rf.views.label;" />
 			</caption>
-
+-->
 			<vbox>
 				<hbox>
 					<vbox flex="1">
 						<hbox flex="1">
-							<label value="&rf.views.view.header;" align="center" />
+							<label class="reminderFox_BoldNormal" value="&rf.views.view.header;" align="center" />
 							<spacer flex="1" />
 
 							<!-- //gWDefaultViews !!!!! use this button for test only !!!!! <toolbarbutton 
@@ -87,7 +87,7 @@
 					<vbox flex="3">
 						<hbox>
 
-							<label value="&rf.views.criteria.header;" align="center" />
+							<label class="reminderFox_BoldNormal" value="&rf.views.criteria.header;" align="center" />
 							<spacer flex="1" />
 							<button id="criteria_Add" label="&rf.categories.list.button.add;"
 								oncommand="reminderfox.view.CriteriaAdd('+');" tooltiptext="&rf.views.ttt.addCriteria;" />

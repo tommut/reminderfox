@@ -11,7 +11,7 @@ if(!reminderfox.sendPlus) reminderfox.sendPlus = {};
  */
 reminderfox.sendPlus.reminder = function () {	
 // -----------------------------------------------------------
-reminderfox.util.Logger('send++', "   .sendPlus.reminder Logger")
+//reminderfox.util.Logger('send++', "   .sendPlus.reminder Logger")
 
 	reminderfox.util.JS.dispatch('sendPlus');
 
@@ -24,7 +24,7 @@ reminderfox.util.Logger('send++', "   .sendPlus.reminder Logger")
 	var identity = reminderfox.msgnr.getIdentity(msgIdentity)
 	reminderfox.mail.FCC = identity.fccFolder;	// remember 'send folder' for account
 
-reminderfox.util.Logger('FolderListener', "  ######## sendPlus : " +  identity.fccFolder + "   key:" + identity.key)
+//reminderfox.util.Logger('FolderListener', "  ######## sendPlus : " +  identity.fccFolder + "   key:" + identity.key)
 
 	reminderfox.mail.setFolderListener("add");
 
@@ -76,13 +76,14 @@ reminderfox.util.Logger('FolderListener', "  ######## sendPlus : " +  identity.f
 			newReminderToBeAdded.priority = 1;		// set RmFx 'Important'=1
 	}
 
-	reminderfox.core.lastSendReminder = newReminderToBeAdded
-
 	var added = reminderfox.core.addReminderHeadlessly(newReminderToBeAdded);
 
 	if (added == false) {	// [CANCEL] NOT 'added' --> reset the 'References' and don't send
 			gMsgCompose.compFields.references = org_References;
 	} else {
+
+		reminderfox.core.lastSendReminder = reminderfox.core.lastEvent
+
 		// now send the msg
 		// msgID will be reset  with nsIMsgCompDeliverMode.Now and .Later 
 		// using .Later will store the msg to the FCC Folder
@@ -319,7 +320,7 @@ reminderfox.sendPlus.reminder4mailList = function () {
  *  @param:  {object} msgHdr
  **/
 reminderfox.sendPlus.getRmRef = function (msgHdr) {
-	reminderfox.util.JS.dispatch ('mail');
+	reminderfox.util.JS.dispatch('mail');
 
 	if ((msgHdr == "") || (msgHdr == null)) {
 		msgHdr = gDBView.hdrForFirstSelectedMessage;

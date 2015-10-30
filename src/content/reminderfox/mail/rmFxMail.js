@@ -540,7 +540,7 @@ reminderfox.mail.sendEventNow = function (reminderToBeSend, todosToBeSend, metho
 };
 
 
-//  --- reminderfox.mail.folderListener  ---------------------------------------
+//  --- reminderfox.mail.folderListener  ----------------------------------------------- ---
 /**
  *  folder listener used with	SEND++
  */
@@ -616,7 +616,6 @@ reminderfox.mail.folderListener = {
 					var activeReminders = reminderfox.core.getReminderEvents();
 
 					for ( var i = 0; i < activeReminders.length; i++ ) {
-				//		if (activeReminders[i].id == lastReminder.id ) {
 						if (activeReminders[i].id == reminderfox.core.lastReminderID) {
 							msg =  (" === found === : " + activeReminders[i].summary);
 							reminderfox.util.Logger('FolderListener', msg);
@@ -640,7 +639,6 @@ reminderfox.mail.folderListener = {
 				reminderfox.core.lastSendEvent = null
 
 		} // folder size
-
 	}  // OnItemIntPropertyChanged
 }
 
@@ -1311,7 +1309,7 @@ if(!reminderfox.msgnr) reminderfox.msgnr={};
 		}
 
 		// ------ write TMP file ---------------
-		return  reminderfox.util.makeMsgFile8 (fContent, reminderfox.util.buildUIDFile(refID));
+		return  reminderfox.util.makeFile8 (fContent, reminderfox.util.buildUIDFile(refID));
 	}
 
 
@@ -1477,8 +1475,6 @@ if(!reminderfox.msgnr) reminderfox.msgnr={};
 		var priority		= msgString[5].substring(9);
 		var refID			= msgString[6].substring(6);
 
-//reminderfox.util.Logger('Darwin', "composeMSGgo icsFile string >>" + msgString[7] + "<<");
-
 		var mailFile = null;
 		if (msgString[7] != null) {
 			var icsFile		= msgString[7].substring(9);
@@ -1547,8 +1543,10 @@ reminderfox.msgnr.mailIdentities = "";
 		reminderfox.msgnr.mailIdentities = "";
 
 		var identity = null;
-		for each (var account in fixIterator(MailServices.accounts.accounts, Ci.nsIMsgAccount)) {
-			for each (var id in fixIterator(account.identities, Ci.nsIMsgIdentity)) {
+
+      // see bug https://bugzilla.mozilla.org/show_bug.cgi?id=1113097    2015-04-23 gW
+		for (var account in fixIterator(MailServices.accounts.accounts, Ci.nsIMsgAccount)) {
+			for (var id in fixIterator(account.identities, Ci.nsIMsgIdentity)) {
 				// We're only interested in identities that have a real email.
 				if (id.email != null) 
 					reminderfox.msgnr.mailIdentities += id.identityName + ',';

@@ -195,7 +195,7 @@
 						<menuseparator id="calDAVaccountSeparator1" />
 
 						<menuitem id="rmFx_syncCalDAV" label="&rf.caldav.sync.all;"
-							onclick="rmFx_CalDAV_SyncActiveAccounts(null, 'Main Dialog menu:rmFx_syncCalDAV');" 
+							onclick="rmFx_CalDAV_SyncActiveAccounts();" 
 							type="radio" />
 							<!-- image="chrome://reminderfox/skin/images/icon_share_20w.png" -->
 
@@ -828,23 +828,6 @@
 
 		rmFx_mainDialogLoad();
 	}
-
-
-	function openNewDoc(xThis){
-		if (xThis.label.search('Dokumentation') == 0) {
-			reminderfox.util.docRmFX('documentation-german/neue-funktionen/');
-		} else {
-			reminderfox.util.docRmFX('new-functions/');
-		}
-	}
-
-//	function calDAVupdate() {	// use with Cntrl u -- and timed call  //TODO
-/* will fail because windows.arguments not defined !!!
-   *** use Cntrl R on Main Dialog to reload all active calendars!
-*/
-//		setTimeout(function () {window.openDialog('chrome://reminderFox/content/caldav/calDAVupdate.xul',
-//					'rmFxCaldavUpdate')}, 50);
-//	}
 
 	</script>
 </window>

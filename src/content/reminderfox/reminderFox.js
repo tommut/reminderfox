@@ -10,7 +10,9 @@ reminderfox.overlay.consts.TOOLTIP_WITH_TODOS_LINE_LENGTH = 65;
 reminderfox.overlay.consts.ALERT_TEXT_MAX_LENGTH = 100;
 reminderfox.overlay.consts.MONTHLY_WILDCARD = "*";
 
-reminderfox.overlay.consts.HOUR_TIMEOUT = 1800000; // changed to half hour instead of 1 hour= 3600000  // dump: externalize this to a pref (read it first time only; then store it)
+// reminderfox.overlay.consts.HOUR_TIMEOUT = 1800000; // changed to half hour instead of 1 hour= 3600000  // dump: externalize this to a pref (read it first time only; then store it)
+reminderfox.overlay.consts.HOUR_TIMEOUT = 60000; // changed to 2 min instead of 1 hour= 3600000  
+// // dump: externalize this to a pref (read it first time only; then store it)
 
 // global vars
 reminderfox.overlay.alarmList = new Array();
@@ -82,7 +84,7 @@ reminderfox.overlay.openMainDialog= function(closeIfOpen, tab){
             //,
             // 08/03/2014 update: now using reminderfox.overlay.timerObject which should be reliable and do not need
             // these checks like we did to kick off setTimeout's if they failed
-            //processRemindersCallback: reminderfox.overlay.initializeReminderFoxHourly
+            //processRemindersCallback: reminderfox.overlay.initializeReminderFoxUpdating     // was   .initializeReminderFoxHourly
         };
         if (tab == null) tab = 'reminders';
         window.openDialog("chrome://reminderfox/content/addreminder-dialog.xul", "addreminder-dialog", "chrome,centerscreen,resizable,dialog=no", tab, newOptions);
@@ -327,7 +329,7 @@ reminderfox.overlay.processAlarm= function( recentReminderOrTodo, isReminder, li
                     alarmIsReminder: isReminderString,
                     alarmIsTodo: isTodo,
                     alarmAlarmMissed: missedAlarmString,
-                    synccallback: reminderfox.core.networkSynchronizeCallback,
+                    synccallback: reminderfox.core.networkSynchronizeCallback,		//.overlay.processAlarm
                     clearLabelCallback: reminderfox.overlay.clearMailLabelCallback,
                     alarmCurrentAlarmId: alarmReminderId,
                     reminderTime: recentReminderOrTodo.date.getTime(),
@@ -408,7 +410,7 @@ reminderfox.overlay.showMissedAlarmsSnooze= function( alarmSnoozeTime, alarmRece
         alarmIsReminder: isReminder,
         alarmIsTodo: isTodo,
         alarmAlarmMissed: alarmMissed,
-        synccallback: reminderfox.core.networkSynchronizeCallback,
+        synccallback: reminderfox.core.networkSynchronizeCallback,		//.overlay.showMissedAlarmsSnooze
         clearLabelCallback: reminderfox.overlay.clearMailLabelCallback,
         alarmCurrentAlarmId: alarmRecentReminderID,
         reminderTime: reminderTime,
@@ -460,7 +462,7 @@ reminderfox.overlay.showMissedAlarmsSnooze2= function( alarmSnoozeTime, alarmRec
         alarmIsReminder: isReminder,
         alarmIsTodo: isTodo,
         alarmAlarmMissed: alarmMissed,
-        synccallback: reminderfox.core.networkSynchronizeCallback,
+        synccallback: reminderfox.core.networkSynchronizeCallback,		//.overlay.showMissedAlarmsSnooze2
         clearLabelCallback: reminderfox.overlay.clearMailLabelCallback,
         alarmCurrentAlarmId: alarmRecentReminderID,
         reminderTime: reminderTime,
@@ -610,6 +612,8 @@ reminderfox.overlay.showMissedAlarms= function( alarmInfos ) {
 }
 
 reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
+	var calDAVaccounts = reminderfox.core.getReminderEvents()		//gW2015-02
+
     var showAlarmsInTabs= reminderfox.core.getPreferenceValue( reminderfox.consts.ALARMS_SHOW_IN_TABS );
 
     // go through all options
@@ -715,7 +719,9 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
 
                         //alert( "ORIG1" + existingAlarmArray[0].alarmRecentReminder.originalDate + "; " +  existingAlarmArray[0].alarmRecentReminder.summary + " - " + existingAlarmArray[0].alarmRecentReminder.date );
 
-                        var newOptions = {  alarmInfos: existingAlarmArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarms}
+                        var newOptions = {  alarmInfos: existingAlarmArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarms,
+                        	calDAVaccounts : calDAVaccounts}
+
                         window.openDialog("chrome://reminderfox/content/alarms/alarmDialog.xul",
                             "alarmOptionsDialog", "chrome,resizable,dialog=no", newOptions);
                         topWindow = reminderfox.util.getWindow("window:reminderFoxAlarmDialog");
@@ -735,7 +741,9 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
                         singleArray[0] = alarmArray[i];
                         //	alert( "ORIG2" + singleArray[0].alarmRecentReminder.originalDate + "; " +singleArray[0].alarmRecentReminder.summary + " - " + singleArray[0].alarmRecentReminder.date );
 
-                        var newOptions = {  alarmInfos: singleArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarmsSnooze}
+                        var newOptions = {  alarmInfos: singleArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarmsSnooze,
+                        	calDAVaccounts : calDAVaccounts}
+
                         window.openDialog("chrome://reminderfox/content/alarms/alarmDialog.xul",
                                 "alarmOptionsDialog"+new Date().getTime() + i, "chrome,resizable,dialog=no", newOptions);
                         topWindow = reminderfox.util.getWindow("window:reminderFoxAlarmDialog");
@@ -746,7 +754,9 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
                 }
                 else {
 
-                    var newOptions = {  alarmInfos: alarmArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarmsSnooze}
+                    var newOptions = {  alarmInfos: alarmArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarmsSnooze,
+                     	calDAVaccounts : calDAVaccounts}
+
                     //we don't use alarmOptionsDialog + date =- sometimes showing a separate window
                     window.openDialog("chrome://reminderfox/content/alarms/alarmDialog.xul",
                         "alarmOptionsDialog", "chrome,resizable,dialog=no", newOptions);
@@ -824,7 +834,7 @@ reminderfox.overlay.showQuickAlarm= function( lastAlarmText, lastSnoozeTime, las
             alarmIsReminder: false,
             alarmIsTodo: false,
             alarmAlarmMissed: false,
-            synccallback: reminderfox.core.networkSynchronizeCallback,
+            synccallback: reminderfox.core.networkSynchronizeCallback,		//.overlay.showQuickAlarm
             clearLabelCallback: reminderfox.overlay.clearMailLabelCallback,
             alarmCurrentAlarmId: null,
             reminderTime: null,
@@ -1819,23 +1829,27 @@ reminderfox.overlay.ensureRemoteRemindersSynchronized= function(headless){
 }
 
 
-reminderfox.overlay.initializeReminderFoxHourlyTimer = {
+//reminderfox.overlay.initializeReminderFoxHourlyTimer = {
+reminderfox.overlay.initializeReminderFoxUpdatingTimer = {
     notify: function (timer) {
         //Components.utils.reportError('Timer Fired!');
-        reminderfox.core.logMessageLevel("initializeReminderFoxHourlyTimer fired.", reminderfox.consts.LOG_LEVEL_INFO);
+        reminderfox.core.logMessageLevel("initialize ReminderFoxTimer ", reminderfox.consts.LOG_LEVEL_INFO);
 
         reminderfox.overlay.initializeReminderFox(true);
         //do stuff here, this stuff will finish and then timer will start countdown of myTimerInterval.
         //This is nice because if used TYPE_REPEATING_PRECISE will trigger this call back every myTimerInterval. TYPE_REPEATING_PRECISE_SKIP will trigger this call back every myTimerInterval, but if myTimerInterval is up and the callback from last time myTimerInterval went off is still running, it will skip running this call back.
         //TYPE_REPEATING_SLACK i don't trust because on MDN they said "note that this is not guaranteed: the timer can fire at any time." so I go with TYPE_ONE_SHOT.
-        timer.initWithCallback(reminderfox.overlay.initializeReminderFoxHourlyTimer,
-            reminderfox.overlay.consts.HOUR_TIMEOUT, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+
+        var timeout = reminderfox.core.getPreferenceValue(reminderfox.consts.INTERVAL_TIMER, reminderfox.consts.INTERVAL_TIMER_INKREMENT);
+        timer.initWithCallback(reminderfox.overlay.initializeReminderFoxUpdatingTimer,  // was  .initializeReminderFoxHourlyTimer,
+            timeout /*reminderfox.overlay.consts.HOUR_TIMEOUT*/, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
     }
 }
 
 
 // this runs every hour and updates all of the windows with the latest reminders
-reminderfox.overlay.initializeReminderFoxHourly= function(){
+//reminderfox.overlay.initializeReminderFoxHourly= function(){
+reminderfox.overlay.initializeReminderFoxUpdating= function(){
 //------------------------------------------------------------------------------
     reminderfox.overlay.initializeReminderFox(true);
 }
@@ -1859,18 +1873,30 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
                 lastTime = "";
                 reminderfox.overlay.reminderFox_initialized = true;
             }
+
             currentDate = new Date();
             var currentTime = currentDate.getTime();
             var lastTimeElapsed = null;
+
+            var timeout = reminderfox.core.getPreferenceValue(reminderfox.consts.INTERVAL_TIMER, 
+               reminderfox.consts.INTERVAL_TIMER_INKREMENT);
+
             if (lastTime != null && lastTime != "") {
-                lastTimeElapsed = parseInt(lastTime) + reminderfox.overlay.consts.HOUR_TIMEOUT;
+         //       lastTimeElapsed = parseInt(lastTime) + reminderfox.overlay.consts.HOUR_TIMEOUT;
+                lastTimeElapsed = parseInt(lastTime) + timeout;
             }
-            reminderfox.core.logMessageLevel(currentDate + "check - should Initialize: " + (lastTime == null || lastTime == "" || (currentTime + 1500) >= lastTimeElapsed) + " ==  lastTime " + lastTime + " -- currentTime: " + currentTime + " -- lastTimeElapsed: " + lastTimeElapsed + " - Difference (currentTime+1500) - lastTimeElapsed:" + ((currentTime + 1500) - lastTimeElapsed), reminderfox.consts.LOG_LEVEL_FINE);
+            reminderfox.core.logMessageLevel("  Check ReminderFoxTimer - should Initialize: " + (lastTime == null || lastTime == "" || (currentTime + 1500) >= lastTimeElapsed) + " ==  lastTime " 
+                + lastTime + " -- currentTime: " + currentTime 
+                + " -- lastTimeElapsed: " + lastTimeElapsed 
+                + " - Difference (currentTime+1500) - lastTimeElapsed:" + ((currentTime + 1500) - lastTimeElapsed)
+                + " - Inkrement timer: " + timeout,
+                 reminderfox.consts.LOG_LEVEL_FINE);
 
             // make sure that the HOURLY_TIMEOUT has passed before we continue.
             // Also add a 1.5 second buffer, as it seems sometimes Mozilla doesn't call the setTimeout at the
             // exact time, but sometimes ~800ms early or late.
             //if (lastTime == null || lastTime == "" || (currentTime + 1500) >= lastTimeElapsed) {
+
             var updateWindows = false;
             var fileChanged = reminderfox.core.timeStampHasChanged();
             if (fileChanged != -1) {
@@ -1879,7 +1905,9 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
 
             var waitForResponse = reminderfox.overlay.ensureRemoteRemindersSynchronized(true);
 
-            reminderfox.core.logMessageLevel("network: waitForResponse:  " + waitForResponse, reminderfox.consts.LOG_LEVEL_SUPER_FINE); //TODO
+            reminderfox.core.logMessageLevel("  network: waitForResponse:  " + waitForResponse, 
+                reminderfox.consts.LOG_LEVEL_SUPER_FINE); //TODO
+
             var changed = false;
             try {
                 if (!waitForResponse) {
@@ -1903,7 +1931,14 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
             if (reminderfox.overlay.lastDay != day) {
                 updateWindows = true;
             }
-            reminderfox.core.logMessageLevel("Initialize: " + currentDate + " --Update?: " + updateWindows + " -- fileChanged: " + fileChanged + ",  changed: " + changed + ", dayChanged: " + (reminderfox.overlay.lastDay != day), reminderfox.consts.LOG_LEVEL_INFO);
+
+            reminderfox.core.logMessageLevel("  Initialize ? "
+                + "  UpdateWindows: " + updateWindows 
+                + ";  file Changed: " + fileChanged 
+                + ";  reminders Changed: " + changed 
+                + ";  day Changed: " + (reminderfox.overlay.lastDay != day), 
+                reminderfox.consts.LOG_LEVEL_INFO);
+
             if (updateWindows) {
                 oldestWindow.reminderfox.overlay.updateRemindersInWindow();
                 if (clearReminders) {
@@ -1926,7 +1961,10 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
                 reminderfox.core.clearRemindersAndTodos();
             }
             reminderfox.overlay.lastDay = day;
-            reminderfox.core.logMessageLevel(currentDate + ": Setting Hourly timeout!", reminderfox.consts.LOG_LEVEL_FINE);
+
+            reminderfox.core.logMessageLevel(" Setting Hourly timeout!", 
+                reminderfox.consts.LOG_LEVEL_FINE);
+
             reminderfox.overlay.storeTimeOfLastProcessed();
 
             // 08/03/2014 update: now using reminderfox.overlay.timerObject which should be reliable and do not need
@@ -1937,18 +1975,25 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
 //				window.clearTimeout( reminderfox.overlay.lastHourlyTimeoutId );
 //
 //				reminderfox.overlay.lastHourlyTimeoutId  =
-//					window.setTimeout(reminderfox.overlay.initializeReminderFoxHourly,
+//					window.setTimeout(reminderfox.overlay.initializeReminderFoxUpdating,    // was   initializeReminderFoxHourly,
 //					reminderfox.overlay.consts.HOUR_TIMEOUT); // 10000 == 10 sec min
             //}
         }
     }
+
+	//gW 2015-10-13 -- CalDAV Update all active Remote Calendars
+   //reminderfox.core.logMessageLevel(" .overlay.initializeReminderFox --> CalDAV Update all active Remote Calendars ! ", 
+   //    reminderfox.consts.LOG_LEVEL_INFO);
+   reminderfox.online.status();
+
 }
 
 
 reminderfox.overlay.updateRemindersInWindow= function(){
 //------------------------------------------------------------------------------
-    reminderfox.core.logMessageLevel("Updating reminders in window: " + new Date(),
-        reminderfox.consts.LOG_LEVEL_INFO);
+    var msg = ("Updating reminders in window: "
+         + "  in : " + document.documentElement.getAttribute('windowtype'))
+    reminderfox.util.Logger('checkData',msg);
 
     var text = document.getElementById('reminderFox-statusLabel');
     if (text != null) {
@@ -2272,10 +2317,12 @@ reminderfox.overlay.showAlertSlider= function(){
                 var currentDate = new Date();
                 var currentTime = currentDate.getTime();
 
-                reminderfox.core.logMessageLevel("Show AlertSlider? " + ((currentTime + 100) >= lastTimeElapsed) + "...  Last time: " + lastTime + " - lastTimeElapsed: " +
-                    lastTimeElapsed +
-                    " - currentTime: " +
-                    currentTime, reminderfox.consts.LOG_LEVEL_INFO);
+                reminderfox.core.logMessageLevel("  Show AlertSlider? " + ((currentTime + 100) >= lastTimeElapsed) 
+                   + "...  Last time: " + lastTime 
+                   + ";  lastTimeElapsed: " + lastTimeElapsed
+                   + ";  currentTime: " + currentTime, 
+                   reminderfox.consts.LOG_LEVEL_INFO);
+
                 // TODO: setInterval - can remove these lastTime checks
                 // 08/03/2014 update: now using reminderfox.overlay.timerObject which should be reliable and do not need
                 // these checks like we did to kick off setTimeout's if they failed
@@ -2349,7 +2396,7 @@ reminderfox.overlay.showAlertSlider= function(){
                 }
 
                 //checkData  gW:disable this for testing 2014-05-11			reminderfox.core.clearRemindersAndTodos();
-                reminderfox.core.logMessageLevel("AlertSlider: " + currentDate, reminderfox.consts.LOG_LEVEL_INFO);
+                reminderfox.core.logMessageLevel("AlertSlider ! ", reminderfox.consts.LOG_LEVEL_INFO);
                 reminderfox.overlay.storeTimeOfLastAlert();
 
 
@@ -2367,7 +2414,7 @@ reminderfox.overlay.showAlertSlider= function(){
     }
     // add some extra checks in when showing alert slider; in case the setTimeout threads have been suspended,
     // this will kick them off again if neccessary
-    //reminderfox.overlay.initializeReminderFoxHourly();
+    //reminderfox.overlay.initializeReminderFoxUpdating();     // was   initializeReminderFoxHourly();
 }
 
 
@@ -2522,7 +2569,7 @@ reminderfox.overlay.processQuickAlarms= function(returnMissed){
                     alarmIsReminder: false,
                     alarmIsTodo: false,
                     alarmAlarmMissed: false,
-                    synccallback: reminderfox.core.networkSynchronizeCallback,
+                    synccallback: reminderfox.core.networkSynchronizeCallback,		//.overlay.processQuickAlarms
                     clearLabelCallback: reminderfox.overlay.clearMailLabelCallback,
                     alarmCurrentAlarmId: null,
                     reminderTime: null,
@@ -2554,7 +2601,7 @@ reminderfox.overlay.processQuickAlarms= function(returnMissed){
                 else {
                     oldestWindow.setTimeout(oldestWindow.reminderfox.overlay.showQuickAlarm, actualAlarmTime, alarmText, snoozeTime, notesText);
 
-                    reminderfox.core.logMessageLevel(new Date() + ": Setting quickalarm for " + alarmText + " -- snoozeTime: " + snoozeTime + " -- actualAlarmTime: " + actualAlarmTime, reminderfox.consts.LOG_LEVEL_FINE);
+                    reminderfox.core.logMessageLevel("  Setting quickalarm for : " + alarmText + " -- snoozeTime: " + snoozeTime + " -- actualAlarmTime: " + actualAlarmTime, reminderfox.consts.LOG_LEVEL_FINE);
                 }
             }
         }
@@ -2731,12 +2778,14 @@ reminderfox.overlay.start_postInit= function() {
     //reminderfox.overlay.initializeReminderFox(false);
 
 
-//    window.setInterval(reminderfox.overlay.initializeReminderFoxHourly,
+//    window.setInterval(reminderfox.overlay.initializeReminderFoxUpdating,     //  was   .initializeReminderFoxHourly,
 //        reminderfox.overlay.consts.HOUR_TIMEOUT); // 10000 == 10 sec min
 
-    reminderfox.overlay.initializeReminderFoxHourlyTimer.notify(reminderfox.overlay.timerObject); //this is how we start the timer, we start off by running the callback, then from there every 5 sec it will call
-//if want to start off by waiting 5sec first then comment out line 20 and uncomment line 18
-//}
+    //reminderfox.overlay.initializeReminderFoxHourlyTimer.notify(reminderfox.overlay.timerObject); //this is how 
+    reminderfox.overlay.initializeReminderFoxUpdatingTimer.notify(reminderfox.overlay.timerObject); //this is how 
+    // we start the timer, we start off by running the callback, then from there every 5 sec it will call
+    //if want to start off by waiting 5sec first then comment out line 20 and uncomment line 18
+    //}
 
     // Initialize reminder fox for the browser window
     var windowEnumerator =  reminderfox.core.getWindowEnumerator();
@@ -2758,20 +2807,17 @@ reminderfox.overlay.start_postInit= function() {
                 if (printAgenda) { // only go if user has set it on Options/Tooltip page
                     var template = {}
                     template.value = "Agenda.xsl";
-                    setTimeout(function () {reminderfox_xmlPrint(template, 'XPI')}, 1000)
+                    setTimeout(function () {reminderfox_xmlPrint(template, 'XPI')}, 3000)
                 }
+					reminderfox.overlay.processQuickAlarms();
 
-                // update all known&active user/accounts
-                setTimeout(function () {rmFx_CalDAV_SyncActiveAccounts(null, " reminderFox.js: 'update all active rmCal'")}, 5000);
-
-                reminderfox.overlay.processQuickAlarms();
-            }
+					// check for online --> update all known&active user/accounts
+					setTimeout(function(){ reminderfox.online.status()},1000)
+				}
 
             reminderfox.overlay.showAlertSliderTimingFunction.notify(reminderfox.overlay.alertTimerObject); //this is how we start the timer, we start off by running the callback, then from there every X specified minutes it will call
         }
     }
-    // clear reminders from memory
-//	reminderfox.core.clearRemindersAndTodos();				//gW??  do we need this   2014-04-12
 }
 
 

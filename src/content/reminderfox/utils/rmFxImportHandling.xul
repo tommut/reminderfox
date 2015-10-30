@@ -35,6 +35,7 @@
 
 					<label id="eventTitle" class="reminderFox_Bold" value="&rf.import.linkTitle;"/>
 					<description id="downloadName"  style="font-family:mono" ></description>
+					<description id="downloadTime"  style="font-family:mono" ></description>
 
 
 					<vbox id="importedReminders"  hidden="true" vertical-align="top">
@@ -294,8 +295,9 @@
 
 
 		if (details != null) {
-			document.getElementById('downloadName').textContent   = details.summary
-			document.getElementById('downloadName').setAttribute('tooltiptext', details.url)
+			document.getElementById('downloadName').textContent = details.summary
+			if (('timeStamp' in details) && (details.timeStamp > 1))
+				document.getElementById('downloadTime').textContent =  (new Date(details.timeStamp))
 		}
 
 		document.getElementById('addRow1').hidden       = false

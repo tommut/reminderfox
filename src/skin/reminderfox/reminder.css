@@ -91,6 +91,10 @@ treechildren::-moz-tree-cell-text(imporantCompleteTextToday) {
 	list-style-image: url("chrome://reminderfox/skin/images/notes.png");
 }
 
+#displayCalDAV { 
+	list-style-image: url("chrome://reminderfox/skin/images/icon_share_16.png");
+}
+
 #displayMail {
 	list-style-image: url("chrome://reminderfox/skin/images/mail.png");
 }
@@ -283,6 +287,10 @@ treechildren::-moz-tree-cell-text(odd, selected) { color: #000000; }
     font-weight: bold;
     color: red;
 }
+.reminderFox_BoldBlue {
+    font-weight: bold;
+    color: blue;
+}
 
 .reminderfox_TextNormal {
     color: black;
@@ -333,6 +341,15 @@ treechildren::-moz-tree-cell-text(odd, selected) { color: #000000; }
 
     .image-button[id="rmFx-foxy-icon-small"] {
         list-style-image    : url("chrome://reminderfox/skin/images/foxy-head-20.png");
+    }
+
+
+   #rmFx-foxy-icon-small {
+		list-style-image    : url("chrome://reminderfox/skin/images/foxy-head-20.png");
+    }
+
+    #rmFx-foxy-icon-small[mode="offline"] {
+	list-style-image    : url("chrome://reminderfox/skin/images/foxy-head-20-grey.png");
     }
 
     .reminderfox-icon {

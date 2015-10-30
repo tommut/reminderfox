@@ -90,6 +90,7 @@ var gUploadService=
 
 var gDownloadService=
 {
+
   _channel:null,
   streamLoader:null,
   data:null,
@@ -101,6 +102,8 @@ var gDownloadService=
 
   start:function(aURI,aCallback)
   {
+    //reminderfox.core.logMessageLevel(" gDownloadService.start " , reminderfox.consts.LOG_LEVEL_INFO);
+
     if( !aURI )
       return false;
 
@@ -113,6 +116,13 @@ var gDownloadService=
                     .createInstance(Components.interfaces.nsIStreamLoader);
                  
       this._channel = ioService.newChannelFromURI( aURI );
+
+    //reminderfox.core.logMessageLevel(" gDownloadService.start    aURI.scheme: " + aURI.scheme
+    //	+ "  nsIStreamLoader.number: " + Components.interfaces.nsIStreamLoader.number, reminderfox.consts.LOG_LEVEL_INFO);
+
+
+// nsIStreamLoader.number: {323bcff1-7513-4e1f-a541-1c9213c2ed1b}
+
       if(aURI.scheme=="http" || aURI.scheme=="https")
         this._channel.loadFlags |= Components.interfaces.nsIRequest.LOAD_BYPASS_CACHE;
         
@@ -121,14 +131,17 @@ var gDownloadService=
                 "{31d37360-8e5a-11d3-93ad-00104ba0fd40}") {
             	//  FF2, seamonkey, etc
                 this.streamLoader.init(this._channel, this , null);
-            } else if (Components.interfaces.nsIStreamLoader.number ==
-                      "{8ea7e890-8211-11d9-8bde-f66bad1e3f3a}") {
+            } else if 
+                  ((Components.interfaces.nsIStreamLoader.number == "{8ea7e890-8211-11d9-8bde-f66bad1e3f3a}")
+                   || (Components.interfaces.nsIStreamLoader.number == "{323bcff1-7513-4e1f-a541-1c9213c2ed1b}"))
+              {
             	// FF3
                 this.streamLoader.init(this );
 			    this._channel.asyncOpen( this.streamLoader, null );
-            }
+            } 
       this._startTime=(new Date()).getTime();
-    }catch(e){ alert(e); return false;}
+    }catch(e){ alert(e); 
+    return false;}
     return true;
   },
 
@@ -157,8 +170,9 @@ var gDownloadService=
       }
     }
 
-    if(this._callback)
+    if(this._callback){
       this._callback(reminderfox.string("rf.net.done"),status);
+    }
   },
 
   get time(){

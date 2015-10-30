@@ -303,7 +303,6 @@ reminderfox.iCal.getiCalFromString= function (_content, mInvitation, info) {
 reminderfox.iCal.tagging= function (rv, tag, info) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	if (reminderfox.util.messenger()) {
-//reminderfox.util.Logger('refactor', "  ((" + (info = " %iCal.tagging") + "))" + tag);
 	
 		if ((tag == null) && (rv == true)){
 			reminderfox.tagging.msg('Reminderfox', true, '#3333FF');
@@ -332,7 +331,6 @@ reminderfox.iCal.getEvents= function(mInvitation, _reminderEventsArg, _todosArra
 	//	 with "receive"  it's written to "reminderfox.core.method;"
 	var method = reminderfox.core.method;
 
-//reminderfox.util.Logger('refactor', "  (("+ (info += " %getEvents: " + method) + ")) ");
 
 	// now iterate over each VEVENT, for Invitations
 	// get infos into reminder.notes ... depended of "METHOD"
@@ -861,8 +859,8 @@ reminderfox.iCal.exportOrSend= function (event, _selectedTyp, _reminderTyp, _Rem
 	 }
 
 
-//reminderfox.util.Logger('ical',"iCal.exportOrSend  eventLength: " + eventLength 
-//		+ "  selectedTyp: " + selectedTyp + "  reminderTyp: " + reminderTyp);
+	reminderfox.util.Logger('userIO',"iCal.exportOrSend  eventLength: " + eventLength 
+		+ "  selectedTyp: " + selectedTyp + "  reminderTyp: " + reminderTyp);
 
 
 	 if (selectedTyp == 'invite') {

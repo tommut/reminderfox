@@ -46,7 +46,7 @@ function loadEventOptions() {
 	if (newTodo)     msg += "\n  Todo.summary|todoCalDAVid|todoCalDAVid : " + isTodo + "|" + newTodo.summary + "|" + todoCalDAVid;
 	msg += "\n  isSubscription : " +  isSubscription 
 	+ "\n  tabInfo.tabName|tabID|tabTyp : " +  tabInfo.tabName + "|" + tabInfo.tabID + "|" + tabInfo.tabTyp;
-reminderfox.util.Logger('Alert', msg);
+//reminderfox.util.Logger('Alert', msg);
 ---*/
 
 

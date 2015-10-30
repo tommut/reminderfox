@@ -27,15 +27,14 @@ if (!reminderfoxX)     var reminderfoxX = {};
  * Parse of 'xml' results to JS object based on
  *     https://developer.mozilla.org/en-US/docs/JXON)
  */
-reminderfoxX.XcalDAVhttp = function () {}
+reminderfoxX.calDAVhttp = function () {}
 //------------------------------------------------------------------
-	reminderfoxX.XcalDAVhttp.prototype.inprogress = null;
+	reminderfoxX.calDAVhttp.prototype.inprogress = null;
 
-	reminderfoxX.XcalDAVhttp.prototype.handlePW= function (call) {
+	reminderfoxX.calDAVhttp.prototype.handlePW= function (call) {
 	//---------------------------------------------------------------
 		if ((call.password === "") && (call.username !== "")) {
 
-			reminderfox.util.JS.dispatch('network')	//gW  2014-08-05
 			return reminderFox_getPassword ({
 				ljURL    : call.url,
 				username : call.username,
@@ -50,7 +49,7 @@ reminderfoxX.XcalDAVhttp = function () {}
 	};
 
 
-	reminderfoxX.XcalDAVhttp.prototype.sendContentToURL = function(caller,call) {
+	reminderfoxX.calDAVhttp.prototype.sendContentToURL = function(caller,call) {
 	//----------------------------------------------------------------
 	var logMsg;
 
@@ -67,12 +66,6 @@ reminderfoxX.XcalDAVhttp = function () {}
 		call.test = false;
 
 		var loginpw = "";
-
-		logMsg = 'CalDAV: HTTP sendContentToURL (' + call.ID + '):  [' + call.request + "|" + call.callback +"]"
-			+ "\n  url:"    + call.url 
-			+ "\n  login : " + call.username + "|" + call.password + "|";
-		reminderfox.util.Logger('calDAVhttp',logMsg)
-
 
 		if ((call.url) && (call.url.search('https://www.googleapis.com/caldav/v2/')) === 0) {
 
@@ -142,10 +135,10 @@ reminderfoxX.XcalDAVhttp = function () {}
 			}
 
 			logMsg = "CalDAV  HTTP sendContentToURL  [" + call.request + "|" + call.callback +"]  (" + call.ID + ")" 
-				+ '\n  method: ' + call.method +  "  headers:" + call.header
+				+ '\n  method: ' + call.method +  "  headers >>\n" + call.header + "\n<<"
 				+ "\n  urlstr:"    + urlstr + "  login : " + call.username
 				+ "\n  contentType:" + call.contentType
-				+ "\n  content:\n" + call.body;
+				+ "\n  content   >>\n" + call.body + "\n<<";
 			reminderfox.util.Logger('calDAVhttp', logMsg);
 
 	rmFX_GCal_SPDYset(call,  (call.request + "|" + call.callback +"]  (" + call.ID + ")" ))
@@ -176,6 +169,7 @@ reminderfoxX.XcalDAVhttp = function () {}
 					caller[call.callback](status, xml, text, headers, statusText, call);
 					}
 			});
+			return;
 	};
 
 
