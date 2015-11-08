@@ -476,6 +476,7 @@ var msg = "initializeAlarm   calDAVaccounts: " + calDAVaccounts.toSource()
 	if(soundInterval > 0) {
 		setInterval(playAlarmSound, (soundInterval * 1000 * 60));
 	}
+	sizeToContent();
 }
 
 
