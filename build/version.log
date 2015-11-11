@@ -1,10 +1,15 @@
 
 	Reminderfox  [2.1.5.3] wip
-	   as of:    Sun, 8 Nov 2015 18:25:49 +0100 (CET)
-	'reminderfox_2.1.5.3_wip_20151108_1825.xpi'   <'20151108_1825'>
+	   as of:    Wed, 11 Nov 2015 23:58:38 +0100 (CET)
+	'reminderfox_2.1.5.3_wip_20151111_2358.xpi'   <'20151111_2358'>
 	
 	   Please note:  Add-ons in FX >41 need to be signed by Mozilla AMO!
 	   For testing FX development version is required.
+
+wip 2015-11-11  __ version 2.1.5.3 (wip)
+	GCal readding a previous removed calendar failed 
+	Some AMO related changes (settimeout)
+
 
 wip 2015-11-08  __ version 2.1.5.3 (wip)
 	Alarm dialog resized after adding icons

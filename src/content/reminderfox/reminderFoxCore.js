@@ -2663,8 +2663,8 @@ reminderfox.core.getReminderEvents= function(clear){
             subscribedCal = new Array();
             subscribedCalArr[tab] = subscribedCal;
             // start downloading in background
-            setTimeout(reminderFox_downloadSubscribedCalendar, 1, tab, subscribedCal);
-            //setTimeout(function() {reminderfox.userIO.getSubscription(tab, subscribedCal);},0);
+            //setTimeout(reminderFox_downloadSubscribedCalendar, 1, tab, subscribedCal);
+            setTimeout(function() {reminderfox.userIO.getSubscription(tab, subscribedCal)},1);
         }
         reminderfox_getNumDaysModel(subscribedCal);
         return subscribedCal;
