@@ -73,11 +73,12 @@
 									urlDav="https://www.googleapis.com"
 									type="VEVENT" />
 
+		<!-- 2015-11-11  disabled, not supported by Google anymore
 								<menuitem id="GCal" label="Google Calendar"
 									urlServer="https://www.google.com" 
 									urlDav="https://www.google.com"
 									type="VEVENT" />
-
+		-->
 								<menuitem id="OC_local7" label="ownCloud 7 (local)"
 									urlServer="http://localhost" 
 									urlDav="http://localhost"

@@ -1,13 +1,15 @@
 
 	Reminderfox  [2.1.5.3] wip
-	   as of:    Wed, 11 Nov 2015 23:58:38 +0100 (CET)
-	'reminderfox_2.1.5.3_wip_20151111_2358.xpi'   <'20151111_2358'>
+	   as of:    Thu, 12 Nov 2015 01:18:38 +0100 (CET)
+	'reminderfox_2.1.5.3_wip_20151112_0118.xpi'   <'20151112_0118'>
 	
 	   Please note:  Add-ons in FX >41 need to be signed by Mozilla AMO!
 	   For testing FX development version is required.
 
+
 wip 2015-11-11  __ version 2.1.5.3 (wip)
-	GCal readding a previous removed calendar failed 
+	GCal re-adding a previous removed calendar failed 
+	GCal auth method v1 disabled on XUL dialog
 	Some AMO related changes (settimeout)
 
 
