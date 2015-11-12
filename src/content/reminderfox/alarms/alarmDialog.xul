@@ -71,6 +71,10 @@
 							align="bottom" flex="2" />
 					</hbox>
 
+					<hbox id="notesHbox" orient="vertical" flex="100" hidden="true">
+						<textbox width="305px" flex="2" readonly="true" id="notesText"
+								 multiline="true" rows="4" hidden="true" />
+					</hbox>
 <!--
 					<hbox align="center">
 						<label id="reminderDateLabel" value="&rf.reminderoptions.date.label;"
@@ -86,13 +90,9 @@
 						<label id="reminderDateLabel" value="&rf.reminderoptions.date.label;"
 							align="bottom" />
 						<label id="reminderDateText" align="bottom" />
-
-						<label id="timeDescLabel" value=" / " />
+						<!--<label id="timeDescLabel" value="" hidden="true" />-->
 						<label id="reminderTimeText" align="bottom" />
 					</hbox>
-
-
-
 
 					<!-- show Time Until if there is one -->
 					<hbox align="center" id="timeUntilHBox" hidden="true">
@@ -100,15 +100,6 @@
 						<label id="timeUntilText" align="bottom" />
 					</hbox>
 
-
-
-					<hbox align="center" id="attributeIcons" hidden="false">
-					</hbox>
-
-					<hbox id="notesHbox" orient="vertical" flex="100" hidden="true">
-						<textbox width="305px" flex="2" readonly="true" id="notesText"
-							multiline="true" rows="4" hidden="true" />
-					</hbox>
 
 					<!-- show location if there is one -->
 					<hbox id="locationHboxX" align="center" hidden="true">
@@ -123,6 +114,8 @@
 							onclick="reminderFox_launchAlarmURL();" />
 					</hbox>
 
+					<hbox align="center" id="attributeIcons" hidden="false">
+					</hbox>
 
 					<spacer flex="3" />
 

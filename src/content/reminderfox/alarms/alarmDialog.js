@@ -1,4 +1,3 @@
-
 var reminderFox_snoozed = false;
 var reminderFox_okayed = false;
 
@@ -294,13 +293,13 @@ var msg = "initializeAlarm   calDAVaccounts: " + calDAVaccounts.toSource()
 	if(recentReminder != null && recentReminder.date != null) {
 		getChildElementById(tabPanel, "reminderDateText").removeAttribute("hidden");
 		getChildElementById(tabPanel, "reminderDateLabel").removeAttribute("hidden");
-		getChildElementById(tabPanel, "timeDescLabel").removeAttribute("hidden");
+		//getChildElementById(tabPanel, "timeDescLabel").removeAttribute("hidden");
 		getChildElementById(tabPanel, "reminderTimeText").removeAttribute("hidden");
 
 	} else {
 		getChildElementById(tabPanel, "reminderDateLabel").setAttribute("hidden", true);
 		getChildElementById(tabPanel, "reminderDateText").setAttribute("hidden", true);
-		getChildElementById(tabPanel, "timeDescLabel").setAttribute("hidden", true);
+		//getChildElementById(tabPanel, "timeDescLabel").setAttribute("hidden", true);
 		getChildElementById(tabPanel, "reminderTimeText").setAttribute("hidden", true);
 	}
 

@@ -10,9 +10,8 @@ reminderfox.overlay.consts.TOOLTIP_WITH_TODOS_LINE_LENGTH = 65;
 reminderfox.overlay.consts.ALERT_TEXT_MAX_LENGTH = 100;
 reminderfox.overlay.consts.MONTHLY_WILDCARD = "*";
 
-// reminderfox.overlay.consts.HOUR_TIMEOUT = 1800000; // changed to half hour instead of 1 hour= 3600000  // dump: externalize this to a pref (read it first time only; then store it)
-reminderfox.overlay.consts.HOUR_TIMEOUT = 60000; // changed to 2 min instead of 1 hour= 3600000  
-// // dump: externalize this to a pref (read it first time only; then store it)
+// this was externalized to a pref; @see reminderfox.consts.INTERVAL_TIMER
+reminderfox.overlay.consts.HOUR_TIMEOUT = 1800000; // changed to half hour instead of 1 hour= 3600000  // dump: externalize this to a pref (read it first time only; then store it)
 
 // global vars
 reminderfox.overlay.alarmList = new Array();
