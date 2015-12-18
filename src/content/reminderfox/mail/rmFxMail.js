@@ -87,7 +87,8 @@ reminderfox.mail.startupwMsgId = function() {
 
 		document.getElementById('rmFx_msg1').setAttribute("value", reminderfox.mail.cmdID);
 		document.getElementById('rmFx_msg2').setAttribute("value", "");
-		setTimeout( reminderfox.msgnr.sendwUIDgo, 5000 );
+		// setTimeout( reminderfox.msgnr.sendwUIDgo, 5000 );
+		setTimeout(function() {reminderfox.msgnr.sendwUIDgo()}, 5000 );
 
 	// -reminderFox COMPOSE:subject -msgString {compose parameters}
 	} else  if (reminderfox.mail.cmdID.indexOf('COMPOSE:') > -1) {
@@ -626,7 +627,6 @@ reminderfox.mail.folderListener = {
 							reminderfox.core.insertIntoArray(activeReminders, lastReminder, i);
 							reminderfox.core.writeOutRemindersAndTodos(false); // (isExport)
 
-		//TODO XXX ????					reminderfox.core.PlaySound (5 /*aValue*/)
 							Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound)
 								.playEventSound(Components.interfaces.nsISound.EVENT_NEW_MAIL_RECEIVED);
 						}

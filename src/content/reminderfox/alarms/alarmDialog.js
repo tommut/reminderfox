@@ -60,7 +60,11 @@ function updateTimeUntil() {
 function loadAlarm() {
 	reminderFox_reopeningWindow = false;
 	reminderAlarmArray = window.arguments[0].alarmInfos;
-	
+
+	var msg = " //XXX loadAlarm    no of alarms: " + reminderAlarmArray.length
+	rmFXaLog(msg)
+
+
 	calDAVaccounts = window.arguments[0].calDAVaccounts;
 
 	var panels = document.getElementById("tabPanelID");
@@ -82,9 +86,14 @@ function loadAlarm() {
 		} else {
 			tabTitle = reminderAlarmArray[i].quickAlarmText;
 		}
+
+		var msg = "  //XXX loadAlarm   reminder: " + tabTitle
+		rmFXaLog(msg)  //XXX
+
 		if(tabTitle != null && tabTitle.length > MAX_TAB_TITLE_LENGTH) {
 			tabTitle = tabTitle.substring(0, MAX_TAB_TITLE_LENGTH);
 		}
+
 
 		var tabPanel = null;
 		if(i == 0) {
@@ -167,14 +176,11 @@ function reminderFox_getLinkDisplayText(linkurl) {
 
 function initializeAlarm(reminderAlarmOptions, hasNotes, firstTab) {
 
-	var calDAVaccounts = reminderfox.calDAV.getAccounts()
-
-var msg = "initializeAlarm   calDAVaccounts: " + calDAVaccounts.toSource()
-//reminderfox.util.Logger('ALERT', msg)
-
 	var tabPanel = reminderAlarmOptions.alarmTabPanel;
 	var recentReminder = reminderAlarmOptions.alarmRecentReminder;
 
+//current instance
+	var recentReminderInstance = reminderAlarmOptions.recentReminderOrTodo;
 	var quickAlarmText = reminderAlarmOptions.quickAlarmText;
 	var snoozeTime = reminderAlarmOptions.alarmSnoozeTime;
 	var alarmListName = reminderAlarmOptions.alarmListName;
@@ -225,12 +231,18 @@ var msg = "initializeAlarm   calDAVaccounts: " + calDAVaccounts.toSource()
 		actionList.selectedIndex = defaultActionIndex;
 	}
 
+	var info;  //XXX
+
 	if(quickAlarmText != null) {
 		getChildElementById(tabPanel, "reminderDescriptionText").setAttribute("value", quickAlarmText);
+		recentReminder = null;			//XXX  don't process for recent reminder now
+		info = quickAlarmText;   //XXX
 	} else {
 		recentReminder = reminderfox.core.processReminderDescription(recentReminder, new Date().getFullYear(), isTodo);
 
 		var reminderString = recentReminder.summary;
+		info = reminderString;  //XXX
+
 		getChildElementById(tabPanel, "reminderDescriptionText").setAttribute("value", reminderString);
 
 		var _dateVariableString;
@@ -308,33 +320,51 @@ var msg = "initializeAlarm   calDAVaccounts: " + calDAVaccounts.toSource()
 	var tabbox = document.getElementById("tabbox");
 	var selectedPanel = tabbox.selectedPanel;
 
+	var msg = " //XXX    Alarm  TEST ::   prio, completed, showTTT  >>"
+	//rmFXaLog(msg)
 
 
 	// *** for attributeIcons  check current reminder for some attributes ***
 	var icons = {};
-	icons.Important = (recentReminder.priority == reminderfox.consts.PRIORITY_IMPORTANT);
+	icons.Important = false;
+	icons.Location = false;
+	icons.Url = false;
+	icons.Notes = false;
+	icons.Mail = false;
 
-	// needs to check against to current  numDate
-	var numDate = reminderfox.date.getDateNum(new Date())
-	icons.Completed = reminderfox.core.isCompletedForDate(recentReminder, numDate);  // reminder.date));
+	icons.CalDAV = false;
+	icons.Categories = false;
 
-	icons.Location = (recentReminder.location !== null) ? true: false;
-	icons.Url = (recentReminder.url !== null) ? true: false;
-	icons.Notes = ( recentReminder.notes !== null) ? true: false;
-
-	icons.Mail = (recentReminder.messageID !== null) ? true: false;
-
-	icons.CalDAV = ((recentReminder.calDAVid != null) && (recentReminder.calDAVid != "")) ? true: false;
-	icons.Categories = (recentReminder.categories != null) && (recentReminder.categories != "") ? true: false;
-
-	var showTTT = recentReminder.showInTooltip
-	if (showTTT != null) icons.showInTooltip =  !!(+showTTT == 1);
-
-	var summaryStyle = "font-weight:bold; ";
-	if (icons.Important) summaryStyle += " color: red;"
-	if (icons.Completed) summaryStyle += " text-decoration: line-through;"
+	icons.showTTT = false;
 
 
+	if (recentReminder != null){ 
+		// icons.Important = (recentReminder.priority == reminderfox.consts.PRIORITY_IMPORTANT);
+		if(recentReminder.priority == reminderfox.consts.PRIORITY_IMPORTANT) {
+			icons.Important = true;
+		}
+
+		// needs to check against to current  Date
+		var cDate = new Date()
+		icons.Completed = reminderfox.core.isCompletedForDate(recentReminder, cDate);  // reminder.date));
+
+		icons.Location = (recentReminder.location !== null) ? true: false;
+		icons.Url = (recentReminder.url !== null) ? true: false;
+		icons.Notes = ( recentReminder.notes !== null) ? true: false;
+
+		icons.Mail = (recentReminder.messageID !== null) ? true: false;
+
+		icons.CalDAV = ((recentReminder.calDAVid != null) && (recentReminder.calDAVid != "")) ? true: false;
+		icons.Categories = (recentReminder.categories != null) && (recentReminder.categories != "") ? true: false;
+
+		var showTTT = recentReminder.showInTooltip
+		if (showTTT != null) icons.showInTooltip =  !!(+showTTT == 1);
+
+
+		var summaryStyle = "font-weight:bold; ";
+		if (icons.Important) summaryStyle += " color: red;"
+		if (icons.Completed) summaryStyle += " text-decoration: line-through;"
+	}
 
 	var attributeIcons = getChildElementById(tabPanel, "attributeIcons");
 	while (attributeIcons.hasChildNodes()) {
@@ -345,9 +375,14 @@ var msg = "initializeAlarm   calDAVaccounts: " + calDAVaccounts.toSource()
 	var spacer1 = document.createElement("spacer");
 	attributeIcons.appendChild(spacer1);
 		spacer1.setAttribute("width", "10px");
+		spacer1.setAttribute("height", "18px");
 
 
-//gWCalDAV
+	var msg = " //XXX    Alarm  TEST ::   calDAV, mail, category icons  >>"
+	//rmFXaLog(msg)
+
+
+	//gWCalDAV
 	if (icons.CalDAV == true) { // isCalDAV 
 		var calDAVTTT = "";
 		var account = reminderfox.calDAV.getAccounts()[recentReminder.calDAVid];
@@ -362,13 +397,11 @@ var msg = "initializeAlarm   calDAVaccounts: " + calDAVaccounts.toSource()
 		}
 	};
 
-	if (icons.Mail == true) { // isMail
+	if (icons.Mail == true) { // isMail    displayMail
 		var icon = document.createElement("toolbarbutton");
 		icon.setAttribute("class", "displayMail");
 		icon.setAttribute("type", "checkbox");
-	//	icon.setAttribute("idValue", n);
-	//	icon.setAttribute("numDate", numDate);
-		icon.addEventListener("click", function() {reminderfox.calendar.ui.openByMessageID(this);},false);
+		icon.addEventListener("click", function() {rmFXshowMailInAlarm(recentReminder);},false);
 		icon.setAttribute("tooltiptext", reminderfox.string('rf.add.mail.message.open'));
 		attributeIcons.appendChild(icon);
 	};
@@ -382,7 +415,11 @@ var msg = "initializeAlarm   calDAVaccounts: " + calDAVaccounts.toSource()
 	};
 
 
-	if (recentReminder.remindUntilCompleted != null) { // reminder
+	var msg = " //XXX    Alarm  TEST ::   ruc >>"
+	//rmFXaLog(msg)
+
+
+	if (recentReminder != null && recentReminder.remindUntilCompleted != null) { // reminder
 		var icon = document.createElement("toolbarbutton");
 		if (recentReminder.remindUntilCompleted == "1") icon.setAttribute("class", "remindUntilCompleted1");
 		if (recentReminder.remindUntilCompleted == "2") icon.setAttribute("class", "remindUntilCompleted2");
@@ -395,7 +432,7 @@ var msg = "initializeAlarm   calDAVaccounts: " + calDAVaccounts.toSource()
 		attributeIcons.appendChild(icon);
 	};
 
-	if (recentReminder.recurrence.type != null) {
+	if (recentReminder != null && recentReminder.recurrence.type != null) {
 		var icon = document.createElement("toolbarbutton");
 		icon.setAttribute("class", "displayRecurrence");
 	//	icon.setAttribute("type", "checkbox");
@@ -416,12 +453,20 @@ var msg = "initializeAlarm   calDAVaccounts: " + calDAVaccounts.toSource()
 	}
 
 
+	var msg = " //XXX    Alarm  TEST ::  notesText "
+	//rmFXaLog(msg)
 
-	if((recentReminder != null && recentReminder.notes != null ) || (reminderAlarmOptions.quickAlarmNotes != null && reminderAlarmOptions.quickAlarmNotes.length > 0 && reminderAlarmOptions.quickAlarmNotes != "null")) {
-		if(reminderAlarmOptions.quickAlarmNotes != null && reminderAlarmOptions.quickAlarmNotes.length > 0 && reminderAlarmOptions.quickAlarmNotes != "null") {
+	if((recentReminder != null && recentReminder.notes != null ) 
+	  || (reminderAlarmOptions.quickAlarmNotes != null 
+			&& reminderAlarmOptions.quickAlarmNotes.length > 0 
+			&& reminderAlarmOptions.quickAlarmNotes != "null")) {
+
+		if(reminderAlarmOptions.quickAlarmNotes != null 
+		   && reminderAlarmOptions.quickAlarmNotes.length > 0 
+		   && reminderAlarmOptions.quickAlarmNotes != "null") {
+
 			// to replace \n char with actual newlines:
 			reminderAlarmOptions.quickAlarmNotes = reminderAlarmOptions.quickAlarmNotes.replace(new RegExp(/\\n/g), "\n");
-
 			getChildElementById(tabPanel, "notesText").setAttribute("value", reminderAlarmOptions.quickAlarmNotes);
 		} else {
 			getChildElementById(tabPanel, "notesText").setAttribute("value", recentReminder.notes);
@@ -443,6 +488,8 @@ var msg = "initializeAlarm   calDAVaccounts: " + calDAVaccounts.toSource()
 		}
 	}
 
+	var msg = " //XXX    Alarm  TEST ::   location/url  >>"
+	//rmFXaLog(msg)
 
 
 	if(recentReminder != null && recentReminder.location != null && recentReminder.location.length > 0) {
@@ -476,10 +523,11 @@ var msg = "initializeAlarm   calDAVaccounts: " + calDAVaccounts.toSource()
 	if(soundInterval > 0) {
 		setInterval(playAlarmSound, (soundInterval * 1000 * 60));
 	}
+	//XXX   sizeToContent();
 }
 
 
-function selectAlarmTab() {
+function selectAlarmTab(xThis) {
 	reminderFox_QAcalendarOpened = false;
 
 	//sizeToContent();
@@ -539,12 +587,15 @@ function selectAlarmTab() {
 		}
 	}
 
+	var info;
 	if(recentReminder != null) {
-		document.title = document.title + ": " + recentReminder.summary;
+		info = recentReminder.summary;
 	} else {
-		document.title = document.title + ": " + reminderAlarmArray[index].quickAlarmText;
+		info = reminderAlarmArray[index].quickAlarmText;
 	}
+	document.title = document.title + ": " + info 
 }
+
 
 function reminderFox_alarmListNameCheck (alarmListName) {
 
@@ -637,13 +688,13 @@ function reminderFox_launchAlarmURL() {
 	}
 }
 
-function showMailInAlarm() {
-	var displayMailButton = getChildElementByIdForCurrentTab("displayMail");
-	displayMailButton.setAttribute("checked", false);
+function rmFXshowMailInAlarm(recentReminder) {
+	//var displayMailButton = getChildElementByIdForCurrentTab("displayMail");
+	//displayMailButton.setAttribute("checked", false);
 
-	var tabList = document.getElementById("tabList");
-	var index = tabList.selectedIndex;
-	var recentReminder = reminderAlarmArray[index].alarmRecentReminder;
+	//var tabList = document.getElementById("tabList");
+	//var index = tabList.selectedIndex;
+	//var recentReminder = reminderAlarmArray[index].alarmRecentReminder;
 	reminderfox.mail.openByMessageID(recentReminder);
 }
 
@@ -654,6 +705,10 @@ function calDavInAlarm () {
 
 function playAlarmSound() {
 	// play a sound for notification (if the user elects to)
+
+var msg = " playAlarmSound  "
+rmFXaLog(rmFXtDate() + msg)
+
 	try {
 		var playSound = true;
 		try {
@@ -664,6 +719,8 @@ function playAlarmSound() {
 			reminderfox.core.playSound();
 			window.focus();
 			// TODO: could select the appropriate tab ?  Or that might be annoying
+	//XXXXXXXXXXXXX 		selectAlarmTab();
+
 		} // end if
 	} catch ( e ) {
 	}
@@ -680,7 +737,8 @@ function reminderFox_editReminderFromAlarm() {
 
 	var alarmReminder;
 	if (isReminderType) reminderOrTodoEdit (reminderfox.core.getRemindersById(reminderID), false /*isTodo*/);
-	if (!isReminderType) reminderOrTodoEdit(reminderfox.core.getSpecificTodoById(reminderID), true, reminderAlarmArray[index].alarmListName);
+//XXX	if (!isReminderType) reminderOrTodoEdit(reminderfox.core.getSpecificTodoById(reminderID), true, reminderAlarmArray[index].alarmListName);
+	if (!isReminderType) reminderOrTodoEdit(reminderfox.core.getSpecificTodoById(reminderID), true);
 
 	// successful edit will set the .lastEvent -- so we can update the Alarm dialog 
 	if (reminderfox.core.lastEvent) {
@@ -973,7 +1031,7 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 			// window (otherwise we have to keep this window open until the network function callback returns)
 			var tabList = document.getElementById("tabList");
 			var index = tabList.selectedIndex;
-			var syncCallback = reminderAlarmArray[index].synccallback;    //TODO Networking
+			var syncCallback = reminderAlarmArray[index].synccallback;
 			if(syncCallback != null) {
 				var networkSync = reminderfox.core.getPreferenceValue(reminderfox.consts.NETWORK_SYNCHRONIZE, reminderfox.consts.NETWORK_SYNCHRONIZE_DEFAULT); 
 
@@ -1109,7 +1167,7 @@ function reminderFox_performAlarmAction(actionIndex, snoozeTime, alarmTime, keep
 				currentWindow.reminderfox.core.reminderFoxTodosArray = reminderfox.core.reminderFoxTodosArray;
 
 				currentWindow.reminderfox.overlay.updateRemindersInWindow();
-		//XXX ???		currentWindow.reminderfox.core.clearRemindersAndTodos();
+				currentWindow.reminderfox.core.clearRemindersAndTodos();
 			}
 		}
 	}
@@ -1334,7 +1392,7 @@ function reminderFox_updateQuickAlarms(quickAlarmText, snoozeTime, notesText) {
 	reminderfox.core.updateQuickAlarm(newQuickAlarm);
 }
 
-function reminderFox_cloneAlarmInfo(originalAlarm) {
+function reminderFox_cloneAlarmInfo(originalAlarm) {			//XXX not used ???
 
 	var clonedAlarm = {
 		alarmTabPanel : originalAlarm.alarmTabPanel,

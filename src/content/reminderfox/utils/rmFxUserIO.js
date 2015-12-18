@@ -259,6 +259,8 @@ reminderfox.userIO.addReminder4Email = function (xthis) {
 	} else {
 
 		var details = reminderfox.util.selectionDetails();
+		
+		details.summary = details.infos.subject;     //XXX
 
 //0001: details.url  = [string] "http://sports.yahoo.com/nfl/teams/buf/ical.ics"
 // webcal://www.tirol.fr/index.php?option=com_jevents&task=icals.export&format=ical&catids=0&years=0&k=254a061439c8e2a966a94aaa2683f74d

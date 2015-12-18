@@ -87,6 +87,9 @@
 						accesskey="&rf.toolsmenu.Help.accesskey;" />
 				<!-- For debugging  -->
 				<menuitem label="Debug"  hidden="true" oncommand="reminderfox.overlay.runDebug();"/>
+		<!--
+				<menuitem label="Process Alarms"  oncommand="reminderfox.overlay.processRecentReminders();"/>
+		-->
 			</menupopup>
 		</menu>
 	</menupopup>

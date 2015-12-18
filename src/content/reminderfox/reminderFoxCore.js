@@ -9,16 +9,16 @@ if (!reminderfox.calDAV)   reminderfox.calDAV = {};
 if (!reminderfox.calDAV.accounts)   reminderfox.calDAV.accounts = {};    //calDAV  main definition of accounts
 
 // constants
-reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.3";		// update also install.rdf
+reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.4";		// update also install.rdf
 
 // ************************* for dev, use "wip"; for offical MOZILLA set to "release"  *****
 // if set to "wip" enables the check-for-update link; if set to release, hides the update link in about dialog
-reminderfox.consts.SPECIAL_VERSION_DETAIL					= "wip"  // "release";  
-reminderfox.consts.DROPBOX										= "https://dl.dropbox.com/u/35444930/rmFX/XPI/"
+reminderfox.consts.SPECIAL_VERSION_DETAIL					= "release"  // "wip";  
+reminderfox.consts.DROPBOX									= "https://dl.dropbox.com/u/35444930/rmFX/XPI/"
     + reminderfox.consts.SPECIAL_VERSION_DETAIL + "/";
 
 
-reminderfox.consts.SUPPORT											= "reminderfox@googlegroups.com";
+reminderfox.consts.SUPPORT									= "reminderfox@googlegroups.com";
 
 reminderfox.consts.REMINDER_FOX_WELCOME_UPDATE_PAGE_URL	= "http://www.reminderfox.org/update";
 reminderfox.consts.REMINDER_FOX_PAGE_URL						= "http://www.reminderfox.org";
@@ -545,7 +545,7 @@ reminderfox.core.setUnicodePref= function(prefName, prefValue){
 reminderfox.core.logMessageLevel= function(logString, level){
     var logLevel = reminderfox._prefsBranch.getIntPref(reminderfox.consts.LOG);
     var date =  new Date()
-    if (level <= logLevel) {
+    if ((level <= logLevel) || (logLevel >= 4) ){
         if (reminderfox.consts.consoleService) {
          //   reminderfox.consts.consoleService.logStringMessage("reminderFox: " + logString);
 
@@ -555,13 +555,10 @@ reminderfox.core.logMessageLevel= function(logString, level){
 				} catch (ex) {}
 				var caller1 = Components.stack.caller.filename.replace("chrome://reminderfox/content", " ..") + " #" + Components.stack.caller.lineNumber 
 
-				console.log("reminderFox: " + new Date().toLocaleFormat("%Y-%m-%d %H:%M:%S") 
+				console.log("reminderfox: " + new Date().toLocaleFormat("%Y-%m-%d %H:%M:%S") 
 				  + " >" + +(new Date()) + "<  " + " [" + caller0 + " --> " + caller1
 				  + "] \n  " + logString);
 
-            if (logLevel >= 2) {
-                dump("reminderFox:: " + date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + " >" + +(new Date()) + "< \n" + logString + "\n");
-            }
         }
     }
 
@@ -1297,8 +1294,6 @@ reminderfox.core.getAlarmInMinutes= function(reminder, reminderInstanceDate){
         alarmMinutes = reminderfox.core.getDurationAsMinutes(reminder.alarm);
     }
 
-    reminderfox.util.Logger('alarm', "  getAlarmInMinutes reminderInstanceDate: " + reminderInstanceDate.toLocaleString()
-        + "  duration :" + reminder.alarm + "  " + alarmMinutes);
     return alarmMinutes;
 };
 
@@ -2538,7 +2533,7 @@ reminderfox.core.compareReminderDatesAndTimes= function(reminder1, reminder2, da
  *      1 = dateOne > dateTwo
  */
 reminderfox.core.compareDates= function(dateOne, dateTwo){
-    if (!dateOne && dateTwo) {
+	if (!dateOne && dateTwo) {
         return -1;
     }
     if (!dateTwo && dateOne) {
@@ -2663,8 +2658,8 @@ reminderfox.core.getReminderEvents= function(clear){
             subscribedCal = new Array();
             subscribedCalArr[tab] = subscribedCal;
             // start downloading in background
-            setTimeout(reminderFox_downloadSubscribedCalendar, 1, tab, subscribedCal);
-            //setTimeout(function() {reminderfox.userIO.getSubscription(tab, subscribedCal);},0);
+            //setTimeout(reminderFox_downloadSubscribedCalendar, 1, tab, subscribedCal);
+            setTimeout(function() {reminderfox.userIO.getSubscription(tab, subscribedCal)},1);
         }
         reminderfox_getNumDaysModel(subscribedCal);
         return subscribedCal;
@@ -2789,7 +2784,7 @@ reminderfox.core.initiliazeTooltip= function(){
         // this will kick them off again if neccessary
         // 08/03/2014 update: now using reminderfox.overlay.timerObject which should be reliable and do not need
         // these checks like we did to kick off setTimeout's if they failed
-        //reminderfox.overlay.initializeReminderFoxHourly();
+        //reminderfox.overlay.initializeReminderFoxUpdating();    // was   .initializeReminderFoxHourly();
 
         //reminderfox.core.filesystemTimeStampHasChanged
     }
@@ -3628,7 +3623,6 @@ reminderfox.core.appendStringToFile= function(outputStr, file, isExport){
         reminderfox.core.storeTimeStamp(reminderfox.core.reminderFox_lastModifiedTime);
     }
 };
-
 
 reminderfox.core.storeTimeStamp= function(lastModified){
     //var file = reminderfox.core.getReminderStoreFile();
@@ -6377,7 +6371,7 @@ reminderfox.core.addReminderHeadlessly= function(originalReminder, isEdit, isTod
     }
     reminderfox.tabInfo.tabID = oldTabName;
 
-    //XXX ???? if (!reminderfox.calDAV.accounts) reminderfox.calDAV.accountsReadIn();
+    //if (!reminderfox.calDAV.accounts) reminderfox.calDAV.accountsReadIn();
 
 
     if((originalReminder.calDAVid) && (originalReminder.calDAVid !== ""))
@@ -7475,19 +7469,3 @@ reminderfox.core.CalDAVaction = function(recentReminder, actionCode) {
 	}
 }
 
-
-
-reminderfox.core.PlaySound = function(aValue, aMail)
-{
-   const nsISound = Components.interfaces.nsISound;
-   var sound = Components.classes["@mozilla.org/sound;1"]
-                         .createInstance(nsISound);
-/*--
-   if (aValue)
-     sound.play(Services.io.newURI(aValue, null, null));
-   else if (aMail && !/Mac/.test(navigator.platform))
-     sound.playEventSound(nsISound.EVENT_NEW_MAIL_RECEIVED);
-   else
----*/
-     sound.beep();
-}

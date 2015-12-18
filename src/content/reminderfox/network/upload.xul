@@ -22,7 +22,7 @@
   <script type="application/x-javascript" src="chrome://global/content/nsUserSettings.js"/>
    <script type="application/x-javascript" src="chrome://reminderfox/content/reminderFoxCore.js" />    
   <script type="application/x-javascript"  src="chrome://reminderfox/content/utils/rmFxUtils.js" />
-  <!--script type="application/x-javascript" src="chrome://reminderfox/content/network/networkService.js"/-->
+  <script type="application/x-javascript" src="chrome://reminderfox/content/network/networkService.js"/>
   <script type="application/x-javascript" src="chrome://reminderfox/content/network/passwordManagerUtils.js"/>
   <script type="application/x-javascript" src="chrome://reminderfox/content/network/upload.js"/>
  

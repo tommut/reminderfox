@@ -775,11 +775,6 @@ function rmFx_mainDialogLoad(restartSkip){
 	setTimeout(function () { reminderfox.calendar.ui.selectDay('today')}, 0);
 
 	// start synchronizing in background (if that network option is set) if no CalDAV active
-
-	reminderfox.util.Logger('userIO', " [reminderFox_ensureRemoteRemindersSynchronizedInEditWindow] "
-		+"  networkSync " + networkSync 
-		+"  calDAVstatus.active >" + calDAVstatus.active + "<")
-
 	if (calDAVstatus.active == 0)
 		setTimeout(reminderFox_ensureRemoteRemindersSynchronizedInEditWindow, 1);
 
@@ -823,8 +818,6 @@ function reminderFox_updateFoxyBadge(){
 function reminderFox_ensureRemoteRemindersSynchronizedInEditWindow(){
 	// sync 'em up
 	var networkSync = reminderfox.core.getPreferenceValue(reminderfox.consts.NETWORK_SYNCHRONIZE, reminderfox.consts.NETWORK_SYNCHRONIZE_DEFAULT); 
-
-	reminderfox.util.Logger('userIO', " [reminderFox_ensureRemoteRemindersSynchronizedInEditWindow]  networkSync " + networkSync)
 
 	if (networkSync) {
 		reminderfox.core.statusSet(reminderfox.string("rf.add.network.status.label"));
@@ -2601,7 +2594,8 @@ function getCurrentReminderList(){
 			subscribedCal = new Array();
 			subscribedCalArr[tab] = subscribedCal;
 			// start downloading in background
-			setTimeout(reminderFox_downloadSubscribedCalendar, 1, tab, subscribedCal);
+			//setTimeout(reminderFox_downloadSubscribedCalendar, 1, tab, subscribedCal);
+			setTimeout(function() {reminderfox.userIO.getSubscription(tab, subscribedCal)},1);
 		}
 		reminderfox_getNumDaysModel(subscribedCal)
 		return subscribedCal;
@@ -4077,8 +4071,6 @@ function reminderTreeTooltip(event){
 	if (column.value != null && typeof column.value != "string") {
 		column.value = column.value.id;
 	}
-
-	var calDAVaccounts = reminderfox.calDAV.getAccounts()
 
 	var index = tree.boxObject.getRowAt(event.clientX, event.clientY);
 	if (index == -1) {
@@ -6454,7 +6446,7 @@ function fillListSortReminders(){
 				dayReminderArray = monthArray[dayIndex];
 				if (dayReminderArray != null) {
 					for (reminderIndex = 0; reminderIndex < dayReminderArray.length; reminderIndex++) {
-						//createUIListReminderItemSorted(dayReminderArray[reminderIndex], calDAVaccounts);
+						//createUIListReminderItemSorted(dayReminderArray[reminderIndex]);
 						unsortedArray[unsortedArray.length] = dayReminderArray[reminderIndex];
 					}
 				}

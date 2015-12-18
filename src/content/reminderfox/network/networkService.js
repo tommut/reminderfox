@@ -1,12 +1,10 @@
 if (!reminderfox)     var reminderfox = {};
 if (!reminderfox.network)    reminderfox.network = {};
-//if (!reminderfox.network.services)    reminderfox.network.services = {};
+if (!reminderfox.network.services)    reminderfox.network.services = {};
 
 //upload.xul, download.xul, and browser.xul(Overlay)
-var XXXgUploadService=
+var gUploadService=
 {
-
-
   _channel:null,
   _callback:null,
   _data:"",
@@ -15,8 +13,6 @@ var XXXgUploadService=
 
   start:function(aStr,aURI,aType,aCallback)
   {
-reminderfox.util.Logger('ALERT', "gUploadService ....start ")
-
     if( !aStr || !aURI)
       return false;
     this._callback=aCallback;
@@ -61,8 +57,6 @@ reminderfox.util.Logger('ALERT', "gUploadService ....start ")
     const sis=Components.classes["@mozilla.org/scriptableinputstream;1"]
                       .createInstance(Components.interfaces.nsIScriptableInputStream);
 
-reminderfox.util.Logger('ALERT', "gUploadService ....onDataAvailable ")
-
     sis.init(input);
     this._errorData +=sis.read(count);
   },
@@ -94,8 +88,9 @@ reminderfox.util.Logger('ALERT', "gUploadService ....onDataAvailable ")
   }
 };
 
-var XXXgDownloadService=
+var gDownloadService=
 {
+
   _channel:null,
   streamLoader:null,
   data:null,
@@ -107,8 +102,7 @@ var XXXgDownloadService=
 
   start:function(aURI,aCallback)
   {
-
-reminderfox.util.Logger('ALERT', "gDownloadService ....onStreamComplete ")
+    //reminderfox.core.logMessageLevel(" gDownloadService.start " , reminderfox.consts.LOG_LEVEL_INFO);
 
     if( !aURI )
       return false;
@@ -122,6 +116,13 @@ reminderfox.util.Logger('ALERT', "gDownloadService ....onStreamComplete ")
                     .createInstance(Components.interfaces.nsIStreamLoader);
                  
       this._channel = ioService.newChannelFromURI( aURI );
+
+    //reminderfox.core.logMessageLevel(" gDownloadService.start    aURI.scheme: " + aURI.scheme
+    //	+ "  nsIStreamLoader.number: " + Components.interfaces.nsIStreamLoader.number, reminderfox.consts.LOG_LEVEL_INFO);
+
+
+// nsIStreamLoader.number: {323bcff1-7513-4e1f-a541-1c9213c2ed1b}
+
       if(aURI.scheme=="http" || aURI.scheme=="https")
         this._channel.loadFlags |= Components.interfaces.nsIRequest.LOAD_BYPASS_CACHE;
         
@@ -130,14 +131,17 @@ reminderfox.util.Logger('ALERT', "gDownloadService ....onStreamComplete ")
                 "{31d37360-8e5a-11d3-93ad-00104ba0fd40}") {
             	//  FF2, seamonkey, etc
                 this.streamLoader.init(this._channel, this , null);
-            } else if (Components.interfaces.nsIStreamLoader.number ==
-                      "{8ea7e890-8211-11d9-8bde-f66bad1e3f3a}") {
+            } else if 
+                  ((Components.interfaces.nsIStreamLoader.number == "{8ea7e890-8211-11d9-8bde-f66bad1e3f3a}")
+                   || (Components.interfaces.nsIStreamLoader.number == "{323bcff1-7513-4e1f-a541-1c9213c2ed1b}"))
+              {
             	// FF3
                 this.streamLoader.init(this );
 			    this._channel.asyncOpen( this.streamLoader, null );
-            }
+            } 
       this._startTime=(new Date()).getTime();
-    }catch(e){ alert(e); return false;}
+    }catch(e){ alert(e); 
+    return false;}
     return true;
   },
 
@@ -149,9 +153,6 @@ reminderfox.util.Logger('ALERT', "gDownloadService ....onStreamComplete ")
   
    onStreamComplete :function ( loader , ctxt , status , resultLength , result )
   {
-
-reminderfox.util.Logger('ALERT', "gDownloadService ....onStreamComplete ")
-
     this.data="";
     this._endTime=(new Date()).getTime();
     if(status==0)
@@ -169,8 +170,9 @@ reminderfox.util.Logger('ALERT', "gDownloadService ....onStreamComplete ")
       }
     }
 
-    if(this._callback)
+    if(this._callback){
       this._callback(reminderfox.string("rf.net.done"),status);
+    }
   },
 
   get time(){

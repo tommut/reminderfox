@@ -1115,8 +1115,8 @@ reminderfoxX.calDAVrequest = function () {}
 			if ((status == 401) && (call.url.search("https://www.googleapis.com/caldav/v2/") === 0)){
 
 				msg = " in 'gCalPrincipalFound'   Refresh gcal2 access_token  (401)  "  + call.username;
-				msg += "\n  [" + call.account.ID + "]  " + call.account.Name;
-				msg += "\n" + callMsg;
+		//		msg += "\n  [" + call.account.ID + "]  " + call.account.Name;
+		//2015-11-11_23		msg += "\n" + callMsg;
 				reminderfox.util.Logger('calDAVv2', msg);
 
 				rmFx_CalDAV_getGCALAccessToken (call.username);

@@ -1,6 +1,9 @@
-if(!reminderfox)              var reminderfox = {};
-if(!reminderfox.network)          reminderfox.network = {};
-if(!reminderfox.network.password) reminderfox.network.password = {};
+if(!reminderfox)
+	var reminderfox = {};
+if(!reminderfox.network)
+	reminderfox.network = {};
+if(!reminderfox.network.password)
+	reminderfox.network.password = {};
 
 var REMINDERFOX_PASSWORD_CID = "@mozilla.org/passwordmanager;1";
 

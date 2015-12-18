@@ -108,7 +108,7 @@ reminderfox.network.upload.reminderFox_upload_senddata = function()
 }
 
 reminderfox.network.upload.reminderFox_uploadCallback = function(aStatus,aError) {
-   reminderfox.core.logMessageLevel(new Date() + ": Uploaded reminders...", reminderfox.consts.LOG_LEVEL_FINE);
+   reminderfox.core.logMessageLevel( "  Uploaded reminders...", reminderfox.consts.LOG_LEVEL_FINE);
 
   if(aStatus != reminderfox.string("rf.net.done") && aError==0) {
     reminderfox.network.upload.reminderFox_upload_statusTxt(aStatus,aError);
@@ -170,8 +170,8 @@ reminderfox.network.upload.reminderFox_uploadCallback = function(aStatus,aError)
 }
 
 reminderfox.network.upload.reminderFox_upload_statusTxt = function(aStatus,aError)
-{ // reminderfox.util.Logger('networking', " .reminderFox_upload_statusTxt   aStatus: " + aStatus + " aError: " + aError);
-  	  	if (reminderfox.network.upload.reminderFox_upload_headless == reminderfox.consts.UI_MODE_HEADLESS_SHOW_ALL_UI ) {
+{
+	if (reminderfox.network.upload.reminderFox_upload_headless == reminderfox.consts.UI_MODE_HEADLESS_SHOW_ALL_UI ) {
   			 document.getElementById("status").value =(aError)?reminderfox.network.upload.reminderFox_upload_getErrorMsg(aError):aStatus;
   		}
   		else {

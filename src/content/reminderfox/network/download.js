@@ -16,7 +16,6 @@ if(!reminderfox.network.download.reminderFox_subscriptionReminders)
 	reminderfox.network.download.reminderFox_subscriptionReminders = null;
 
 reminderfox.network.download.reminderFox_download_statustxt = function(aStatus, aError) {
-//	reminderfox.util.Logger('networking', " .reminderFox_download_statustxt   aStatus: " + aStatus + " aError: " + aError);
 	if(reminderfox.network.download.reminderFox_download_headless == reminderfox.consts.UI_MODE_HEADLESS_SHOW_ALL_UI) {
 		document.getElementById("status").value = (aError) ? reminderfox.network.download.reminderFox_download_getErrorMsg(aError) : aStatus;
 	} else {
@@ -26,11 +25,13 @@ reminderfox.network.download.reminderFox_download_statustxt = function(aStatus, 
 		} else {
 			value = (aError) ? reminderfox.network.download.reminderFox_download_getErrorMsg(aError) : aStatus;
 		}
-		reminderfox.core.logMessageLevel("Download (headless): " + new Date() + " " + value, reminderfox.consts.LOG_LEVEL_FINE);
+		reminderfox.core.logMessageLevel("Download (headless): "  + value, reminderfox.consts.LOG_LEVEL_FINE);
 	}
 }
 
 reminderfox.network.download.reminderFox_download_Startup = function() {
+
+    reminderfox.core.logMessageLevel(" [.network.download.reminderFox_download_Startup ] ",        reminderfox.consts.LOG_LEVEL_INFO);
 	reminderfox.network.download.reminderFox_download_headless = reminderfox.consts.UI_MODE_HEADLESS_SHOW_ALL_UI;
 	reminderfox.network.download.reminderFox_download_statustxt(reminderfox.string("rf.upload.ready.label"), 0);
 	reminderfox.network.download.reminderFox_editWindowCallback = null;
@@ -190,10 +191,17 @@ reminderfox.network.download.reminderFox_downloadDelayedStartup = function() {
 
 	//gStartTime = new Date().getTime();
 
-	if(gDownloadService.start(downloadURI, reminderfox.network.download.reminderFox_downloadCallback))
+	if(gDownloadService.start(downloadURI, reminderfox.network.download.reminderFox_downloadCallback)){
+	
+		reminderfox.core.logMessageLevel(" [reminderFox_downloadDelayedStartup]   "  + reminderfox.string("rf.upload.request.label"));
+
 		reminderfox.network.download.reminderFox_download_statustxt(reminderfox.string("rf.upload.request.label"), 0);
+	}
 	else {
 		//statustxt(reminderfox.string("rf.net.done"),0);
+
+		reminderfox.core.logMessageLevel(" [reminderFox_downloadDelayedStartup]   "  + reminderfox.string("rf.net.done"));
+
 		reminderfox.network.download.reminderFox_downloadCallback(reminderfox.string("rf.net.done"), -1);
 	}
 }
@@ -214,7 +222,7 @@ reminderfox.network.download.reminderFox_downloadCallback = function(aStatus, aE
 			return;
 			break;
 		case 0:
-			var remotetimestamp = reminderfox.core.getFileTimeStampFromString(gDownloadService.data);
+			var remotetimestamp = reminderfox.core.getICSXLastmodifiedFromString(gDownloadService.data);
 			var lastRecordedLocalTimeStamp = reminderfox._prefsBranch.getCharPref(reminderfox.consts.LAST_MODIFIED) + "";
 
 			if(remotetimestamp == -1) {
@@ -248,7 +256,7 @@ reminderfox.network.download.reminderFox_downloadCallback = function(aStatus, aE
 				return;
 			} else if(remotetimestamp < lastRecordedLocalTimeStamp) {
 				reminderfox.core.logMessageLevel("Local  reminders are newer than remote --  uploading local reminders... (local: " + lastRecordedLocalTimeStamp + ", remote: " + remotetimestamp + ")", reminderfox.consts.LOG_LEVEL_FINE);
-				reminderfox.core.logMessageLevel("Read timestamp from file (should be == to local): " + reminderfox.core.getFileTimeStamp(), reminderfox.consts.LOG_LEVEL_FINE);
+				reminderfox.core.logMessageLevel("Read timestamp from file (should be == to local): " + reminderfox.core.getICSXLastmodifiedFromFile(), reminderfox.consts.LOG_LEVEL_FINE);
 				if(reminderfox.network.download.reminderFox_editWindowCallback != null) {
 					reminderfox.network.download.reminderFox_editWindowCallback(reminderfox.string("rf.add.network.status.upload.label"), 0);
 				}
@@ -271,7 +279,7 @@ reminderfox.network.download.reminderFox_downloadCallback = function(aStatus, aE
 				return;
 			} else if(remotetimestamp > lastRecordedLocalTimeStamp) {
 				reminderfox.core.logMessageLevel("Remote reminders newer than local -- downloading remote reminders... (local: " + lastRecordedLocalTimeStamp + ", remote: " + remotetimestamp + ")", reminderfox.consts.LOG_LEVEL_FINE);
-				reminderfox.core.logMessageLevel("Read timestamp from file (should be == to local): " + reminderfox.core.getFileTimeStamp(), reminderfox.consts.LOG_LEVEL_FINE);
+				reminderfox.core.logMessageLevel("Read timestamp from file (should be == to local): " + reminderfox.core.getICSXLastmodifiedFromFile(), reminderfox.consts.LOG_LEVEL_FINE);
 
 				if(reminderfox.network.download.reminderFox_editWindowCallback != null) {
 					reminderfox.network.download.reminderFox_editWindowCallback(reminderfox.string("rf.add.network.status.download.label"), 0);
