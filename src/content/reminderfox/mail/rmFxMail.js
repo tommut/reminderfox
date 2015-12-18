@@ -627,7 +627,6 @@ reminderfox.mail.folderListener = {
 							reminderfox.core.insertIntoArray(activeReminders, lastReminder, i);
 							reminderfox.core.writeOutRemindersAndTodos(false); // (isExport)
 
-		//TODO XXX ????					reminderfox.core.PlaySound (5 /*aValue*/)
 							Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound)
 								.playEventSound(Components.interfaces.nsISound.EVENT_NEW_MAIL_RECEIVED);
 						}

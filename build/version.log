@@ -1,17 +1,25 @@
 
-	Reminderfox  [2.1.5.3] wip
-	   as of:    Thu, 12 Nov 2015 01:18:38 +0100 (CET)
-	'reminderfox_2.1.5.3_wip_20151112_0118.xpi'   <'20151112_0118'>
+	Reminderfox  [2.1.5.4] release
+	   as of:    Fri, 18 Dec 2015 14:08:12 +0100 (CET)
+	'reminderfox_2.1.5.4_release_20151218_1408.xpi'   <'20151218_1408'>
 	
 	   Please note:  Add-ons in FX >41 need to be signed by Mozilla AMO!
 	   For testing FX development version is required.
 
+2015-12-18  __ version 2.1.5.4 (rel)
+	
+wip 2015-11-30  __ version 2.1.5.3 (wip)
+	QAlarm updated for logs
+
+
+wip 2015-11-16  __ version 2.1.5.3 (wip)
+	Alarm / Quickalarm not always displayed correctly
+	Reminder for mail missed subject
 
 wip 2015-11-11  __ version 2.1.5.3 (wip)
 	GCal re-adding a previous removed calendar failed 
 	GCal auth method v1 disabled on XUL dialog
 	Some AMO related changes (settimeout)
-
 
 wip 2015-11-08  __ version 2.1.5.3 (wip)
 	Alarm dialog resized after adding icons
