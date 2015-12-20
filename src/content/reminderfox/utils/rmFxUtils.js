@@ -2458,6 +2458,12 @@ reminderfox.about= function() {
 };
 
 
+function rmFxTDate(i) {
+   if (i == null) return new Date().toLocaleString()
+	return new Date(+i).toLocaleString()
+}
+
+
 /**
  * Query a remote system (Dropbox) to get a file with version details
  * If available, calls dialog for updating

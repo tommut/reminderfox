@@ -136,6 +136,11 @@ reminderfox.overlay.openQuickAlarmDialog= function(){
 
 
 reminderfox.overlay.processAlarm= function( recentReminderOrTodo, isReminder, listName ) {
+var msg = " +++ overlay.processAlarm +++++ " + reminderfox.overlay.reminder_Infos(recentReminderOrTodo)
+//reminderfox.core.logMessageLevel(msg, reminderfox.consts.LOG_LEVEL_SUPER_FINE);
+    recentReminderOrTodo.currentInstance = recentReminderOrTodo.date
+    msg += "\n ..1. the current reminder date instance: " + rmFXtDate(recentReminderOrTodo.currentInstance)
+//rmFXaLog(msg);
     var alarmInfo = null;
     var changed = false;
     var alarmTime = null;
@@ -149,8 +154,6 @@ reminderfox.overlay.processAlarm= function( recentReminderOrTodo, isReminder, li
     var mins = 	newDate.getMinutes();
     var alarmMinutes = null;
     alarmMinutes = reminderfox.core.getAlarmInMinutes( recentReminderOrTodo, recentReminderOrTodo);
-
-//ALARM	reminderfox.core.logMessageLevel("alarm: reminder date: " + newDate + "; alarmMinutes: " + alarmMinutes , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
 
     // dump: if a RUC=2 reminder, and no snooze...  maybe just always alarm?
     if ( alarmMinutes != null ) {
@@ -199,15 +202,11 @@ reminderfox.overlay.processAlarm= function( recentReminderOrTodo, isReminder, li
     var missedAlarm = false;
     var timeDifference = alarmTime - currentTime;
 
-//	reminderfox.core.logMessageLevel("\n\n**************\nProcess Alarm: " + recentReminderOrTodo.date + "\n" + recentReminderOrTodo.summary +"\n" +
-//		"alarmMinutes; " + alarmMinutes + " --- alarmTime: " + alarmTime + " == currentTime: " + currentTime +
-//		"timeDiff: " + timeDifference + "\nlastAck: " + recentReminderOrTodo.alarmLastAcknowledge + "; Listname: " + listName , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
-//	dump("\n\n**************\nProcess Alarm: " + recentReminderOrTodo.date + "\n" + recentReminderOrTodo.summary +"\n" +
-//		"alarmMinutes; " + alarmMinutes + " --- alarmTime: " + alarmTime + " == currentTime: " + currentTime +
-//		"timeDiff: " + timeDifference + "\nlastAck: " + recentReminderOrTodo.alarmLastAcknowledge + "; Listname: " + listName , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
-//	reminderfox.core.logMessageLevel("\n\n**************\nProcess Alarm: " + new Date() + " -- " + recentReminderOrTodo.date + "\n" + recentReminderOrTodo.summary +"\n" +
-//		"alarmMinutes; " + alarmMinutes + " --- alarmTime: " + alarmTime + " == currentTime: " + currentTime +
-//		"timeDiff: " + timeDifference + "\nlastAck: " + recentReminderOrTodo.alarmLastAcknowledge + "; Listname: " + listName , reminderfox.consts.LOG_LEVEL_DEBUG);  //TODO
+var msg = "\n  -- alarmMinutes >" + alarmMinutes + "<  --- alarmTime >" + rmFXtDate(alarmTime) + "<  ==  currentTime >" + rmFXtDate(currentTime) + "<"
+    + "  timeDiff >" + timeDifference +"<" 
+    + "\n  -- lastAck: " + rmFXtDate(recentReminderOrTodo.alarmLastAcknowledge) + "; Listname: " + listName ;
+
+
     if ( timeDifference < 0 ) {
         // check acknowledge
         var ackDate = new Date();
@@ -217,19 +216,18 @@ reminderfox.overlay.processAlarm= function( recentReminderOrTodo, isReminder, li
         var alarmD = new Date();
         alarmD.setTime(alarmTime);
 
-//ALARM		reminderfox.core.logMessageLevel( "ackdate: "  + recentReminderOrTodo.alarmLastAcknowledge + " less than: " + alarmTime , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
-//ALARM		reminderfox.core.logMessageLevel( "ackdate: "  + ackDate + " less than: " +alarmD , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
 // TODO: tfm - changed to == null || ... in order to handle alarms where lastack was cleared
         if ( recentReminderOrTodo.alarmLastAcknowledge == null ||  // don't check alarms of old-style reminders (i.e. they have no ack)
             recentReminderOrTodo.alarmLastAcknowledge < alarmTime ) {
             // this past alarm was never acknowledged; let's do it now
             timeDifference = 0;
             missedAlarm = true;
-
-
         }
-//ALARM		reminderfox.core.logMessageLevel( "alarm:set missed: " + missedAlarm, reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
+
+//ALARM		reminderfox.core.logMessageLevel( "ackdate: "  + ackDate + " less than: " +alarmD , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
+msg += "\n  --  if  alarmLastAck >"  +  rmFXtDate(recentReminderOrTodo.alarmLastAcknowledge) + "<  less than  alarmTime  >" + rmFXtDate(alarmTime) + "<  set missed: " + missedAlarm;
     }
+
     // allow for a minute time buffer
     if ( timeDifference < 0 && timeDifference >= -60000 ) {
         timeDifference = 0;
@@ -239,6 +237,7 @@ reminderfox.overlay.processAlarm= function( recentReminderOrTodo, isReminder, li
     if ( timeDifference != 0 ) {
         timeDifferenceInMinutes = timeDifference/60000;
     }
+
     if ( timeDifferenceInMinutes >= 0 && timeDifferenceInMinutes  <= 60 ) {
         var windowEnumerator =  reminderfox.core.getWindowEnumerator();
         if (windowEnumerator.hasMoreElements()) {
@@ -285,7 +284,6 @@ reminderfox.overlay.processAlarm= function( recentReminderOrTodo, isReminder, li
 
             if ( !found ) {
                 // add him
-//ALARM				reminderfox.core.logMessageLevel( "alarm: Setting alarm: " +recentReminderOrTodo.summary, reminderfox.consts.LOG_LEVEL_DEBUG);  //TODO
 
                 // if this was a snoozed alarm (in the ICS file) then mark him as snoozed
                 var isSnoozed = false;
@@ -296,11 +294,11 @@ reminderfox.overlay.processAlarm= function( recentReminderOrTodo, isReminder, li
                 //reminderfox.core.logMessageLevel( "alarm: adding to list: " +recentReminderOrTodo.summary + "; alarmId: " + alarmReminderId + "; timeOfAlarm: " + alarmTime, reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
                 //reminderfox.core.logMessageLevel( "alarm: adding to list:  len= " + oldestWindow.reminderfox.overlay.alarmList.length + "; " +recentReminderOrTodo.summary + "; alarmId: " + alarmReminderId + "; timeOfAlarm: " + alarmTime, reminderfox.consts.LOG_LEVEL_DEBUG);  //TODO
 
+    msg +=  "\n  --  Setting alarm  >" +recentReminderOrTodo.summary + "<   alarmId >" + alarmReminderId + "<  timeOfAlarm >" + rmFXtDate(alarmTime) +"<";
+    msg +=  "\n  --  alarmList.length >" + oldestWindow.reminderfox.overlay.alarmList.length + "< " 
 
                 oldestWindow.reminderfox.overlay.alarmList[oldestWindow.reminderfox.overlay.alarmList.length]  =
                 { alarmId: alarmReminderId,  timeOfAlarm: alarmTime,  snoozed: isSnoozed };
-
-                //reminderfox.core.logMessageLevel( "alarm: ADDED:  len= " + oldestWindow.reminderfox.overlay.alarmList.length + "; " +recentReminderOrTodo.summary + "; alarmId: " + alarmReminderId + "; timeOfAlarm: " + alarmTime, reminderfox.consts.LOG_LEVEL_DEBUG);  //TODO
 
                 var missedAlarmString = "false";
                 if ( missedAlarm  ) {
@@ -332,7 +330,8 @@ reminderfox.overlay.processAlarm= function( recentReminderOrTodo, isReminder, li
                     clearLabelCallback: reminderfox.overlay.clearMailLabelCallback,
                     alarmCurrentAlarmId: alarmReminderId,
                     reminderTime: recentReminderOrTodo.date.getTime(),
-                    reminderTimeDifference : timeDifference
+                    reminderTimeDifference : timeDifference,
+                    reminderInstanceDate : recentReminderOrTodo.currentInstance
                 };
 
 
@@ -356,20 +355,30 @@ reminderfox.overlay.processAlarm= function( recentReminderOrTodo, isReminder, li
                         alarmInfoArray[0].alarmIsTodo,
                         alarmInfoArray[0].alarmAlarmMissed,
                         alarmInfoArray[0].reminderTime,
-                        alarmInfoArray[0].reminderTimeDifference );
+                        alarmInfoArray[0].reminderTimeDifference,
+                        alarmInfoArray[0].recentReminderOrTodo );
 
                 }
-            }
-        }
-    }
+            } // endOf::  if ( !found ) 
 
+
+
+        }  // endOf:: if (windowEnumerator.hasMoreElements()) {
+        if (alarmInfoArray != null) {
+//var cmsg = " test 4 alarmInfo" 
+//reminderfox.util.Logger("TEST", cmsg)
+           msg += ("\n --- overlay.processAlarm ------   \n" + reminderfox.overlay.alarm_Infos(alarmInfoArray) + " --- overlay.processAlarm ------  ")
+        }
+     }   // endOf::  timeDifferenceInMinutes >= 0 && timeDifferenceInMinutes  <= 60 ) 
+        
+//rmFXaLog(msg + "\n")
     return alarmInfo;
 }
 
 
 reminderfox.overlay.showMissedAlarmsSnooze= function( alarmSnoozeTime, alarmRecentReminderID, alarmListName,
                                                       alarmTimeString, alarmIsReminder, alarmIsTodo, alarmAlarmMissed, reminderTime,
-                                                      reminderTimeDifference ) {
+                                                      reminderTimeDifference, recentReminderOrTodo ) {
 
 //	alert( "INSIDE HERE: " + alarmSnoozeTime + ", " +  alarmRecentReminderID+ ", " +  alarmListName+ ", " +
 //	alarmTimeString+ ", alarmisreminder: " + alarmIsReminder+ ", " + alarmIsTodo+ ", " + alarmAlarmMissed+ ", " +  reminderTime+ ", " +
@@ -413,7 +422,8 @@ reminderfox.overlay.showMissedAlarmsSnooze= function( alarmSnoozeTime, alarmRece
         clearLabelCallback: reminderfox.overlay.clearMailLabelCallback,
         alarmCurrentAlarmId: alarmRecentReminderID,
         reminderTime: reminderTime,
-        reminderTimeDifference : reminderTimeDifference
+        reminderTimeDifference : reminderTimeDifference,
+        recentReminderOrTodo : recentReminderOrTodo
     };
 
     var alarmInfos = new Array();
@@ -425,7 +435,7 @@ reminderfox.overlay.showMissedAlarmsSnooze= function( alarmSnoozeTime, alarmRece
 
 reminderfox.overlay.showMissedAlarmsSnooze2= function( alarmSnoozeTime, alarmRecentReminderID, alarmListName,
                                                        alarmTimeString, alarmIsReminder, alarmIsTodo, alarmAlarmMissed, reminderTime,
-                                                       reminderTimeDifference ) {
+                                                       reminderTimeDifference, recentReminderOrTodo ) {
 
     var reminderOrTodo = null;
     var isReminder = false;
@@ -446,6 +456,9 @@ reminderfox.overlay.showMissedAlarmsSnooze2= function( alarmSnoozeTime, alarmRec
         reminderOrTodo =	reminderfox.core.getSpecificTodoById( alarmRecentReminderID);
     }
 
+var msg = "  --> overlay.showMissedAlarmsSnooze2 " + reminderOrTodo.summary + "   alarmTimeString >" + alarmTimeString
+rmFXaLog(msg)
+
     var alarmMissed = false;
     if ( alarmAlarmMissed == 1 ) {
         alarmMissed = true;
@@ -465,7 +478,8 @@ reminderfox.overlay.showMissedAlarmsSnooze2= function( alarmSnoozeTime, alarmRec
         clearLabelCallback: reminderfox.overlay.clearMailLabelCallback,
         alarmCurrentAlarmId: alarmRecentReminderID,
         reminderTime: reminderTime,
-        reminderTimeDifference : reminderTimeDifference
+        reminderTimeDifference : reminderTimeDifference,
+        recentReminderOrTodo : recentReminderOrTodo
     };
     var alarmInfos = new Array();
     alarmInfos[0] = newAlarm;
@@ -474,6 +488,12 @@ reminderfox.overlay.showMissedAlarmsSnooze2= function( alarmSnoozeTime, alarmRec
 
 
 reminderfox.overlay.showMissedAlarms= function( alarmInfos ) {
+var msg = "*** .overlay.showMissedAlarms  ***  " + alarmInfos.length  + reminderfox.overlay.alarm_Infos(alarmInfos)
+reminderfox.core.logMessageLevel (msg, reminderfox.consts.LOG_LEVEL_SUPER_FINE);
+//reminderfox.util.Logger("TEST", msg)
+
+//JSON.stringify(alarmInfos)
+
     var alarmArray = new Array();
     for (var k = 0; k < alarmInfos.length; k++) {
         var alarmInfo = alarmInfos[k];
@@ -515,6 +535,10 @@ reminderfox.overlay.showMissedAlarms= function( alarmInfos ) {
                 // only show this reminder if it has not already been acknowledged
                 var resultbool = (reminderOrTodo.alarmLastAcknowledge <= alarmTime);
 //ALARM				reminderfox.core.logMessageLevel("alarm: last acknowlege: " + reminderOrTodo.alarmLastAcknowledge + " <=? " + alarmTime + " ; result = " + (reminderOrTodo.alarmLastAcknowledge <= alarmTime), reminderfox.consts.LOG_LEVEL_SUPER_FINE); //TODO
+var msg = "   .. >" + reminderOrTodo.summary + "<  is  >alarm lastAck:" + rmFXtDate(reminderOrTodo.alarmLastAcknowledge) + "  <=  alarmTime:" + rmFXtDate(alarmTime) +"< ?" 
+        + "  result = " + (reminderOrTodo.alarmLastAcknowledge <= alarmTime)
+rmFXaLog(msg)
+
                 if (reminderOrTodo.alarmLastAcknowledge == null || reminderOrTodo.alarmLastAcknowledge <= alarmTime) {
                     var windowEnumerator = reminderfox.core.getWindowEnumerator();
                     if (windowEnumerator.hasMoreElements()) {
@@ -537,6 +561,10 @@ reminderfox.overlay.showMissedAlarms= function( alarmInfos ) {
                                     var diffcheck = actualCurrentTime < alarmTimeInt;
                                     if (actualCurrentTime < alarmTimeInt) {
 //ALARM										reminderfox.core.logMessageLevel("alarm: current time is less than alarm time; not showing alarm.  Current time " + (actualCurrentTime - 2000) + "; alarm time set for: " + alarmTimeInt, reminderfox.consts.LOG_LEVEL_SUPER_FINE); //TODO
+var msg = "      current time is less than alarm time; NOT showing alarm. "
+        +" Current time  >" + rmFXtDate(actualCurrentTime - 2000) + "<    alarmTime >" + rmFXtDate(alarmTime) +"<";
+rmFXaLog(msg)
+
                                         continue;
                                     }
 
@@ -549,6 +577,10 @@ reminderfox.overlay.showMissedAlarms= function( alarmInfos ) {
                                 var alarmTimeDiff = alarmTime - currentAlarmTime;
 
 //ALARM								reminderfox.core.logMessageLevel("alarm: original alarm time: " + alarmTime + "; current alarm time: " + currentAlarmTime + ";  alarmTimeDiff: " + alarmTimeDiff, reminderfox.consts.LOG_LEVEL_SUPER_FINE); //TODO
+var msg = "      original alarmTime >" + rmFXtDate(alarmTime) + "<   currentAlarmTime >" + rmFXtDate(currentAlarmTime) +"<" 
+   + "  alarmTimeDiff >" + alarmTimeDiff +"<";
+rmFXaLog(msg)
+
                                 // ensure that the current stored alarm time is the same as the alarm time this function was called with.
                                 // This check is in case the user changed the alarm time after the first timeout had been issued.  You only
                                 // want to show one alert at the last time the user selected
@@ -570,28 +602,38 @@ reminderfox.overlay.showMissedAlarms= function( alarmInfos ) {
                                     // at the same time, you will always see them properly and not get a blank window in one of them
                                     var time = new Date().getTime();
 //ALARM								reminderfox.core.logMessageLevel( "alarm: time: " + time + "; lastalarmtime" +reminderfox.overlay._lastAlarmTime + " ; " +  reminderfox.overlay.getAlarmDelay()    , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
+var msg = "      time >" + rmFXtDate(time) + "<  lastAlarmTime >" + rmFXtDate(reminderfox.overlay._lastAlarmTime)  
+        + "<  .getAlarmDelay()  >"  +  reminderfox.overlay.getAlarmDelay() +"<"
+rmFXaLog(msg)
                                     alarmInfo.alarmRecentReminder = reminderOrTodo;
 
-                                    if ( alarmInfos.length > 1 ||  // if there's multiple reminders; continue in here.  Only if there is 1 reminder would we want to set the delay
-                                        (reminderfox.overlay._lastAlarmTime == null || (  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) ) ) ) {
+                                    if (alarmInfos.length > 1   // if there's multiple reminders; continue in here.  Only if there is 1 reminder would we want to set the delay
+                                        || (reminderfox.overlay._lastAlarmTime == null 
+                                        || (time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) ) ) ) {
                                         reminderfox.overlay._lastAlarmTime = time;
 //ALARM										reminderfox.core.logMessageLevel( "alarm: opening alarm dialog: " + reminderOrTodo.summary   , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
+var msg = "      +++  OPENING alarm dialog! "  + alarmInfo.reminderInstanceDate
+//rmFXaLog(msg)
+
                                         alarmArray[alarmArray.length] = alarmInfo;
                                     }
                                     else {
 //ALARM										reminderfox.core.logMessageLevel( "alarm: Setting time out..."   , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
+var msg = "      ...  ALARM - Setting time out..." 
+rmFXaLog(msg)
 
                                         oldestWindow.setTimeout(oldestWindow.reminderfox.overlay.showMissedAlarmsSnooze2,
                                             reminderfox.overlay.getAlarmDelay(),
                                             alarmInfo.alarmSnoozeTime,
                                             alarmInfo.alarmRecentReminder.id,
                                             alarmInfo.alarmListName,
-                                            alarmInfo.alarmTimeString ,
+                                            alarmInfo.alarmTimeString , 
                                             alarmInfo.alarmIsReminder,
                                             alarmInfo.alarmIsTodo,
                                             alarmInfo.alarmAlarmMissed,
                                             alarmInfo.reminderTime,
-                                            alarmInfo.reminderTimeDifference );
+                                            alarmInfo.reminderTimeDifference,
+                                            alarmInfo.recentReminderOrTodo );
                                     }
 
                                     break;
@@ -606,12 +648,16 @@ reminderfox.overlay.showMissedAlarms= function( alarmInfos ) {
         }
     }
     //alert( "IN ARRAY: " + alarmArray[0].alarmRecentReminder.summary + " :" + alarmArray[0].alarmRecentReminder.originalDate);
-    reminderfox.overlay.openAlarmWindow( alarmArray, true );
 
+    reminderfox.overlay.openAlarmWindow( alarmArray, true );
 }
 
+
 reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
-	var calDAVaccounts = reminderfox.core.getReminderEvents()		//gW2015-02
+var msg = "*** .overlay.openAlarmWindow  ***  "
+reminderfox.core.logMessageLevel (msg, reminderfox.consts.LOG_LEVEL_SUPER_FINE);
+
+	var calDAVaccounts = reminderfox.core.getReminderEvents()		//gW2015-02            //XXX 
 
     var showAlarmsInTabs= reminderfox.core.getPreferenceValue( reminderfox.consts.ALARMS_SHOW_IN_TABS );
 
@@ -621,11 +667,11 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
 
         var time = new Date().getTime();
 
-        if ( alarmArray.length == 1 && alarmArray[0].quickAlarmText != null ) {
+        if ( alarmArray.length == 1 && alarmArray[0].quickAlarmText != null ) {   //qalarm and only 1 
             var q_alarm = reminderfox.core.getQuickAlarm( alarmArray[0].quickAlarmText );
             //alert( "doing quick alarm check: " + q_alarm.text + "; time = " + time + " ; quick alarm time: " + q_alarm.alarmTime ); dump: remove  dump(): nls
 
-            if ( q_alarm != null && ( (time  + 10000) <   q_alarm.alarmTime ) ) {
+            if ( q_alarm != null && ( (time  + 10000) <   q_alarm.alarmTime ) ) {    // check q_alarm.alarmTime
                 // check if it's snooze time has yet occurred;
                 // there is a bug where sometimes snoozing a reminder will automatically call the
                 // setTimeout function and come back in here;  if we check the snooze time and it
@@ -633,12 +679,15 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
 
                 // let's set a new timeout and try again
                 var windowEnumerator =  reminderfox.core.getWindowEnumerator();
-                if (windowEnumerator.hasMoreElements()) {
+                if (windowEnumerator.hasMoreElements()) {    // only process alarms  >  1 hour     //XXX  ??????????? 
                     var oldestWindow = windowEnumerator.getNext();
                     // alert( "A3! quick alarm: " +  alarmArray[0].quickAlarmText + " --- "  + (q_alarm.alarmTime + 2000)  + " -- " + (q_alarm.alarmTime - time) + " -- " + (q_alarm.alarmTime - time + 2000 ));
 
                     // if snooze greater than an hour; just let hourly process do it
                     if ( ((q_alarm.alarmTime - time) + 2000)  > 3600000 ) {
+
+var msg = "  ...  q_alarm alarmTime   >  1h ";  //XXX
+rmFXaLog(msg);
                         return;
                     }
 
@@ -648,25 +697,26 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
                         alarmArray[0].alarmSnoozeTime );
 
                     return;
-                }
-            }
-        }
+                }  // only process alarms  >  1 hour
+            }  //  check q_alarm.alarmTime
+        }  //qalarm and only 1 
 
-//ALARM		reminderfox.core.logMessageLevel( "alarm2: ignoreCheck = " + ignoreCheck + "; time: " + time + "; lastalarmtime" +reminderfox.overlay._lastAlarmTime + " ; "
-//			+  reminderfox.overlay.getAlarmDelay() + "; alarmArray.length = " + alarmArray.length +
-//			"(  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) ) = " +
-//			(  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) )    , reminderfox.consts.LOG_LEVEL_SUPER_FINE);  //TODO
+var msg = "   ...   ignoreCheck = " + ignoreCheck + ";  time >" + rmFXtDate(time) 
+     + "<   lastAlarmTime >" + rmFXtDate(reminderfox.overlay._lastAlarmTime) + "<  " +  reminderfox.overlay.getAlarmDelay() 
+     + ";\n   alarmArray.length = " + alarmArray.length 
+     + "  (time > (.overlay._lastAlarmTime + .overlay.getAlarmDelay()) ) = "
+     + (  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) )
+rmFXaLog(msg)
+			//reminderfox.core.logMessageLevel( msg, reminderfox.consts.LOG_LEVEL_DEBUG);
 
-//ALARM		reminderfox.core.logMessageLevel(new Date()  + "alarm2: ignoreCheck = " + ignoreCheck + "; time: " + time + "; lastalarmtime" +reminderfox.overlay._lastAlarmTime + " ; "
-//			+  reminderfox.overlay.getAlarmDelay() + "; alarmArray.length = " + alarmArray.length +
-//			"(  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) ) = " +
-//			(  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) )   , reminderfox.consts.LOG_LEVEL_DEBUG);  //TODO
+        if ( ignoreCheck || alarmArray.length > 1   // if there's multiple reminders; continue in here.  Only if there is 1 reminder would we want to set the delay
+              || (reminderfox.overlay._lastAlarmTime == null 
+              || (  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) ) ) ) {  // ##1
 
-        if ( ignoreCheck || alarmArray.length > 1 ||  // if there's multiple reminders; continue in here.  Only if there is 1 reminder would we want to set the delay
-            (reminderfox.overlay._lastAlarmTime == null || (  time > (reminderfox.overlay._lastAlarmTime + reminderfox.overlay.getAlarmDelay()) ) ) ) {
             reminderfox.overlay._lastAlarmTime = time;
-            if (showAlarmsInTabs && topWindow) {
-                try {
+
+            if (showAlarmsInTabs && topWindow) {  // ##2   try 
+                try {  
                     // close and reopen
                     var selectedIndex = topWindow.getRF_alarmIndex();
                     var existingAlarmArray = topWindow.getRF_AlarmArray();
@@ -716,7 +766,8 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
                             existingAlarmArray[existingAlarmArray.length] = alarmArray[j];
                         }
 
-                        //alert( "ORIG1" + existingAlarmArray[0].alarmRecentReminder.originalDate + "; " +  existingAlarmArray[0].alarmRecentReminder.summary + " - " + existingAlarmArray[0].alarmRecentReminder.date );
+            var msg = "   ...  ORIG1   >" + existingAlarmArray[0].alarmRecentReminder.summary + "<   date >" + rmFXtDate(existingAlarmArray[0].alarmRecentReminder.date) +"<";
+            rmFXaLog(msg)
 
                         var newOptions = {  alarmInfos: existingAlarmArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarms,
                         	calDAVaccounts : calDAVaccounts}
@@ -731,14 +782,16 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
                 }
                 catch ( e ) {
                 }
-            }
+            }   // ##2  try 
             else {
                 if ( !showAlarmsInTabs ) {
                     // go through all alarms and open in separate windows
                     for ( var i = 0; i < alarmArray.length; i++ ) {
                         var singleArray = new Array();
                         singleArray[0] = alarmArray[i];
-                        //	alert( "ORIG2" + singleArray[0].alarmRecentReminder.originalDate + "; " +singleArray[0].alarmRecentReminder.summary + " - " + singleArray[0].alarmRecentReminder.date );
+
+                var msg = "  ...  ORIG2   >" + singleArray[0].alarmRecentReminder.summary + "<   date >" + rmFXtDate(singleArray[0].alarmRecentReminder.date) +"<";    //XXX
+                rmFXaLog(msg)
 
                         var newOptions = {  alarmInfos: singleArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarmsSnooze,
                         	calDAVaccounts : calDAVaccounts}
@@ -756,6 +809,9 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
                     var newOptions = {  alarmInfos: alarmArray, showMissedAlarmsSnoozeCallback : reminderfox.overlay.showMissedAlarmsSnooze,
                      	calDAVaccounts : calDAVaccounts}
 
+                var msg = "  ...  ORIG3   >" + alarmArray +"<";    //XXX
+                //rmFXaLog(msg)
+
                     //we don't use alarmOptionsDialog + date =- sometimes showing a separate window
                     window.openDialog("chrome://reminderfox/content/alarms/alarmDialog.xul",
                         "alarmOptionsDialog", "chrome,resizable,dialog=no", newOptions);
@@ -765,7 +821,7 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
                     }
                 }
             }
-        }
+        }     // ##1
         else {
             var windowEnumerator =  reminderfox.core.getWindowEnumerator();
             if (windowEnumerator.hasMoreElements()) {
@@ -777,8 +833,11 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
                 if ( alarmInfo.quickAlarmText != null ) {
 
                     // debug:
-                    //var q_alarm = reminderfox.core.getQuickAlarm( alarmArray[0].quickAlarmText );
-                    //alert( "doing quick alarm check: " + q_alarm.text + "; time = " + time + " ; quick alarm time: " + q_alarm.alarmTime ); dump: remove  dump(): nls
+                    var q_alarm = reminderfox.core.getQuickAlarm( alarmArray[0].quickAlarmText );
+
+            var msg = "  ...  doing quick alarm check: " + q_alarm.text + "; time = " + time 
+                    + " ; quick alarm time: "  + q_alarm.alarmTime;
+            rmFXaLog(msg);
 
                     var text = alarmInfo.quickAlarmText;
                     var sTime = alarmInfo.alarmSnoozeTime;
@@ -793,10 +852,13 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
                     var id1 = alarmInfo.alarmCurrentAlarmId;
 
                     // dump test this
-                    //var nuller = null;
-                    //if ( alarmInfo.alarmCurrentAlarmId != null )
-                    //nuller = alarmInfo.alarmCurrentAlarmId;
-                    //alert( "A4!" + alarmInfo.alarmSnoozeTime + " -- " +alarmInfo.alarmCurrentAlarmId + " __ " + nuller );
+                    var nuller = null;
+                    if ( alarmInfo.alarmCurrentAlarmId != null )
+                    nuller = alarmInfo.alarmCurrentAlarmId;
+
+              var msg = "  ...  A4! " + alarmInfo.alarmSnoozeTime + " -- " 
+                      + alarmInfo.alarmCurrentAlarmId + " __ " + nuller; 			//XXX
+              rmFXaLog(msg);
 
                     oldestWindow.setTimeout(oldestWindow.reminderfox.overlay.showMissedAlarmsSnooze2,
                         reminderfox.overlay.getAlarmDelay(),
@@ -808,11 +870,12 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
                         alarmInfo.alarmIsTodo,
                         alarmInfo.alarmAlarmMissed,
                         alarmInfo.reminderTime,
-                        alarmInfo.reminderTimeDifference );
+                        alarmInfo.reminderTimeDifference,
+                        alarmArray.recentReminderOrTodo );
                 }
             }
         }
-    }
+    }  // go through all options
 }
 
 
@@ -883,6 +946,10 @@ reminderfox.overlay.openAboutReminderFoxDialog= function() {
 
 
 reminderfox.overlay.processRecentReminders= function(processQuickAlarms){
+var msg = (" #   overlay.processRecentReminders    " )
+//reminderfox.core.logMessageLevel(" #   overlay.processRecentReminders    ", reminderfox.consts.LOG_LEVEL_SUPER_FINE);
+//reminderfox.util.Logger("TEST",msg)
+
     var changed = false;
     var alarmInfos = new Array();
     var NUM_OF_PAST_DAYS_TO_PROCESS = 90; // needs to be less than weekly reminder so Completed mark isn't cleared...
@@ -914,6 +981,10 @@ reminderfox.overlay.processRecentReminders= function(processQuickAlarms){
     var endDateAlarmCheck = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     endDateAlarmCheck.setDate(startDate.getDate() + NUM_OF_DAYS_AHEAD_FOR_ALARM);
     startDate.setDate(startDate.getDate() - NUM_OF_PAST_DAYS_TO_PROCESS);
+
+//var msg = " overlay.processRecentReminders  with  startDate " + rmFXtDate(startDate)
+//reminderfox.util.Logger("TEST", msg)
+
     for (i = 0; i < reminderEvents.length; i++) {
         reminder = reminderEvents[i];
 
@@ -942,6 +1013,11 @@ reminderfox.overlay.processRecentReminders= function(processQuickAlarms){
                 dateCompare = 0; // set as today's date
             }
 //ALARM			reminderfox.core.logMessageLevel("alarm: recent alarm" + j + ": " + recentReminder.summary + " -- " + recentReminder.alarm + " -- " + alarmsEnabled, reminderfox.consts.LOG_LEVEL_SUPER_FINE); //TODO
+var msg = "\n   #   alarm:  recent alarm " + j + " : " + recentReminder.summary + " -- .date " + rmFXtDate(recentReminder.date)
+      	+ recentReminder.alarm + " -- " + alarmsEnabled 
+      	+ "  completed: " + (recentReminder.completedDate == null ? null : rmFXtDate(recentReminder.completedDate));
+//rmFXaLog(msg)
+
             // check the alert for future and past reminders (for missed alerts)
             if (recentReminder.alarm != null && alarmsEnabled && !reminderfox.core.isCompletedForDate(recentReminder, recentReminder.date)) {
                 var missedAlarmInfo = reminderfox.overlay.processAlarm(recentReminder, true, null);  // soo here we might have an old one
@@ -950,6 +1026,10 @@ reminderfox.overlay.processRecentReminders= function(processQuickAlarms){
                 // or remove old one...
                 if (missedAlarmInfo != null) {
                     missedAlarmInfo.originalDate = recentReminder.originalDate;
+
+var msg = "  ~~~~~~ missedAlarmInfo: " + missedAlarmInfo.alarmRecentReminder.summary + "   --- date: " + missedAlarmInfo.alarmRecentReminder.date
+//rmFXaLog(msg)
+
                     alarmInfos[alarmInfos.length] = missedAlarmInfo;
                 }
             }
@@ -1831,8 +1911,11 @@ reminderfox.overlay.ensureRemoteRemindersSynchronized= function(headless){
 //reminderfox.overlay.initializeReminderFoxHourlyTimer = {
 reminderfox.overlay.initializeReminderFoxUpdatingTimer = {
     notify: function (timer) {
-        //Components.utils.reportError('Timer Fired!');
-        reminderfox.core.logMessageLevel("initialize ReminderFoxTimer ", reminderfox.consts.LOG_LEVEL_INFO);
+
+        var msg =  '   ReminderFoxTimer Fired!    in "overlay.initializeReminderFoxUpdatingTimer" ';		//XXX
+        rmFXaLog(rmFXtDate() + msg)
+
+      //  reminderfox.core.logMessageLevel("initialize ReminderFoxTimer ", reminderfox.consts.LOG_LEVEL_INFO);
 
         reminderfox.overlay.initializeReminderFox(true);
         //do stuff here, this stuff will finish and then timer will start countdown of myTimerInterval.
@@ -1884,12 +1967,13 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
          //       lastTimeElapsed = parseInt(lastTime) + reminderfox.overlay.consts.HOUR_TIMEOUT;
                 lastTimeElapsed = parseInt(lastTime) + timeout;
             }
-            reminderfox.core.logMessageLevel("  Check ReminderFoxTimer - should Initialize: " + (lastTime == null || lastTime == "" || (currentTime + 1500) >= lastTimeElapsed) + " ==  lastTime " 
+       //     reminderfox.core.logMessageLevel("  Check ReminderFoxTimer - should Initialize: " + (lastTime == null || lastTime == "" || (currentTime + 1500) >= lastTimeElapsed) + " ==  lastTime " 
+       var msg = "  Check ReminderFoxTimer - should Initialize: " + (lastTime == null || lastTime == "" || (currentTime + 1500) >= lastTimeElapsed) + " ==  lastTime " 
                 + lastTime + " -- currentTime: " + currentTime 
                 + " -- lastTimeElapsed: " + lastTimeElapsed 
                 + " - Difference (currentTime+1500) - lastTimeElapsed:" + ((currentTime + 1500) - lastTimeElapsed)
-                + " - Inkrement timer: " + timeout,
-                 reminderfox.consts.LOG_LEVEL_FINE);
+                + " - Inkrement timer: " + timeout;
+       rmFXaLog(rmFXtDate() + msg)
 
             // make sure that the HOURLY_TIMEOUT has passed before we continue.
             // Also add a 1.5 second buffer, as it seems sometimes Mozilla doesn't call the setTimeout at the
@@ -1931,7 +2015,7 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
                 updateWindows = true;
             }
 
-            reminderfox.core.logMessageLevel("  Initialize ? "
+            reminderfox.core.logMessageLevel("  overlay.initializeReminderFox   Initialize ? "
                 + "  UpdateWindows: " + updateWindows 
                 + ";  file Changed: " + fileChanged 
                 + ";  reminders Changed: " + changed 
@@ -1961,7 +2045,7 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
             }
             reminderfox.overlay.lastDay = day;
 
-            reminderfox.core.logMessageLevel(" Setting Hourly timeout!", 
+            reminderfox.core.logMessageLevel(" Setting  .intervalTimer!", 
                 reminderfox.consts.LOG_LEVEL_FINE);
 
             reminderfox.overlay.storeTimeOfLastProcessed();
@@ -1990,8 +2074,8 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
 
 reminderfox.overlay.updateRemindersInWindow= function(){
 //------------------------------------------------------------------------------
-    var msg = ("Updating reminders in window: "
-         + "  in : " + document.documentElement.getAttribute('windowtype'))
+    var msg =  "  Updating reminders in window: "
+         + "  in : " + document.documentElement.getAttribute('windowtype')
     reminderfox.util.Logger('checkData',msg);
 
     var text = document.getElementById('reminderFox-statusLabel');
@@ -2595,12 +2679,17 @@ reminderfox.overlay.processQuickAlarms= function(returnMissed){
                 //alert( "alarm 7!" );
                 // dump: here's another place to check that it is not more than 24 days in the future
                 if (actualAlarmTime > 3600000) {
-                    //  if alarm greater than an hour; don't add it; just let hourly process do it
+
+       var msg = "  if alarm greater than an hour; don't add it; just let hourly process do it"  //XXX
+       rmFXaLog(rmFXtDate() + msg)
+
                 }
                 else {
-                    oldestWindow.setTimeout(oldestWindow.reminderfox.overlay.showQuickAlarm, actualAlarmTime, alarmText, snoozeTime, notesText);
+                    oldestWindow.setTimeout(oldestWindow.reminderfox.overlay.showQuickAlarm, actualAlarmTime, 
+                         alarmText, snoozeTime, notesText);
 
-                    reminderfox.core.logMessageLevel("  Setting quickalarm for : " + alarmText + " -- snoozeTime: " + snoozeTime + " -- actualAlarmTime: " + actualAlarmTime, reminderfox.consts.LOG_LEVEL_FINE);
+                    reminderfox.core.logMessageLevel("  Setting quickalarm for : " + alarmText + " -- snoozeTime: " 
+                      + snoozeTime + " -- actualAlarmTime: " + actualAlarmTime, reminderfox.consts.LOG_LEVEL_FINE);
                 }
             }
         }
@@ -2823,7 +2912,7 @@ reminderfox.overlay.start_postInit= function() {
 reminderfox.overlay.showAlertSliderTimingFunction = {
     notify: function (timer) {
         //Components.utils.reportError('showAlertSliderTimingFunction timer fired!');
-        reminderfox.core.logMessageLevel("showAlertSliderTimingFunction timer fired.", reminderfox.consts.LOG_LEVEL_INFO);
+        reminderfox.core.logMessageLevel("  showAlertSliderTimingFunction timer fired.", reminderfox.consts.LOG_LEVEL_INFO);
 
         reminderfox.overlay.showAlertSlider();
 
@@ -3860,5 +3949,60 @@ reminderfox.overlay.ContextMenuPopup= function(){
     else {
         addReminderMenuItem.hidden = false;
         subscribeReminderMenuItem.hidden = true;
+    }
+}
+
+
+
+reminderfox.overlay.alarm_Infos = function(alarmInfos) {
+	var infos = "";
+
+		for (var k = 0; k < alarmInfos.length; k++) {
+			cInfo = alarmInfos[k];
+			infos += "\n  ## >" + cInfo.alarmRecentReminder.summary + "< "
+			infos += "  date >" + rmFXtDate(cInfo.alarmRecentReminder.date) + "<"
+			infos += "  alarm:" + (cInfo.alarmRecentReminder.alarm)
+			infos += "  alarmLastAck:" + rmFXtDate(cInfo.alarmRecentReminder.alarmLastAcknowledge)
+			infos += "  lastMod:" + (cInfo.alarmRecentReminder.lastModified)
+			infos += "  completedDate:" + rmFXtDate(cInfo.alarmRecentReminder.completedDate)
+			infos += "  snoozeTime:" + (cInfo.alarmRecentReminder.snoozeTime)
+			infos += "  ruc:" + (cInfo.alarmRecentReminder.remindUntilCompleted)
+			infos += "  reminderTime:" + rmFXtDate(cInfo.reminderTime)
+			infos += "  reminderTimeDiff:" + (cInfo.reminderTimeDifference)
+			infos += "\n current instance reminder  --->" + rmFXtDate(cInfo.alarmRecentReminder.currentInstance) + "<---"
+			infos += "\n reminderInstanceDate  --->" + rmFXtDate(cInfo.reminderInstanceDate) + "<---"
+
+			infos += "\n"
+		}
+	return infos
+}
+
+reminderfox.overlay.reminder_Infos = function(iReminder) {
+	var infos = "";
+	try { 
+		infos += iReminder.summary
+		infos += " - " + rmFXtDate(iReminder.date)
+		infos += "  alarm:" + (iReminder.alarm)
+		infos += "  alarmLastAck:" + rmFXtDate(iReminder.alarmLastAcknowledge)
+		infos += "  lastModified:" + (iReminder.lastModified)
+		infos += "  completedDate:" + rmFXtDate(iReminder.completedDate)
+		infos += "  snoozeTime:" + (iReminder.snoozeTime)
+		infos += "  ruc:" + (iReminder.remindUntilCompleted)
+		infos += "\n"
+	} catch (e) {}
+	return infos
+}
+
+
+function rmFXtDate(i) {
+   if (i == null) return new Date().toLocaleString()
+	return new Date(+i).toLocaleString()
+}
+
+function rmFXaLog(msg){
+
+    var logLevel = reminderfox._prefsBranch.getIntPref(reminderfox.consts.LOG);
+    if (logLevel == 88){
+       console.log(msg)
     }
 }
