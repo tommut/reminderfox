@@ -6,6 +6,11 @@
 	   Please note:  Add-ons in FX >41 need to be signed by Mozilla AMO!
 	   For testing FX development version is required.
 
+
+2015-12-30  __ version 2.1.5.4 
+	Updated after alarm log error (Tommut 22.12.2015)
+
+
 wip 2015-10-13  __ version 2.1.5.3 (wip)
 
 	Updating reminders in windows and update CalDAV calendars

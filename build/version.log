@@ -1,11 +1,16 @@
 
 	Reminderfox  [2.1.5.4] release
-	   as of:    Sun, 20 Dec 2015 01:19:30 +0100 (CET)
-	'reminderfox_2.1.5.4_release_20151220_0119.xpi'   <'20151220_0119'>
+	   as of:    Wed, 30 Dec 2015 00:19:08 +0100 (CET)
+	'reminderfox_2.1.5.4_release_20151230_0019.xpi'   <'20151230_0019'>
 	
 
 	   Please note:  Add-ons in FX >41 need to be signed by Mozilla AMO!
 	   For testing FX development version is required.
+
+
+2015-12-30  __ version 2.1.5.4 
+	Updated after alarm log error (Tommut 22.12.2015)
+
 
 wip 2015-10-13  __ version 2.1.5.3 (wip)
 
