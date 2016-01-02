@@ -3956,7 +3956,7 @@ reminderfox.overlay.ContextMenuPopup= function(){
 
 reminderfox.overlay.alarm_Infos = function(alarmInfos) {
 	var infos = "";
-
+	try {
 		for (var k = 0; k < alarmInfos.length; k++) {
 			cInfo = alarmInfos[k];
 			infos += "\n  ## >" + cInfo.alarmRecentReminder.summary + "< "
@@ -3974,6 +3974,7 @@ reminderfox.overlay.alarm_Infos = function(alarmInfos) {
 
 			infos += "\n"
 		}
+	} catch (e) {}
 	return infos
 }
 

@@ -141,7 +141,7 @@ reminderfoxX.calDAVhttp = function () {}
 				+ "\n  content   >>\n" + call.body + "\n<<";
 			reminderfox.util.Logger('calDAVhttp', logMsg);
 
-	rmFX_GCal_SPDYset(call,  (call.request + "|" + call.callback +"]  (" + call.ID + ")" ))
+	var spdy = rmFX_GCal_SPDYset(call,  ("[" + call.request + "|" + call.callback +"]  (" + call.ID + ")" ))
 
 			var requester;
 			var currentApp = this;
@@ -156,6 +156,7 @@ reminderfoxX.calDAVhttp = function () {}
 				body          : call.body,
 				headers       : call.headers,
 				returnHeaders : true,
+				spdy          : spdy,
 
 				onOpened : function() { 
 					},
@@ -165,7 +166,7 @@ reminderfoxX.calDAVhttp = function () {}
 					},
 
 				onSuccess : function(status, xml, text, headers, statusText) {
-	rmFX_GCal_SPDYreset(call) 
+	rmFX_GCal_SPDYreset(call, "(" + call.ID + ")" )
 					caller[call.callback](status, xml, text, headers, statusText, call);
 					}
 			});
@@ -192,27 +193,28 @@ reminderfoxX.calDAVhttp = function () {}
 		if ((call.url.search('www.google.com') > -1) 
 			|| (call.url.search('www.googleapis.com') > -1)
 			|| (call.url.search('accounts.google.com') > -1)) {
-			var SPDYpref;
+
 			try {
-				SPDYpref = reminderfox._prefs.getBoolPref('network.http.spdy.enabled');
-				var msg = " ** SPDY setting: " + SPDYpref + "  status : " + aStatus 
+				call.spdy = reminderfox._prefs.getBoolPref('network.http.spdy.enabled');
+				var msg = " ** SPDY setting:" + call.spdy + "  status: " + aStatus 
 					+ "\n  call.url : " + call.url
-	//			reminderfox.util.Logger('alert', msg)
-				if (SPDYpref == true) {
+				reminderfox.util.Logger('SPDY', msg)
+				if (call.spdy == true) {
 					reminderfox._prefs.setBoolPref('network.http.spdy.enabled', false);
 					call.spdy = false
 				}
 			} catch(e) {}
 		} else {
-			return
+			return call.spdy
 		}
 	}
 
-	function rmFX_GCal_SPDYreset(call) {
-		try{
-			if ((!call.spdy)&&(call.spdy == false)) {
-				reminderfox._prefs.setBoolPref('network.http.spdy.enabled', true);
-				call.spdy = true
-			}
-		} catch (ex) {}
+	function rmFX_GCal_SPDYreset(call, id) {
+		var msg = " ** SPDY status:" + call.spdy + "  call.id: " + id 
+
+		if ((!call.spdy)&&(call.spdy == false)) {
+			reminderfox._prefs.setBoolPref('network.http.spdy.enabled', true);
+			var msg = " ** SPDY reset  call.id: " + id 
+		}
+		reminderfox.util.Logger('SPDY', msg)
 	}
