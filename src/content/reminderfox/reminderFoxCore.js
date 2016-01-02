@@ -2802,8 +2802,8 @@ reminderfox.core.hideTooltip= function(){
 reminderfox.core.ensureRemindersSynchronized= function(){			//TODO Networking - downloading OR uploading (with .timeStampHasChanged)
 
 	var networkSync = reminderfox.core.getPreferenceValue(reminderfox.consts.NETWORK_SYNCHRONIZE, reminderfox.consts.NETWORK_SYNCHRONIZE_DEFAULT); 
-	reminderfox.util.Logger('ALERT', "  [.core.ensureRemindersSynchronized]"
-		+ "   networkSync:" + networkSync);
+	//reminderfox.util.Logger('ALERT', "  [.core.ensureRemindersSynchronized]"
+	//	+ "   networkSync:" + networkSync);
 
 
     // check ICS data file for timeStamp (X-REMINDERFOX-LAST-MODIFIED) 

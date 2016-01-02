@@ -782,7 +782,7 @@
 		onResult : function (status, xml, text, headers, statusText, call) {
 		var msg, XML;
 			msg = "TESTING  onResult: " + status + "  " +statusText + "\n" +text;
-			reminderfox.util.Logger('Alert',msg);
+			//reminderfox.util.Logger('Alert',msg);
 
 
 		if (status === 0 || (status >= 200 && status < 300)) {
