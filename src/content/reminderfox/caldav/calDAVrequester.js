@@ -198,7 +198,7 @@ reminderfoxX.calDAVhttp = function () {}
 				call.spdy = reminderfox._prefs.getBoolPref('network.http.spdy.enabled');
 				var msg = " ** SPDY setting:" + call.spdy + "  status: " + aStatus 
 					+ "\n  call.url : " + call.url
-				reminderfox.util.Logger('SPDY', msg)
+	//			reminderfox.util.Logger('SPDY', msg)
 				if (call.spdy == true) {
 					reminderfox._prefs.setBoolPref('network.http.spdy.enabled', false);
 					call.spdy = false
@@ -216,5 +216,5 @@ reminderfoxX.calDAVhttp = function () {}
 			reminderfox._prefs.setBoolPref('network.http.spdy.enabled', true);
 			var msg = " ** SPDY reset  call.id: " + id 
 		}
-		reminderfox.util.Logger('SPDY', msg)
+	//	reminderfox.util.Logger('SPDY', msg)
 	}

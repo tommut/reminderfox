@@ -163,8 +163,10 @@
 		</panel>
 	</popupset>
 
+<!--  //gWD&D   added for text/link/iCal/file   -->
+<!--    DISABLED see Bug 1246481 - With ReminderFox add-on active: all Toolbar related Drag and Dop fails -->
 
-	<statusbar id="status-bar">	<!--  //gWD&D   added for text/link/iCal/file   -->
+	<statusbar id="status-bar">	
 
 		<keyset id="reminderFox_keyset">
 		</keyset>
@@ -176,14 +178,17 @@
 				context="reminderfox-options-contextmenu"
 				oncontextmenu="reminderfox.overlay.activateOptionsContext(event);"
 				onclick="reminderfox.overlay.openDoubleClickDialog(event);"
-				status="none"
-
-				ondragenter="event.stopPropagation(); event.preventDefault();"
-				ondragover="event.stopPropagation(); event.preventDefault();"
-				ondrop="event.stopPropagation(); event.preventDefault(); reminderfox.util.JS.dispatch('userIO', event);">
+				status="none">
 
 		</statusbarpanel>
 	</statusbar>
+
+
+<!--
+				ondragenter="event.stopPropagation(); event.preventDefault();"
+				ondragover="event.stopPropagation(); event.preventDefault();"
+				ondrop="event.stopPropagation(); event.preventDefault(); reminderfox.util.JS.dispatch('userIO', event);">
+-->
 
 
 	<popup id="contentAreaContextMenu">  <!-- context-sep-open" -->

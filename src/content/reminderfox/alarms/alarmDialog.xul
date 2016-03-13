@@ -86,13 +86,9 @@
 						<label id="reminderDateLabel" value="&rf.reminderoptions.date.label;"
 							align="bottom" />
 						<label id="reminderDateText" align="bottom" />
-
 						<label id="timeDescLabel" value=" / " />
 						<label id="reminderTimeText" align="bottom" />
 					</hbox>
-
-
-
 
 					<!-- show Time Until if there is one -->
 					<hbox align="center" id="timeUntilHBox" hidden="true">

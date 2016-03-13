@@ -1,16 +1,56 @@
 
-	Reminderfox  [2.1.5.4] release
-	   as of:    Wed, 30 Dec 2015 00:19:08 +0100 (CET)
-	'reminderfox_2.1.5.4_release_20151230_0019.xpi'   <'20151230_0019'>
+	Reminderfox  [2.1.5.4] wip
+	   as of:    Thu, 10 Mar 2016 11:40:35 +0100 (CET)
+	'reminderfox_2.1.5.4_wip_20160310_1140.xpi'   <'20160310_1140'>
+	
+2016-03-10	changes for next release
+	calDAVrequester - SPDY logging disabled
 	
 
-	   Please note:  Add-ons in FX >41 need to be signed by Mozilla AMO!
-	   For testing FX development version is required.
+
+
+2016-03-01  ___ version 2.1.5.4   wip
+	-- Calculating reminder description for any variables (eg: <1978>)
+	   was wrong with show more than 1 year on the 'Main List'
+	   Thanks to Jens-Uwe
+
+2016-02-14
+	-- Disable storing ICS data with no events/todos during sync
+	-- Subscribe failed due to missing lib link
+	-- D&D failed with FX/SM Nightly builds; 
+	   fixed with removing drag elements from <statusbar/> at overlay.
+
+2016-02-05
+	UTC preference setting was not respected for sending ICS data to remote
+	Thanks to  M.P.Ragavendra
+
 
 
 2015-12-30  __ version 2.1.5.4 
 	Updated after alarm log error (Tommut 22.12.2015)
 
+	   Please note:  Add-ons in FX >41 need to be signed by Mozilla AMO!
+	   For testing FX development version is required.
+
+2015-12-20  __ version 2.1.5.4 (rel)
+	SPDY logging updated
+
+2015-12-18  __ version 2.1.5.4 (rel)
+	
+wip 2015-11-30  __ version 2.1.5.3 (wip)
+	QAlarm updated for logs
+
+wip 2015-11-16  __ version 2.1.5.3 (wip)
+	Alarm / Quickalarm not always displayed correctly
+	Reminder for mail missed subject
+
+wip 2015-11-11  __ version 2.1.5.3 (wip)
+	GCal re-adding a previous removed calendar failed 
+	GCal auth method v1 disabled on XUL dialog
+	Some AMO related changes (settimeout)
+
+wip 2015-11-08  __ version 2.1.5.3 (wip)
+	Alarm dialog resized after adding icons
 
 wip 2015-10-13  __ version 2.1.5.3 (wip)
 

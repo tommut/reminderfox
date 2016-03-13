@@ -13,7 +13,7 @@ reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.4";		// update also insta
 
 // ************************* for dev, use "wip"; for offical MOZILLA set to "release"  *****
 // if set to "wip" enables the check-for-update link; if set to release, hides the update link in about dialog
-reminderfox.consts.SPECIAL_VERSION_DETAIL					= "release"  // "wip";  
+reminderfox.consts.SPECIAL_VERSION_DETAIL					= "wip";   //"release" 
 reminderfox.consts.DROPBOX									= "https://dl.dropbox.com/u/35444930/rmFX/XPI/"
     + reminderfox.consts.SPECIAL_VERSION_DETAIL + "/";
 
@@ -240,6 +240,7 @@ reminderfox.consts.REMINDERS = "reminderFox.reminders";
 reminderfox.consts.TODOS = "reminderFox.todos";
 
 reminderfox.consts.STORE_FILE = "storeFile";
+reminderfox.consts.UTC_DEFAULT= "utcFormat";
 
 reminderfox.consts.DEBUG = "debug";
 reminderfox.consts.LOG = reminderfox.consts.DEBUG + "." + "loglevel";
@@ -446,7 +447,6 @@ reminderfox.core.initUserPrefsArray= function(){
 
     reminderfox._prefsUser[reminderfox.consts.QUICK_ALARMS] = reminderfox._prefsTYPE.COMPLEX;
 
-    reminderfox._prefsUser[reminderfox.consts.UTC] = reminderfox._prefsTYPE.BOOL;
 
     reminderfox._prefsUser[reminderfox.consts.NEWS] = reminderfox._prefsTYPE.BOOL;
     reminderfox._prefsUser[reminderfox.consts.NEWSSTAMP] = reminderfox._prefsTYPE.CHAR;
@@ -454,6 +454,8 @@ reminderfox.core.initUserPrefsArray= function(){
 
     
     reminderfox._prefsUser[reminderfox.consts.INTERVAL_TIMER] = reminderfox._prefsTYPE.INT;
+    reminderfox._prefsUser[reminderfox.consts.UTC_DEFAULT] = reminderfox._prefsTYPE.BOOL;
+
 };
 
 
@@ -1027,7 +1029,10 @@ reminderfox.core.loadDefaultPreferences= function(){
         }
     }
 
-	reminderfox.core.utc = reminderfox.core.getPreferenceValue ('utcFormat', reminderfox.consts.UTC_DEFAULT)
+	reminderfox.core.utc = reminderfox.core.getPreferenceValue (reminderfox.consts.UTC_DEFAULT, false) 
+
+	//console.log("  rmFX  loaded prefs .utc :", reminderfox.core.utc)
+
 };
 
 
@@ -2857,8 +2862,13 @@ reminderfox.core.ensureRemindersSynchronized= function(){			//TODO Networking - 
  *   -- or <#1>  - but how would I know to increment each one?
  */
 reminderfox.core.processReminderDescription= function(reminder, year, isTodo){
+
+	var nDate = new Date();
+	year = nDate.getFullYear()
+
     var index = reminder.summary.indexOf("<");
     if (index != -1) {
+
         var endIndex = reminder.summary.indexOf(">", index + 1);
         if (endIndex != -1) {
             var useYearOnly = false;
@@ -2946,7 +2956,7 @@ reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, 
     var newline, currentDate;
 //	var _startTime = new Date()		// use to measure execution time (performance of utc version)
 
-	reminderfox.core.utc = reminderfox.core.getPreferenceValue ('utcFormat', reminderfox.consts.UTC_DEFAULT)
+	reminderfox.core.utc = reminderfox.core.getPreferenceValue (reminderfox.consts.UTC_DEFAULT, false)
 
     if (navigator.appVersion.lastIndexOf('Win') != -1) {
         newline = "\r\n";
@@ -3329,7 +3339,10 @@ reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, 
 
 
 reminderfox.core.createStringForDate= function(reminderOrTodo, currentDate, isExport, separator, newline){
-    var outputStr;
+
+	//console.log(" rmFX  createStringForDate", new Date(), currentDate, " utc:", reminderfox.core.utc)
+	
+	var outputStr;
     var year = currentDate.getFullYear();
     var month = currentDate.getMonth() + 1;
     var day = currentDate.getDate();
@@ -3376,6 +3389,9 @@ reminderfox.core.createStringForDate= function(reminderOrTodo, currentDate, isEx
             "00" +
             newline;
     }
+
+	//console.log(" rmFX  createStringForDate", new Date(), currentDate, " utc:", reminderfox.core.utc, outputStr)
+
     return outputStr;
 };
 
@@ -5601,6 +5617,34 @@ reminderfox.core.importRemindersUpdateAll= function(isNetworkImport, lastModifie
     }
 
     var outputStr = reminderfox.core.constructReminderOutput(reminderfox.core.reminderFoxEvents, reminderfox.core.reminderFoxTodosArray, isNetworkImport);
+
+    
+
+    //gW  2016-02-14   hold off with Events=0 and Todos=0 not to loose the RmFX ICS data file
+    // core.constructReminderOutput add this line, will be used for a check
+    // "X-REMINDERFOX-SUMMARY:Events=" + rLen + " Todos=" + tLen +  newline;
+    // ex.;  X-REMINDERFOX-SUMMARY:Events=227 Todos=195
+    var pos0 = outputStr.search("X-REMINDERFOX-SUMMARY:Events=");
+
+    // console.log(" X-REMINDERFOX-SUMMARY ", outputStr.substring(pos0))
+
+    var summary = outputStr.substring(pos0).split("=");
+    var nEvents = summary[1].split(' ')[0];
+    var nTodos  = summary[2].split('\n')[0];
+    var logMsg = (" X-REMINDERFOX-SUMMARY events >" + nEvents + "< todos >" + nTodos+ "<") 
+
+    //nEvents =0; nTodos=0;
+    if ((nEvents == 0) && (nTodos == 0)) {
+       var logMsg = (logMsg + "\n\nReminderfox didn't found any reminders/todos with your the reminder data!"
+          +" \nPlease check your reminder store file and restore from backup if necessary!")
+       reminderfox.util.Logger('calDAV', "\n" + logMsg + "\n\n");
+
+       var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
+       promptService.alert(window, "Reminderfox Warning", logMsg)
+
+       return;
+    }
+
 
     // now write file out to filesystem
     var file = reminderfox.core.getReminderStoreFile();
