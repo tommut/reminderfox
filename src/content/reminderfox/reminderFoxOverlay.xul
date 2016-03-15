@@ -165,7 +165,7 @@
 
 <!--  //gWD&D   added for text/link/iCal/file   -->
 <!--    DISABLED see Bug 1246481 - With ReminderFox add-on active: all Toolbar related Drag and Dop fails -->
-
+<!-- **************
 	<statusbar id="status-bar">	
 
 		<keyset id="reminderFox_keyset">
@@ -182,7 +182,7 @@
 
 		</statusbarpanel>
 	</statusbar>
-
+************** -->
 
 <!--
 				ondragenter="event.stopPropagation(); event.preventDefault();"

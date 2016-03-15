@@ -2829,7 +2829,7 @@ reminderfox.overlay.start_postInit= function() {
     }
 
 // *** old statusbar
-    reminderfox.overlay.moveBox();
+    //reminderfox.overlay.moveBox();     //XXXgW
 
     // moved to only run the very first time after an install (in reminderfox.core.loadDefaultPreferences)
     // we don't want to override user's addon-bar visibility state once they set it
