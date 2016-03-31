@@ -36,10 +36,17 @@
 					value="&rf.about.updatecheck.label;" tooltiptext="&rf.about.updatecheck.tooltip;"/>
 
 			</hbox>
+
 			<separator class="thin" />
+
+			<text value="&rf.about.homepage.label;" style="font-weight: bold;" />
+			<text value="http://www.reminderfox.org/" class="url"
+				onclick="reminderfox.util.docRmFX(); window.close();" />
+			<separator class="thin" />
+
 			<text value="&rf.about.createdby.label;" style="font-weight: bold;" />
 			<text value="Daniel Lee" class="url"
-				onclick="reminderfox.util.docRmFX();" />
+				onclick="reminderfox.util.docRmFX(); window.close();" />
 			<separator class="thin" />
 
 			<text value="&rf.about.developers.label;" style="font-weight: bold;" />
@@ -52,14 +59,18 @@
 				onclick="reminderfox.core.Send2List('gneandr@web.de'); window.close();" />
 			<separator class="thin" />
 
-			<text value="&rf.about.homepage.label;" style="font-weight: bold;" />
-			<text value="http://www.reminderfox.org/" class="url"
-				onclick="reminderfox.util.docRmFX();" />
-			<separator class="thin" />
-
 			<text value="&rf.about.support.label;" style="font-weight: bold;" />
 			<text value="reminderfox@mozdev.org" class="url" id="supportPage"
 				onclick="reminderfox.core.Send2List(null); window.close();" />
+
+			<separator class="thin" />
+
+			<text value="Reminderfox Forum / Support / Feedback" style="font-weight: bold;"
+				class="url" id="forumPage"
+				onclick="reminderfox.util.docRmFX('forum'); window.close();" />
+			<text value="See and share user discussions,"/>
+			<text value="get answers and recommendations to your questions."/>
+
 			<separator class="thin" />
 		</vbox>
 		<spring flex="1" />
