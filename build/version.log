@@ -1,28 +1,38 @@
 
-	Reminderfox  [2.1.5.4] wip
-	   as of:    Thu, 10 Mar 2016 11:40:35 +0100 (CET)
-	'reminderfox_2.1.5.4_wip_20160310_1140.xpi'   <'20160310_1140'>
-	
-2016-03-10	changes for next release
-	calDAVrequester - SPDY logging disabled
+	Reminderfox  [2.1.5.5] release
+	   as of:    Fri, 1 Apr 2016 00:29:04 +0200 (CEST)
+	'reminderfox_2.1.5.5_release_20160401_0029.xpi'   <'20160401_0029'>
 	
 
+2016-04-01_00    Version wip 2.1.5.5 
+==============================================
+	Alert Slider modification
+	-- content/reminderfox/alert  replaced with ../newAlert
+	--> Alert fades in/out (fct is similar to TB new mail notification)
+	--> can be closed with red X on slider
 
+		Known Problem: 
+		Playing sound for the Alert Slider isn't working with all OS:
+		-- WIN7   OK  (WIN8/10 not tested)
+		-- OSX    Works with default (system beep), not with .wav/.ogg files
+		-- Linux  Don't work with default (system beep), not with .wav files,
+		          but OK with .ogg files
 
-2016-03-01  ___ version 2.1.5.4   wip
-	-- Calculating reminder description for any variables (eg: <1978>)
+	About and Foxy menu changed for Google Forum link
+
+	Calculating reminder description for any variables (eg: <1978>)
 	   was wrong with show more than 1 year on the 'Main List'
 	   Thanks to Jens-Uwe
 
-2016-02-14
-	-- Disable storing ICS data with no events/todos during sync
-	-- Subscribe failed due to missing lib link
-	-- D&D failed with FX/SM Nightly builds; 
+	Disable storing ICS data with no events/todos during sync
+	Subscribe failed due to missing lib link
+	D&D failed with FX/SM Nightly builds; 
 	   fixed with removing drag elements from <statusbar/> at overlay.
 
-2016-02-05
-	UTC preference setting was not respected for sending ICS data to remote
-	Thanks to  M.P.Ragavendra
+	CalDAV Sync 
+	-- changed for DST
+	-- UTC preference setting was not respected for sending ICS data to remote
+	   Thanks to  M.P.Ragavendra
 
 
 

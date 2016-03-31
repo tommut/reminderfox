@@ -3,7 +3,7 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>{ada4b710-8346-4b82-8199-5de2b400a6ae}</em:id>
 		<em:name>ReminderFox</em:name>
-		<em:version>2.1.5.4.1</em:version>
+		<em:version>2.1.5.5</em:version>
 		<em:description>Displays and manages reminders and ToDos.</em:description>
 		<em:creator>Tom Mutdosch and Daniel Lee</em:creator>
 		<em:contributor>Guenter Wahl</em:contributor>
