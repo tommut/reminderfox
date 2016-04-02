@@ -9,11 +9,11 @@ if (!reminderfox.calDAV)   reminderfox.calDAV = {};
 if (!reminderfox.calDAV.accounts)   reminderfox.calDAV.accounts = {};    //calDAV  main definition of accounts
 
 // constants
-reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.5";		// update also install.rdf
+reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.5";	// update also install.rdf and build.properties
 
 // ************************* for dev, use "wip"; for offical MOZILLA set to "release"  *****
 // if set to "wip" enables the check-for-update link; if set to release, hides the update link in about dialog
-reminderfox.consts.SPECIAL_VERSION_DETAIL					= "release" // "wip" 
+reminderfox.consts.SPECIAL_VERSION_DETAIL					= "release"  //"release" // "wip" 
 reminderfox.consts.DROPBOX									= "https://dl.dropbox.com/u/35444930/rmFX/XPI/"
     + reminderfox.consts.SPECIAL_VERSION_DETAIL + "/";
 

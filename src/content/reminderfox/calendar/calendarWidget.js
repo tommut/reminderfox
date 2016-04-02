@@ -398,10 +398,11 @@ reminderfox.calendar.ui.event4Day= function (xThis, dayBoxNum) {
 reminderfox.calendar.ui.eventAdd= function(xThis, xEvent){
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// add a new event for the selected day
-	if (xThis.attributes['idValue'].value.indexOf("date:") == 0) {
-		var thisDate =reminderfox.date.convertDate(xThis.attributes['idValue'].value.substring(5));
-		reminderfox.calendar.ui.eventContext ('Add', null, thisDate);
-	}
+	var a = xEvent.currentTarget.id.lastIndexOf('-')
+	var selectedDateNum = xEvent.currentTarget.id.substring(a+1)
+
+	var selectedDate = reminderfox.date.getDateObject(selectedDateNum);
+	reminderfox.calendar.ui.eventContext ('Add', null, selectedDate);
 };
 
 
@@ -653,10 +654,11 @@ reminderfox.calendar.ui.mouseDayOnGrid= function(xThis, xEvent) {
 	if (reminderfox.calendar.drawGrid == false) return;
 
 	var layout = +reminderfox.calendar.layout.status;
-	var selectedDateNum = xThis.getAttribute('gridDayNum');
-	
+	var a = xThis.id.lastIndexOf('-')
+	var selectedDateNum = xThis.id.substring(a+1)
+
 	var aDate = reminderfox.datePicker.gSelectedDate|| new Date();
-	
+
 	var oldDateNum = reminderfox.date.getDateNum(aDate)
 	var selectedDate = reminderfox.date.getDateObject(selectedDateNum);
 
@@ -2129,7 +2131,7 @@ reminderfox.calendar.ttt.addDay= function(dayPanel, numDate) {
 	;
 
 	var dayBox = document.createElement("hbox");
-	dayBox.setAttribute("id", "rmFx_dayPanelDayBox" + numDate);
+	dayBox.setAttribute("id", "rmFx_dayPanelDayBox-" + numDate);
 	dayBox.setAttribute("class", "rmFx_dayPanelDayBox");
 	dayBox.setAttribute("flex", "0");
 

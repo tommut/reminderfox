@@ -1,10 +1,10 @@
 
 	Reminderfox  [2.1.5.5] release
-	   as of:    Fri, 1 Apr 2016 00:29:04 +0200 (CEST)
-	'reminderfox_2.1.5.5_release_20160401_0029.xpi'   <'20160401_0029'>
+	   as of:    Sat, 2 Apr 2016 23:25:26 +0200 (CEST)
+	'reminderfox_2.1.5.5_release_20160402_2325.xpi'   <'20160402_2325'>
 	
 
-2016-04-01_00    Version wip 2.1.5.5 
+2016-04-02_17    Version wip 2.1.5.5 
 ==============================================
 	Alert Slider modification
 	-- content/reminderfox/alert  replaced with ../newAlert
@@ -17,6 +17,8 @@
 		-- OSX    Works with default (system beep), not with .wav/.ogg files
 		-- Linux  Don't work with default (system beep), not with .wav files,
 		          but OK with .ogg files
+
+	Fixed: On FX45 click on calendar day defaulted to year 1899
 
 	About and Foxy menu changed for Google Forum link
 
