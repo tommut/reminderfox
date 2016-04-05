@@ -2,6 +2,124 @@
 ##
 ##  version.txt
 ##
+2016-03-10	changes for next release
+	calDAVrequester - SPDY logging disabled
+	
+
+
+
+2016-03-01  ___ version 2.1.5.4   wip
+	-- Calculating reminder description for any variables (eg: <1978>)
+	   was wrong with show more than 1 year on the 'Main List'
+	   Thanks to Jens-Uwe
+
+2016-02-14
+	-- Disable storing ICS data with no events/todos during sync
+	-- Subscribe failed due to missing lib link
+	-- D&D failed with FX/SM Nightly builds; 
+	   fixed with removing drag elements from <statusbar/> at overlay.
+
+2016-02-05
+	UTC preference setting was not respected for sending ICS data to remote
+	Thanks to  M.P.Ragavendra
+
+
+
+2015-12-30  __ version 2.1.5.4 
+	Updated after alarm log error (Tommut 22.12.2015)
+
+	   Please note:  Add-ons in FX >41 need to be signed by Mozilla AMO!
+	   For testing FX development version is required.
+
+2015-12-20  __ version 2.1.5.4 (rel)
+	SPDY logging updated
+
+2015-12-18  __ version 2.1.5.4 (rel)
+	
+wip 2015-11-30  __ version 2.1.5.3 (wip)
+	QAlarm updated for logs
+
+wip 2015-11-16  __ version 2.1.5.3 (wip)
+	Alarm / Quickalarm not always displayed correctly
+	Reminder for mail missed subject
+
+wip 2015-11-11  __ version 2.1.5.3 (wip)
+	GCal re-adding a previous removed calendar failed 
+	GCal auth method v1 disabled on XUL dialog
+	Some AMO related changes (settimeout)
+
+wip 2015-11-08  __ version 2.1.5.3 (wip)
+	Alarm dialog resized after adding icons
+
+wip 2015-10-13  __ version 2.1.5.3 (wip)
+
+	Updating reminders in windows and update CalDAV calendars
+	-- prefs "extensions.reminderFox.intervalTimer" defines the interval for
+	   the update; default is 30 min (1800000)
+
+
+wip  2015-10-08 __ version 2.1.5.3 (wip)
+
+	Networking updated
+	-- downloading failed with different features because nsIStreamLoader.number
+	   changed (../networkService.js)
+	-- http requesting updated
+
+	Reminderfox News  (disabled)
+	-- Testing a "Reminderfox News" feature which is shown on Main Dialog
+	   (For details see: rmFxUtils.js  and search for //go4news)
+
+	Open/Todo
+	-- change strings for localization!
+
+wip 2015-06-04 __ version 2.1.5.2 (wip)
+	CalDAV Error 412
+	-- Precaution warning with reminder changed on remote but not updated locally,
+	   a local change send to remote would mismatch the etag/ctag
+	   "Remote Calendar Sync" extended handling
+	Note: Testing with GCal showed a GCal/Alarm handling doesn't change the CTag/ETag,
+	      consequently a RmFX update/change of such an event would not produce 412
+
+	CalDAV Error 409
+	-- ??? 
+
+	correction of ICS/DAV File location handling after profile move
+	-- new FX/TB install could only use old profile after resetting the RmFX
+	   store location prefs
+
+
+wip 2015-03-02 __ version 2.1.5.2 (wip)
+	CalDAV
+	-- with GCal error 401 just the token was updated, not the pending reminder
+
+
+wip 2015-02-23 __ version 2.1.5.2 (wip)
+	CalDAV
+	-- update accounts on all XUL windows with write to .dav
+
+	UTC-foremt
+	-- DTSTART/DTEND changed to Z-time format with storing/syncing to be compatible
+	   with systems like fruux (values are converted for 'local' time for UI and 
+	   internal RmFX use) 
+
+
+wip 2015-02-14 __ version 2.1.5.2 (wip)
+	Auto sync at FX/TB startup and also with open RmFX MainDialog
+	Offline mode (Foxy symbol changes, status line in MainDialog)
+
+	CalDAV 
+	-- Alarm dialog functions with CalDAV didn't worked correctly
+	-- Renew reminders of a selected account 
+	   (Foxy menu on Main Dialog --> 'Sync Remote Calendars' --> Select account with Cntrl)
+
+	Alarm dialog
+		alarmed reminders are shown with icon/account id
+
+
+-----------------
+wip  2015-01-25 __ version 2.1.5.2 (wip)
+	Sent++ supporting IMAP Sent folder
+
 
 wip  2015-01-25 __ version 2.1.5.2 (wip)
 	Sent++ supporting IMAP Sent folder
@@ -23,27 +141,27 @@ user preference is set to use multiple windows instead of a single tabbed dialog
 
 
 
-update  2014-04-15 ____version 2.1.5 (release) ____________________________________
+update  2014-04-15 ____version 2.1.5 (release) 
 	calDAV updates/housekeeping
 
-update  2014-04-13 ____version 2.1.5 (test) ____________________________________
+update  2014-04-13 ____version 2.1.5 (test) 
 	CalDAV Sync failed on FX/TB start with new event for first calendar
 		At start removing an event failed
 	Provision to better trace for data loss at startup
 
 
-Updates 2014-02-13 ___ version 2.1.4.2 (release) _______________________________
+Updates 2014-02-13 ___ version 2.1.4.2 (release) 
 	CalDAV Sync requesting for a calendar which throws an error (not available, 
 		wrong PW, etc) now opens a XUL dialog with error detail, it has buttons to
 		go for Options tab:Sync or just skip that calendar without a fix.
 
-Updates 2014-02-12 ___ version 2.1.4.2 (release) _______________________________
+Updates 2014-02-12 ___ version 2.1.4.2 (release) 
 	Foxy Icon now has option to show status text as used with Foxy Bow
 		(experimental)
 
 	Gcal Sync wasn't handling the CTag correctly
 
-Updates 2014-02-10 ___ version 2.1.4.2 (release) _______________________________
+Updates 2014-02-10 ___ version 2.1.4.2 (release) 
 	CalDAV now checks for status on remote calendar vs local (CTag) and only 
 		updates if required        Thank to Peter Wills's request
 
@@ -54,11 +172,11 @@ Updates 2014-02-10 ___ version 2.1.4.2 (release) _______________________________
 
 
 
-Updates 2014-02-08 ___ version 2.1.4.1 (release) _______________________________
+Updates 2014-02-08 ___ version 2.1.4.1 (release) 
 	Editing a Todo/Task on a user list did not set the top menu selector for the
 		user list but always to "Todo's"
 
-Updates 2014-02-06 ___ version 2.1.4.1 (release) _______________________________
+Updates 2014-02-06 ___ version 2.1.4.1 (release) 
 	Deleting current instance of a recurring reminder now position in the Main List
 		to a reminder with date of or near to deleted instance
 
@@ -69,7 +187,7 @@ Updates 2014-02-06 ___ version 2.1.4.1 (release) _______________________________
 		as  we don't want to override user's addon-bar visibility state once 
 		they set it  (this was a complaint of several vocal users)
 
-Updates 2014-02-04 ___ version 2.1.4 (release) _________________________________
+Updates 2014-02-04 ___ version 2.1.4 (release) __
 	Foxy Icon with Badge now  can be placed to any bar. 
 		Also Options --> FX/TB can be used to disable/enable. After an enable after
 		previous disable the Foxy Icon will be placed on the same bar, same position
@@ -83,7 +201,7 @@ Updates 2014-02-04 ___ version 2.1.4 (release) _________________________________
 	Known Issue
 		-- FX 29 will not automatically start Reminderfox, need to open the list
 
-Updates 2014-02-02 ___ version 2.1.4 (release) _________________________________
+Updates 2014-02-02 ___ version 2.1.4 (release) __
 	FoxyBadge on MainMenu and Bow on statusbar didn't followed 
 		the Options --> FX/TB settings
 		(also some others similar)
@@ -91,7 +209,7 @@ Updates 2014-02-02 ___ version 2.1.4 (release) _________________________________
 	       Newer FX version (eg. FX29) will NOT support the Addon-Bar, so this 
 	       current version of Reminderfox can not show the Bow!
 
-Updates 2014-01-26 ___ version 2.1.4 (release) _________________________________
+Updates 2014-01-26 ___ version 2.1.4 (release) __
 
 	CalDAV/Remote Calendar
 	-- Google Calendar with OAuth2 supported (since Sept.16th 2013 required)

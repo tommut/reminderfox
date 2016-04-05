@@ -1,7 +1,7 @@
 // ReminderFox Prefs
-//pref("extensions.reminderFox.news", true);
-//pref("extensions.reminderFox.newsStamp", "1443869890924");
-//pref("extensions.reminderFox.newsLink", "https://dl.dropbox.com/u/35444930/rmFX/XPI/news.txt");
+pref("extensions.reminderFox.news", true);
+pref("extensions.reminderFox.newsStamp", "1443869890924");
+pref("extensions.reminderFox.newsLink", "https://dl.dropbox.com/u/35444930/rmFX/XPI/news.txt");
 
 pref("extensions.reminderFox.alarmSound", true);
 pref("extensions.reminderFox.alertSound", false);
