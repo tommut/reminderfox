@@ -7,10 +7,10 @@
 <?xul-overlay href="chrome://reminderfox/content/editing/eventEntryOverlay.xul"?>
 
 <!-- DTD Files -->
-<!DOCTYPE window
-		[
-				<!ENTITY % dtd2 SYSTEM "chrome://reminderfox/locale/reminderfox.dtd" > %dtd2;
-				]>
+<!DOCTYPE window 
+[
+    <!ENTITY % dtd2 SYSTEM "chrome://reminderfox/locale/reminderfox.dtd" > %dtd2;
+]>
 
 
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"

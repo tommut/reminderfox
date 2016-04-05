@@ -10,8 +10,9 @@ reminderfox.overlay.consts.TOOLTIP_WITH_TODOS_LINE_LENGTH = 65;
 reminderfox.overlay.consts.ALERT_TEXT_MAX_LENGTH = 100;
 reminderfox.overlay.consts.MONTHLY_WILDCARD = "*";
 
-// this was externalized to a pref; @see reminderfox.consts.INTERVAL_TIMER
-reminderfox.overlay.consts.HOUR_TIMEOUT = 1800000; // changed to half hour instead of 1 hour= 3600000  // dump: externalize this to a pref (read it first time only; then store it)
+// reminderfox.overlay.consts.HOUR_TIMEOUT = 1800000; // changed to half hour instead of 1 hour= 3600000  // dump: externalize this to a pref (read it first time only; then store it)
+reminderfox.overlay.consts.HOUR_TIMEOUT = 60000; // changed to 2 min instead of 1 hour= 3600000  
+// // dump: externalize this to a pref (read it first time only; then store it)
 
 // global vars
 reminderfox.overlay.alarmList = new Array();
@@ -23,7 +24,6 @@ reminderfox.overlay._lastAlarmTime = null;
 
 
 reminderfox.overlay.lastSuspendAlertTimeoutId = null;
-reminderfox.overlay.lastHourlyTimeoutId = null;  // todo: cleanup
 
 reminderfox.overlay.timerObject = Components.classes['@mozilla.org/timer;1'].createInstance(Components.interfaces.nsITimer);
 reminderfox.overlay.alertTimerObject = Components.classes['@mozilla.org/timer;1'].createInstance(Components.interfaces.nsITimer);
@@ -80,10 +80,6 @@ reminderfox.overlay.openMainDialog= function(closeIfOpen, tab){
         var newOptions = {
             callback: reminderfox.core.networkSynchronizeCallback,
             clearMailLabelCallback: reminderfox.overlay.clearMailLabelCallback
-            //,
-            // 08/03/2014 update: now using reminderfox.overlay.timerObject which should be reliable and do not need
-            // these checks like we did to kick off setTimeout's if they failed
-            //processRemindersCallback: reminderfox.overlay.initializeReminderFoxUpdating     // was   .initializeReminderFoxHourly
         };
         if (tab == null) tab = 'reminders';
         window.openDialog("chrome://reminderfox/content/addreminder-dialog.xul", "addreminder-dialog", "chrome,centerscreen,resizable,dialog=no", tab, newOptions);
@@ -2049,18 +2045,6 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
                 reminderfox.consts.LOG_LEVEL_FINE);
 
             reminderfox.overlay.storeTimeOfLastProcessed();
-
-            // 08/03/2014 update: now using reminderfox.overlay.timerObject which should be reliable and do not need
-            // these checks like we did to kick off setTimeout's if they failed
-//				// make sure there's not an oustanding alarm.
-//				// Since we can enter this code slightly ahead of time, and in that case
-//				// we don't want an outstanding timeout to occur.
-//				window.clearTimeout( reminderfox.overlay.lastHourlyTimeoutId );
-//
-//				reminderfox.overlay.lastHourlyTimeoutId  =
-//					window.setTimeout(reminderfox.overlay.initializeReminderFoxUpdating,    // was   initializeReminderFoxHourly,
-//					reminderfox.overlay.consts.HOUR_TIMEOUT); // 10000 == 10 sec min
-            //}
         }
     }
 
@@ -2094,6 +2078,8 @@ reminderfox.overlay.updateRemindersInWindow= function(){
                 important = true;
             }
         }
+
+//console.log("   overlay.updateRemindersInWindow ", reminderString )		//gWXXXTEST 2016-03-22 TEST
 
         if (reminderString != "") {
             // get preference for how many chars to make this
@@ -2406,26 +2392,6 @@ reminderfox.overlay.showAlertSlider= function(){
                    + ";  currentTime: " + currentTime, 
                    reminderfox.consts.LOG_LEVEL_INFO);
 
-                // TODO: setInterval - can remove these lastTime checks
-                // 08/03/2014 update: now using reminderfox.overlay.timerObject which should be reliable and do not need
-                // these checks like we did to kick off setTimeout's if they failed
-
-//				if (lastTime == null || (currentTime + 100) >= lastTimeElapsed) { // +100 as small buffer (sometimes times are slightly off)
-                // problem with MAC and alertslider
-//					var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo);
-//
-//					if ("1.9" > appInfo.platformVersion) { // Gecko check
-//						var alertComponent = Components.classes["@mozilla.org/alerts-service;1"]
-//						if (alertComponent != null) {
-//							var alerts = alertComponent.getService(Components.interfaces.nsIAlertsService);
-//						}
-//					}
-//					else {
-//						// due to some error with OS/2 use the previous code (for Gecko 1.8)
-//						var alerts = Components.classes["@mozilla.org/alerts-service;1"].getService(Components.interfaces.nsIAlertsService);
-//
-//					}
-                //					var alerts = Components.classes["@mozilla.org/alerts-service;1"].getService(Components.interfaces.nsIAlertsService);
                 var alertType;
                 try {
                     alertType = reminderfox._prefsBranch.getCharPref(reminderfox.consts.ENABLE_ALERT_PREF);
@@ -2441,63 +2407,52 @@ reminderfox.overlay.showAlertSlider= function(){
                 //var remoteChanged = reminderfox.overlay.ensureRemoteRemindersSynchronized(true);   // do we want  alarm sync too?
 
                 // check for empty today/upcoming - if both empty then ignore - check if today equals none string; if so, then check if upcoming == none string
-                var lblparent = document.getElementById("reminderfox-todaysRemindersBox").cloneNode(true);
-                var lblparent2 = document.getElementById("reminderfox-upcomingRemindersBox").cloneNode(true);
+                var todaysReminders = document.getElementById("reminderfox-todaysRemindersBox").cloneNode(true);
+                var upcomingReminders = document.getElementById("reminderfox-upcomingRemindersBox").cloneNode(true);
 
                 var children = null;
                 var children2 = null;
                 var todayPref = false;
                 var upcomingPref = false;
+
                 if (alertType == reminderfox.consts.ENABLE_ALERT_PREF_TODAY || alertType == reminderfox.consts.ENABLE_ALERT_PREF_ALL) {
-                    children = lblparent.childNodes;
+                    children = todaysReminders.childNodes;
                     todayPref = true;
                 }
                 if (alertType == reminderfox.consts.ENABLE_ALERT_PREF_UPCOMING || alertType == reminderfox.consts.ENABLE_ALERT_PREF_ALL) {
-                    children2 = lblparent2.childNodes;
+                    children2 = upcomingReminders.childNodes;
                     upcomingPref = true;
                 }
                 var noToday = (children == null || children.length == 0 || (children.length == 1 && children[0].getAttribute("value") == reminderfox.string("rf.main.tooltip.reminders.none")));
                 var noUpcoming = (children2 == null || children2.length == 0 || (children2.length == 1 && children2[0].getAttribute("value") == reminderfox.string("rf.main.tooltip.reminders.none")));
                 var ignoreAlert = noToday && noUpcoming;
+
                 if (!ignoreAlert) {
                     if (!todayPref) {
-                        lblparent = null;
+                        todaysReminders = null;
                     }
                     if (!upcomingPref) {
-                        lblparent2 = null;
+                        upcomingReminders = null;
                     }
-                    var newOptions = {
-                        todaysreminders: lblparent,
-                        upcomingreminders: lblparent2,
-                        alertTypeToShow: alertType
-                    };
-                    window.openDialog("chrome://reminderfox/content/alerts/reminderalert.xul", "window:alert2", "chrome,dialog=yes,titlebar=no,popup=yes", newOptions);
 
-                    // use this if you want to have a close button on the alert window
-                    // window.openDialog("chrome://reminderfox/content/alerts/reminderalert.xul", "window:alert2", "chrome,dialog=yes,titlebar=yes,popup=no", newOptions);
-
-                }
+							if (reminderfox._prefsBranch.getBoolPref(reminderfox.consts.ALERT_SOUND)){
+								reminderfox.core.playSound();
+							}
+							var newOptions = {
+								todaysReminders: todaysReminders,
+								upcomingReminders: upcomingReminders,
+								alertTypeToShow: alertType,
+								hideGayPaw:reminderfox.core.getPreferenceValue( reminderfox.consts.HIDE_FOX_PAW )
+							};
+							window.openDialog("chrome://reminderfox/content/newAlert/newAlert.xul", "window:alert", "chrome,dialog=yes,titlebar=no,popup=yes", newOptions);
+						}
 
                 //checkData  gW:disable this for testing 2014-05-11			reminderfox.core.clearRemindersAndTodos();
                 reminderfox.core.logMessageLevel("AlertSlider ! ", reminderfox.consts.LOG_LEVEL_INFO);
                 reminderfox.overlay.storeTimeOfLastAlert();
-
-
-                //window.setInterval(reminderfox.overlay.showAlertSlider, alert_timeout);
-                // if lastAlertTimeout != alertTimeout
-                // window.clearInterval...    (have to have saved original setInterval)
-                // window.setInterval( ... )
-
-
-                //window.setTimeout(reminderfox.overlay.showAlertSlider, alert_timeout);
-
-                //}
             }
         }
     }
-    // add some extra checks in when showing alert slider; in case the setTimeout threads have been suspended,
-    // this will kick them off again if neccessary
-    //reminderfox.overlay.initializeReminderFoxUpdating();     // was   initializeReminderFoxHourly();
 }
 
 
@@ -2508,8 +2463,6 @@ reminderfox.overlay.showAlertSlider= function(){
 //    reminders.ics.bak3
 reminderfox.overlay.saveReminders= function(){
 //------------------------------------------------------------------------------
-
-
 
     // algo notes:
     /*
@@ -2801,6 +2754,9 @@ reminderfox.overlay.runDebug= function() {
 
 reminderfox.overlay.start= function(){
     // run this later and let the window load.
+
+    console.log(" rmFX overlay.start", new Date())
+
     window.setTimeout(function() { reminderfox.overlay.start_postInit(); }, 100);
 
 
@@ -2829,7 +2785,7 @@ reminderfox.overlay.start_postInit= function() {
     }
 
 // *** old statusbar
-    //reminderfox.overlay.moveBox();     //XXXgW
+    reminderfox.overlay.moveBox();
 
     // moved to only run the very first time after an install (in reminderfox.core.loadDefaultPreferences)
     // we don't want to override user's addon-bar visibility state once they set it
@@ -2862,18 +2818,8 @@ reminderfox.overlay.start_postInit= function() {
     if (attContext != null)
         attContext.addEventListener("popupshowing", reminderfox.util.popupCheck, false);
 
-    // if this is the very first window opened, then let's set the timeout on it.
-    //reminderfox.overlay.initializeReminderFox(false);
-
-
-//    window.setInterval(reminderfox.overlay.initializeReminderFoxUpdating,     //  was   .initializeReminderFoxHourly,
-//        reminderfox.overlay.consts.HOUR_TIMEOUT); // 10000 == 10 sec min
-
-    //reminderfox.overlay.initializeReminderFoxHourlyTimer.notify(reminderfox.overlay.timerObject); //this is how 
-    reminderfox.overlay.initializeReminderFoxUpdatingTimer.notify(reminderfox.overlay.timerObject); //this is how 
-    // we start the timer, we start off by running the callback, then from there every 5 sec it will call
-    //if want to start off by waiting 5sec first then comment out line 20 and uncomment line 18
-    //}
+	// initialize  Alert Slider  Timer
+    reminderfox.overlay.initializeReminderFoxUpdatingTimer.notify(reminderfox.overlay.timerObject);
 
     // Initialize reminder fox for the browser window
     var windowEnumerator =  reminderfox.core.getWindowEnumerator();
@@ -2922,9 +2868,14 @@ reminderfox.overlay.showAlertSliderTimingFunction = {
             alert_timeout = alert_timeout * 60000;
 
 
-            //do stuff here, this stuff will finish and then timer will start countdown of myTimerInterval.
-            //This is nice because if used TYPE_REPEATING_PRECISE will trigger this call back every myTimerInterval. TYPE_REPEATING_PRECISE_SKIP will trigger this call back every myTimerInterval, but if myTimerInterval is up and the callback from last time myTimerInterval went off is still running, it will skip running this call back.
-            //TYPE_REPEATING_SLACK i don't trust because on MDN they said "note that this is not guaranteed: the timer can fire at any time." so I go with TYPE_ONE_SHOT.
+            // do stuff here, this stuff will finish and then timer will start countdown of myTimerInterval.
+            // This is nice because if used TYPE_REPEATING_PRECISE will trigger this call back every myTimerInterval. 
+            // TYPE_REPEATING_PRECISE_SKIP will trigger this call back every myTimerInterval, but if myTimerInterval 
+            // is up and the callback from last time myTimerInterval went off is still running, it will skip running 
+            // this call back.
+            // TYPE_REPEATING_SLACK i don't trust because on MDN they said 
+            // "note that this is not guaranteed: the timer can fire at any time." 
+            // so I go with TYPE_ONE_SHOT.
             timer.initWithCallback(reminderfox.overlay.showAlertSliderTimingFunction,
                 alert_timeout, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
         }

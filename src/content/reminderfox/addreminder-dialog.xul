@@ -215,10 +215,6 @@
 					label="&rf.calendar.menu.options.open;"
 					tooltiptext="&rf.calendar.menu.options.open;" />
 
-				<menuitem label="&rf.main.help.label;"
-					onclick="reminderfox.util.launchHelp();reminderfox.calendar.ui.panelClose(); "
-					tooltiptext="&rf.calendar.menu.options.docu;" />
-
 				<menu id="backupMenu" label="&rf.add.file.menu.backup.title;">
 					<menupopup id="backupMenuPopup" >
 						<menuitem id="rmFxBackup" label="&rf.options.file.backup;"
@@ -229,6 +225,16 @@
 								   tooltiptext="&rf.options.file.Pick;"/>
 					</menupopup>
 				</menu>
+
+				<menuseparator />
+
+				<menuitem label="&rf.main.help.label;"
+					onclick="reminderfox.util.launchHelp();reminderfox.calendar.ui.panelClose(); "
+					tooltiptext="&rf.calendar.menu.options.docu;" />
+
+				<menuitem label="Reminderfox Forum / Support / Feedback" 
+					oncommand="reminderfox.util.docRmFX('forum');" 
+				tooltiptext="See and share user discussions, get answers and recommendations to your questions."/>
 
 				<menuitem label="&rf.main.about.label;" id="calendar-foxy-contextmenu-gotoAbout"
 					onclick="reminderfox.overlay.openAboutReminderFoxDialog();reminderfox.calendar.ui.panelClose(); " />
