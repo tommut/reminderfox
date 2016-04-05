@@ -7,42 +7,42 @@
 <?xul-overlay href="chrome://reminderfox/content/editing/eventEntryOverlay.xul"?>
 
 <!-- DTD Files -->
-<!DOCTYPE window 
-[
-    <!ENTITY % dtd2 SYSTEM "chrome://reminderfox/locale/reminderfox.dtd" > %dtd2;
-]>
+<!DOCTYPE window
+		[
+				<!ENTITY % dtd2 SYSTEM "chrome://reminderfox/locale/reminderfox.dtd" > %dtd2;
+				]>
 
 
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	id="reminderFox-alarmDialog" title="&rf.alarm.dialog.title;" persist="screenX screenY  width height"
-	windowtype="window:reminderFoxAlarmDialog" onfocus="updateTimeUntil()"
-	onload="loadAlarm()" onunload="reminderFox_alarmClosed(true);"
-	>
+		id="reminderFox-alarmDialog" title="&rf.alarm.dialog.title;" persist="screenX screenY  width height"
+		windowtype="window:reminderFoxAlarmDialog" onfocus="updateTimeUntil()"
+		onload="loadAlarm()" onunload="reminderFox_alarmClosed(true);"
+>
 
 	<stringbundleset id="stringbundleset">
 		<stringbundle id="reminderFox-bundle"
-			src="chrome://reminderfox/locale/reminderfox.properties" />
+					  src="chrome://reminderfox/locale/reminderfox.properties" />
 	</stringbundleset>
 	<script type="application/x-javascript" src="chrome://reminderfox/content/reminderFoxCore.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/rmFxUtils.js" />
 	<script type="application/x-javascript"
-		src="chrome://reminderfox/content/alarms/alarmDialog.js" />
+			src="chrome://reminderfox/content/alarms/alarmDialog.js" />
 	<script type="application/x-javascript"
-		src="chrome://reminderfox/content/editing/eventEntry.js" />
+			src="chrome://reminderfox/content/editing/eventEntry.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/network/download.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/network/upload.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/passwordManagerUtils.js"/>
 	<script type="application/x-javascript" src="chrome://reminderfox/content/addReminderDialog.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/reminderFox.js" />
 	<script type="application/x-javascript"
-		src="chrome://reminderfox/content/datepicker/datepicker.js" />
+			src="chrome://reminderfox/content/datepicker/datepicker.js" />
 
 	<script type="application/x-javascript" src="chrome://reminderfox/content/mail/rmFxMail.js" />
 
 
-    <!-- allow escape to dismiss window; but we don't want ENTER as that can be accidentally
+	<!-- allow escape to dismiss window; but we don't want ENTER as that can be accidentally
       input while typing something else when an alarm pops up -->
-    <keyset id="reminderFoxOptions-keys">
+	<keyset id="reminderFoxOptions-keys">
 		<key keycode="VK_ESCAPE" oncommand="reminderFox_alarmClosed()" />
 	</keyset>
 
@@ -65,30 +65,30 @@
 				<vbox id="reminderFoxVbox" flex="1">
 					<hbox align="center">
 						<label id="descLabel" value="&rf.reminderoptions.description.label;"
-							align="bottom" />
+							   align="bottom" />
 
 						<textbox id="reminderDescriptionText" readonly="true"
-							align="bottom" flex="2" />
+								 align="bottom" flex="2" />
 					</hbox>
 
 					<hbox id="notesHbox" orient="vertical" flex="100" hidden="true">
 						<textbox width="305px" flex="2" readonly="true" id="notesText"
 								 multiline="true" rows="4" hidden="true" />
 					</hbox>
-<!--
+					<!--
+                                        <hbox align="center">
+                                            <label id="reminderDateLabel" value="&rf.reminderoptions.date.label;"
+                                                align="bottom" />
+                                            <label id="reminderDateText" align="bottom" />
+                                        </hbox>
+                                        <hbox align="center">
+                                            <label id="timeDescLabel" value="&rf.reminderoptions.time.label;" />
+                                            <label id="reminderTimeText" align="bottom" />
+                                        </hbox>
+                    -->
 					<hbox align="center">
 						<label id="reminderDateLabel" value="&rf.reminderoptions.date.label;"
-							align="bottom" />
-						<label id="reminderDateText" align="bottom" />
-					</hbox>
-					<hbox align="center">
-						<label id="timeDescLabel" value="&rf.reminderoptions.time.label;" />
-						<label id="reminderTimeText" align="bottom" />
-					</hbox>
--->
-					<hbox align="center">
-						<label id="reminderDateLabel" value="&rf.reminderoptions.date.label;"
-							align="bottom" />
+							   align="bottom" />
 						<label id="reminderDateText" align="bottom" />
 						<!--<label id="timeDescLabel" value="" hidden="true" />-->
 						<label id="reminderTimeText" align="bottom" />
@@ -111,7 +111,7 @@
 					<hbox id="urlhbox" align="center" hidden="true">
 						<label id="urlLabel" value="&rf.reminderoptions.url.label;" />
 						<label id="urlText" align="bottom" class="text-link" href=""
-							onclick="reminderFox_launchAlarmURL();" />
+							   onclick="reminderFox_launchAlarmURL();" />
 					</hbox>
 
 					<hbox align="center" id="attributeIcons" hidden="false">
@@ -126,9 +126,9 @@
 							<vbox>
 								<hbox align="center">
 									<button id="snoozeButton" label="&rf.alarm.button.snooze;"
-										oncommand="reminderFox_snooze();" default="true"/>
+											oncommand="reminderFox_snooze();" default="true"/>
 									<menulist id="reminderFox-snoozeTime" editable="true"
-										oninput="reminderFox_snoozeTimeChanged();" oncommand="reminderFox_snoozeTimeChanged();">
+											  oninput="reminderFox_snoozeTimeChanged();" oncommand="reminderFox_snoozeTimeChanged();">
 										<menupopup>
 											<menuitem label="1" />
 											<menuitem label="5" selected="true" />
@@ -152,20 +152,20 @@
 										<vbox id="rmFx-moz-datepicker-box">
 											<box id="datepickerBox">		<!-- datepicker param will be set with JS -->
 												<datepicker id="datePickerCurrent" type='grid'
-													firstdayofweek="2" />
+															firstdayofweek="2" />
 											</box>
 											<hbox>							<!-- is24H will be set with JS -->
 												<spacer width="3px"/>
 												<timepicker id="timePickerCurrent" hideseconds="true"/>
 												<button label="&rf.ok;" id="okButton"
-													oncommand="rmFx_datePickerQAclose();" />
+														oncommand="rmFx_datePickerQAclose();" />
 												<spacer width="3px"/>
 											</hbox>
 										</vbox>
 									</panel>
 
 									<toolbarbutton id="datepickerAnchor"
-										onclick="rmFx_datePickerQAopen(event, this)" tooltiptext="&rf.reminderoptions.tooltip.selectdate;" />
+												   onclick="rmFx_datePickerQAopen(event, this)" tooltiptext="&rf.reminderoptions.tooltip.selectdate;" />
 
 								</hbox>
 							</vbox>
@@ -185,7 +185,7 @@
 										</menupopup>
 									</menulist>
 									<button id="okButton" label="&rf.ok;"
-										oncommand="reminderFox_alarmDone();" />
+											oncommand="reminderFox_alarmDone();" />
 								</hbox>
 							</vbox>
 						</groupbox>
