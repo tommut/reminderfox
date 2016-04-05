@@ -175,6 +175,19 @@ reminderfox.date.adjustTimeZones= function (eventDateString, fullDateString, rem
 };
 
 
+ function offsetDST(t) { //t is the date object to check, returns true if daylight saving time is in effect.
+	var jan = new Date(t.getFullYear(),0,1);
+	var jul = new Date(t.getFullYear(),6,1);
+
+	var offset = 0;
+	if (Math.min(jan.getTimezoneOffset(),jul.getTimezoneOffset()) == t.getTimezoneOffset()) {
+		offset = jan.getTimezoneOffset() - jul.getTimezoneOffset()
+	}
+	return offset;
+}
+
+
+
 /**
  * Converts a date string to a Date object
  * @param {string} eventDate
@@ -2018,6 +2031,10 @@ reminderfox.util.launchHelp= function(whichHelp){
 	}
 };
 
+reminderfox.util.launchForum= function(whichHelp){
+	
+}
+
 
 reminderfox.util.docRmFX= function(UrlToGoTo){
 //------------------------------------------------------------------------------
@@ -2026,8 +2043,13 @@ reminderfox.util.docRmFX= function(UrlToGoTo){
 	if ((UrlToGoTo === "") || (!UrlToGoTo)) {
 		UrlToGoTo = (reminderfox.consts.REMINDER_FOX_PAGE_URL + "/");
 	}
+	
+	if (UrlToGoTo == "forum") {
+		UrlToGoTo = "https://groups.google.com/forum/#!forum/reminderfox"
+	} else {
 	if (UrlToGoTo.indexOf(reminderfox.consts.REMINDER_FOX_PAGE_URL) == -1) 
 		UrlToGoTo = reminderfox.consts.REMINDER_FOX_PAGE_URL +"/" + UrlToGoTo;
+	}
 
 	if ("@mozilla.org/messenger;1" in Components.classes) { 
 

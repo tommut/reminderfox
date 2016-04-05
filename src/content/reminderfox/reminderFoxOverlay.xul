@@ -63,7 +63,8 @@
 	<window id="main-window">
 		<popupset id="mainPopupSet"/>
 	</window>
-	
+
+
 	<!-- Firefox Tools Menu -->
 	<menupopup id="menu_ToolsPopup">
 		<menu id="reminderFox-tools-menu" label="&rf.name;" 
@@ -154,6 +155,11 @@
 			<menuitem label="&rf.main.options.label;" oncommand="reminderfox.overlay.openOptionsDialog();" />
 			<menuitem label="&rf.main.homepage.label;"  oncommand="reminderfox.util.docRmFX();" />
 			<menuitem label="&rf.main.help.label;"  oncommand="reminderfox.util.launchHelp();" />
+
+			<menuitem label="Reminderfox Forum / Support / Feedback" 
+				oncommand="reminderfox.util.docRmFX('forum');" 
+			tooltiptext="See and share user discussions, get answers and recommendations to your questions."/>
+
 			<menuitem id="reminderfox-options-contextmenu-editreminder" label="&rf.main.about.label;" oncommand="reminderfox.overlay.openAboutReminderFoxDialog();"/>
 		</menupopup>
 
@@ -165,7 +171,7 @@
 
 <!--  //gWD&D   added for text/link/iCal/file   -->
 <!--    DISABLED see Bug 1246481 - With ReminderFox add-on active: all Toolbar related Drag and Dop fails -->
-<!-- **************
+
 	<statusbar id="status-bar">	
 
 		<keyset id="reminderFox_keyset">
@@ -182,7 +188,7 @@
 
 		</statusbarpanel>
 	</statusbar>
-************** -->
+
 
 <!--
 				ondragenter="event.stopPropagation(); event.preventDefault();"

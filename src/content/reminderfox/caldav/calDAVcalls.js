@@ -2021,14 +2021,14 @@ reminderfoxX.calDAVrequest = function () {}
 			call.password     = "";
 			if(call.account.Typ == "VEVENT") {
 				call.vCalendar    = reminderfox.core.constructReminderOutput (cReminders, null /* _todosArray*/, 
-						true /*isExport*/, false /*ignoreExtraInfo*/);
+						true /*isExport*/, false /*ignoreExtraInfo*/, false, true /*isCalDAV*/);
 				call.reminder = cReminders
 			}
 			if(call.account.Typ == "VTODO") {
 				var cTodo = [];
 				cTodo[0] = cReminders;
 				call.vCalendar    = reminderfox.core.constructReminderOutput (null, cTodo /* _todosArray*/, 
-						true /*isExport*/, false /*ignoreExtraInfo*/);
+						true /*isExport*/, false /*ignoreExtraInfo*/, false, true /*isCalDAV*/);
 				call.reminder = cReminders
 			}
 

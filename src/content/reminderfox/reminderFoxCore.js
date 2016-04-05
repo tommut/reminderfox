@@ -9,11 +9,11 @@ if (!reminderfox.calDAV)   reminderfox.calDAV = {};
 if (!reminderfox.calDAV.accounts)   reminderfox.calDAV.accounts = {};    //calDAV  main definition of accounts
 
 // constants
-reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.4";		// update also install.rdf
+reminderfox.consts.MIGRATED_PREF_VERSION						= "2.1.5.5";	// update also install.rdf and build.properties
 
 // ************************* for dev, use "wip"; for offical MOZILLA set to "release"  *****
 // if set to "wip" enables the check-for-update link; if set to release, hides the update link in about dialog
-reminderfox.consts.SPECIAL_VERSION_DETAIL					=  "release"; // "wip";   //"release" 
+reminderfox.consts.SPECIAL_VERSION_DETAIL					= "release"  //"release" // "wip" 
 reminderfox.consts.DROPBOX									= "https://dl.dropbox.com/u/35444930/rmFX/XPI/"
     + reminderfox.consts.SPECIAL_VERSION_DETAIL + "/";
 
@@ -1955,6 +1955,8 @@ reminderfox.core.getWindowEnumerator= function(){
 
 
 reminderfox.core.playSound= function(){
+    console.trace()
+
     var gSound = Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound);
     var savefilePath;
     // check if user has specified a specific file path for sound in their preferences
@@ -1963,11 +1965,16 @@ reminderfox.core.playSound= function(){
     }
     catch (e) {
     }
+
     // if not, then play default beep sound
     if (!savefilePath || savefilePath === "") {
+
+        // console.log("XXXalert playSound Core    beep:", gSound)
         gSound.beep();
     }
     else {
+        // console.log("XXXalert playSound Core    savefilePath:", savefilePath, gSound)
+
         var _ioService = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
         var _soundService = Components.classes["@mozilla.org/sound;1"].createInstance(Components.interfaces.nsISound);
         _soundService.init();
@@ -1986,8 +1993,11 @@ reminderfox.core.playSound= function(){
 
         if (uri)
             _soundService.play(uri);
+        // console.log("XXXalert playSound Core    soundService.play(uri):", uri)
+
     }
 };
+
 
 reminderfox.core.getSortNewUpcomingReminderIndex= function(reminders, newreminder){
     // We go through each reminder and then compare that reminder's month with
@@ -2952,7 +2962,7 @@ reminderfox.core.processReminderDescription= function(reminder, year, isTodo){
 };
 
 
-reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, isExport, ignoreExtraInfo, postingMethod){
+reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, isExport, ignoreExtraInfo, postingMethod, isCalDAV){
     var newline, currentDate;
 //	var _startTime = new Date()		// use to measure execution time (performance of utc version)
 
@@ -3039,14 +3049,16 @@ reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, 
             }
 
             // set date
+//console.log("XXXutc  constructReminderOutput  reminder.date  in:", "_"+reminder.date+"_", reminder.summary)
+
             currentDate = new Date(reminder.date.getFullYear(), reminder.date.getMonth(), reminder.date.getDate(), reminder.date.getHours(), reminder.date.getMinutes());
-            outputStr += reminderfox.core.createStringForDate(reminder, currentDate, isExport, separator, newline);
+            outputStr += reminderfox.core.createStringForDate(reminder, currentDate, isExport, separator, newline, isCalDAV);
 
             var endDate = null;
             if (reminder.endDate) {
                 endDate = new Date(reminder.endDate.getFullYear(), reminder.endDate.getMonth(), reminder.endDate.getDate(), reminder.endDate.getHours(), reminder.endDate.getMinutes());
             }
-            outputStr += reminderfox.core.createStringForEndDate(reminder, endDate, isExport, separator, newline);
+            outputStr += reminderfox.core.createStringForEndDate(reminder, endDate, isExport, separator, newline, isCalDAV);
 
             if (isExport && (!reminder.extraInfo || reminder.extraInfo.indexOf("STATUS:") == -1)) {
                 outputStr += "STATUS:CONFIRMED" + newline;
@@ -3259,11 +3271,6 @@ reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, 
                     + "CALDAVID" + separator + todo.calDAVid, newline);
             }
 
-            // moved down after .extraInfo,  so a list name from extraInfo can be used
-            //			if ( n != reminderfox.consts.DEFAULT_TODOS_CATEGORY ) {
-            //				outputStr += reminderfox.consts.REMINDER_FOX_EXTENDED + "LISTID" + separator +  n  + newline;
-            //			}
-
             if (todo.location && todo.location !== "") {
                 var location = reminderfox.util.escapeCommas(todo.location);
                 outputStr += reminderfox.util.foldLines("LOCATION" + separator + location, newline);
@@ -3338,9 +3345,7 @@ reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, 
 };
 
 
-reminderfox.core.createStringForDate= function(reminderOrTodo, currentDate, isExport, separator, newline){
-
-    //console.log(" rmFX  createStringForDate", new Date(), currentDate, " utc:", reminderfox.core.utc)
+reminderfox.core.createStringForDate= function(reminderOrTodo, currentDate, isExport, separator, newline, isCalDAV){
 
     var outputStr;
     var year = currentDate.getFullYear();
@@ -3365,9 +3370,11 @@ reminderfox.core.createStringForDate= function(reminderOrTodo, currentDate, isEx
     else
 
     //  UTC Format 
-    if (reminderfox.core.utc == true) {
+    if ((reminderfox.core.utc == true) && !isCalDAV) {
+
         var dateZ = new Date(currentDate).toISOString().replace(/-/g,"").replace(/:/g,"").substring(0,15)+"Z"
         outputStr = "DTSTART" + separator + dateZ + newline;
+
     }
     else {
         var hours = currentDate.getHours();
@@ -3389,14 +3396,11 @@ reminderfox.core.createStringForDate= function(reminderOrTodo, currentDate, isEx
             "00" +
             newline;
     }
-
-    //console.log(" rmFX  createStringForDate", new Date(), currentDate, " utc:", reminderfox.core.utc, outputStr)
-
     return outputStr;
 };
 
 
-reminderfox.core.createStringForEndDate= function(reminderOrTodo, currentDate, isExport, separator, newline){
+reminderfox.core.createStringForEndDate= function(reminderOrTodo, currentDate, isExport, separator, newline, isCalDAV){
     var nullDate = false;
     if (!currentDate) {
         nullDate = true;
@@ -3458,7 +3462,7 @@ reminderfox.core.createStringForEndDate= function(reminderOrTodo, currentDate, i
 //gwUTC Format 
 //DTSTART:20150222T231500Z
 //DTEND:20150222T231500Z
-            if (reminderfox.core.utc == true) {
+            if ((reminderfox.core.utc == true) && !isCalDAV){
                 var dateZ = new Date(currentDate).toISOString().replace(/-/g,"").replace(/:/g,"").substring(0,15)+"Z"
                 outputStr = "DTEND" + separator + dateZ + newline;
 
@@ -5019,7 +5023,10 @@ reminderfox.core.readInReminderTodo= function(reminderTodo, index, readIn, remin
                 // event with specific hourly time
                 reminderTodo.date = new Date(eventDate.substring(0, 4), monthInt, eventDate.substring(6, 8));
                 reminderTodo.date.setHours(eventDate.substring(9, 11), eventDate.substring(11, 13));
+
+//console.log("XXXutc   readin DTSTART  in  eventDate:", "_"+eventDate+"_", "   _"+reminderTodo.date+"_")
                 reminderfox.date.adjustTimeZones(eventDate, readIn, reminderTodo.date);
+//console.log("XXXutc   readin DTSTART  out eventDate:", "_"+eventDate+"_", "   _"+reminderTodo.date+"_")
 
                 reminderTodo.allDayEvent = false;
             }
