@@ -3,6 +3,36 @@
 ##  version.txt
 ##
 
+2016-05-06_14   Version wip 2.1.5.5.3
+	Known Problem:
+	-- Timeselector on Alarm and Quick Alarm dialogs fail. Use has to enter
+	   time values numerically to the dialog
+
+
+2016-05-04_24   Version wip 2.1.5.5.3
+	Due to removal of 'unpack' in install.rdf
+	-- /defaults directory moved to chrome/content/defaults.
+	   At startup /defaults dir is extracted to ../Profile/{profile.default}/reminderfox
+	   to support calDAV colors and Agenda/Printing
+	-- About Reminderfox changed for no-release-version checking
+	-- build_eANT.xml changed!
+	Logging - minor changes to make use of console.info/.log/.error etc
+
+
+2016-04-21_21    Version wip 2.1.5.5.2
+	Alert/Alarm:  On Options selecting a sound file will play it for testing
+	About Reminderfox Dialog updated for unpack setup
+
+
+2016-04-18_00    Version wip 2.1.5.5.2
+	XPI generated without unpack for installation
+
+	Alert Notification Slider 
+	-- on Options Notification selection to place on screen Top/bottom,left/right
+	-- red button closes without fading
+	-- separate sound file selection, preset for wav,ogg
+
+
 2016-04-01_00    Version wip 2.1.5.5 
 ==============================================
 	Alert Slider modification

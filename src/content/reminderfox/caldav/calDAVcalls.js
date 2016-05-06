@@ -322,7 +322,7 @@ function rmFx_CalDAV_AccountListing (call, rAccounts) {
 		reminderfox.calDAV.accountsWrite(accounts);
 	}
 
-	var msg = "Reminderfox  Reminders pending (#2) : " + rmFx_UIDpending + "  (" + rmFx_UIDpending.length + ") "
+	var msg = "Reminderfox  Reminders pending:: " + rmFx_UIDpending + "  (" + rmFx_UIDpending.length + ") "
 		+"  call.changed: " + call.changed + "   smsg: " + call.smsg
 	reminderfox.util.Logger('calDAV', msg)
 
@@ -479,8 +479,8 @@ function rmFx_CalDAV_updatePendingNext() {
 		}
 	}
 
-	var msg = "  Reminderfox  Reminders pending (#1) " + rmFx_UIDpending.toString() + "  (" + rmFx_UIDpending.length + ")"
-	console.log(msg)
+	var msg = "  Reminderfox  Reminders pending:: " + rmFx_UIDpending.toString() + "  (" + rmFx_UIDpending.length + ")"
+	if (rmFx_UIDpending.length != 0) console.log(msg)
 
 	if (rmFx_UIDpending.length == 0) {
 		rmFx_CalDAV_SyncActiveAccounts()

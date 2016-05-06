@@ -563,7 +563,7 @@ function rmFx_mainDialogLoad(restartSkip){
 	} catch (ex) {
 		Components.utils.reportError(ex);
 	}
-	// -------------
+
 
 	//gWABContact Handling
 	reminderfox.msgnr.whichMessenger();
@@ -3427,7 +3427,6 @@ function removeTodoListItem(todo, messageIDtagging){
 					}
 				}
 			}
-		//XXXX  ?????	reminderfox.core.numDaysModelDelete (todo, 'numDaysTodos')
 			break;
 		}
 	}

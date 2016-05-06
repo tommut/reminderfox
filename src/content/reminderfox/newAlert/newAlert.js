@@ -3,17 +3,22 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
-// Copied from nsILookAndFeel.h, see comments on eMetric_AlertNotificationOrigin
-var NS_ALERT_HORIZONTAL = 1;
-var NS_ALERT_LEFT = 2;
-var NS_ALERT_TOP = 4;
+var ALERT_LEFT = reminderfox.core.getPreferenceValue(reminderfox.consts.PREF_ALERTSLIDER_LEFT, false);
+var ALERT_TOP = reminderfox.core.getPreferenceValue(reminderfox.consts.PREF_ALERTSLIDER_TOP, false);
+var ALERT_MAX_SIZE = reminderfox.core.getPreferenceValue(reminderfox.consts.PREF_ALERTSLIDER_MAX_HEIGHT, 150);
 
 var gOpenTime = 4000; // total time the alert should stay up once we are done animating.
-var gAlertMaxHeight = 150;     //134  5 lines - 152 6 lines
 
-var gUserInitiated = false;
-var gOrigin = 0; // Default value: alert from bottom right.
 
+function onAlertLoad() {
+	var todaysReminders = window.arguments[0].todaysReminders;
+	var upcomingReminders = window.arguments[0].upcomingReminders;
+	var alertType = window.arguments[0].alertTypeToShow;
+
+	rmFX_prefillAlertInfo(todaysReminders, upcomingReminders) // , hideGayPaw)
+
+	setTimeout(function() {showAlert();}, 0);
+}
 
 
 function rmFX_prefillAlertInfo(todaysReminders, upcomingReminders) { //, hideGayPaw) {
@@ -28,8 +33,6 @@ function rmFX_prefillAlertInfo(todaysReminders, upcomingReminders) { //, hideGay
 
 		var upcomingBox = document.getElementById( "reminderfox-upcomingRemindersBox2" );
 		while (upcomingBox.firstChild) upcomingBox.removeChild(upcomingBox.firstChild);
-
-// console.log(" .......  rmFX_prefillAlertInfo    todaysReminders " ,todaysReminders)
 
 		// get the nodes from the tooltip
 		if (todaysReminders != null ) {
@@ -51,33 +54,16 @@ function rmFX_prefillAlertInfo(todaysReminders, upcomingReminders) { //, hideGay
 }
 
 
-function onAlertLoad() {
-	var todaysReminders = window.arguments[0].todaysReminders;
-	var upcomingReminders = window.arguments[0].upcomingReminders;
-	var alertType = window.arguments[0].alertTypeToShow;
-
-	rmFX_prefillAlertInfo(todaysReminders, upcomingReminders) // , hideGayPaw)
-
-	// bogus call to make sure the window is moved offscreen until we are ready for it.
-	resizeAlert(true);
-
-	setTimeout(function() {showAlert();}, 0); 
-}
-
-
 function showAlert() {
 	// resize the alert based on our current content
-	resizeAlert(false);
+	resizeAlert();
 
 	var alertContainer = document.getElementById("alertContainer");
 
 	try {
 		// get gOpenTime (it is specified in seconds - so multiply by 1000)
 		gOpenTime = reminderfox._prefsBranch.getIntPref(reminderfox.consts.PREF_ALERTSLIDER_OPEN_TIME) * 1000;
-	} catch(e) {
-		// alert( "ERROR: " + e );
-		gOpenTime = 5000;  
-	}
+	} catch(e) {}
 
 	alertContainer.addEventListener("animationend", function hideAlert(event) {
 		if (event.animationName == "fade-in") {
@@ -90,41 +76,21 @@ function showAlert() {
 }
 
 
-function resizeAlert(aMoveOffScreen) {
+function resizeAlert() {
 	var alertTextBox = document.getElementById("tooltipChildrenReminders2");
 	var alertImageBox = document.getElementById("reminderfox-foxpaw");
-	alertImageBox.style.minHeight = alertTextBox.scrollHeight + "px";
+	alertImageBox.style.minHeight =  "5px";
 
 	sizeToContent();
+	var gFinalHeight = window.outerHeight;
 
-	// leftover hack to get the window properly hidden when we first open it
-	if (aMoveOffScreen)
-		window.outerHeight = 1;
-
-	// Determine position
-	var x = gOrigin & NS_ALERT_LEFT ? screen.availLeft :
-		screen.availLeft + screen.availWidth - window.outerWidth;
-	var y = gOrigin & NS_ALERT_TOP ? screen.availTop :
-		screen.availTop + screen.availHeight - window.outerHeight;
-
-	gFinalHeight = window.outerHeight;
-
-	var alertSliderMaxHeight = gAlertMaxHeight;
-	try {
-		alertSliderMaxHeight = reminderfox._prefsBranch.getIntPref(reminderfox.consts.PREF_ALERTSLIDER_MAX_HEIGHT);
-	} catch(e) {}
-
+	var alertSliderMaxHeight = ALERT_MAX_SIZE;
 	if (alertSliderMaxHeight <= 0 ) {
-		alertSliderMaxHeight = gAlertMaxHeight;
+		alertSliderMaxHeight = 150;
 	}
 
 	if (gFinalHeight > alertSliderMaxHeight ) {
 		gFinalHeight = alertSliderMaxHeight;
-	}
-
-	if (window.outerHeight > gFinalHeight) {
-		var reduce = window.outerHeight - gFinalHeight;
-		y = y + reduce;
 	}
 
 	window.resizeTo(
@@ -132,18 +98,39 @@ function resizeAlert(aMoveOffScreen) {
 		gFinalHeight
 	);
 
-	// Offset the alert by 20 / 30 pixels from the edge of the screen
-	y += gOrigin & NS_ALERT_TOP ? 20 : -20;
-	x += gOrigin & NS_ALERT_LEFT ? 30 : -30;
+	// Determine position
+	var x = ALERT_LEFT ? 0 : (screen.width - window.outerWidth);
+	var y = ALERT_TOP ? 0 : (screen.height - window.outerHeight);
+
+	// Offset the alert by 20 / 40 pixels from the edge of the screen
+	y += ALERT_TOP ? 20 : -20;
+	x += ALERT_LEFT ? 40 : -40;
 	window.moveTo(x, y);
+
+
+var logMsg = "XXX NewAlert Slider on screen details  "
+	+"  ALERT_LEFT " + ALERT_LEFT + "  ALERT_TOP " + ALERT_TOP
+	+ "\n  final   x:"+ x + " y:" + y 
+	+ "\n  screen.width  | window.outerWidth   :: " 
+		+ screen.width +" | "+  window.outerWidth
+
+	+ "\n  screen.height | window.outerHeight   :: " 
+		+ screen.height +" | "+  window.outerHeight 
+	+ "\n  alertSliderMaxHeight | gFinalHeight  :: " 
+		+ alertSliderMaxHeight +" | "+ gFinalHeight 
+	+ "\n";
+//XXX console.log(logMsg)
 }
 
 
 function fadeOutAlert(goClose) {
+	var alertContainer = document.getElementById("alertContainer");
 
-//console.log ("XXXalert  fadeout  ****** ", gOpenTime)
-	if ((gOpenTime != 0) || (goClose != null)) { 
-		var alertContainer = document.getElementById("alertContainer");
+	if (goClose) {
+		window.close();
+	} else {
+
+	if (gOpenTime != 0) { 
 		alertContainer.addEventListener("animationend", function fadeOut(event) {
 			if (event.animationName == "fade-out") {
 				alertContainer.removeEventListener("animationend", fadeOut, false);
@@ -151,6 +138,7 @@ function fadeOutAlert(goClose) {
 			}
 		}, false);
 		alertContainer.setAttribute("fade-out", true);
+	}
 	}
 }
 

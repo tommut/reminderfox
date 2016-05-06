@@ -32,7 +32,7 @@
 				<text id="versionDetail"/>
 				<spacer width="20px" />
 				<text id="versionDetailLink" class="urlBold" hidden="true"
-					onclick="reminderfox.versionCompare.get();"
+					onclick="reminderfox.aboutXPI(true);"
 					value="&rf.about.updatecheck.label;" tooltiptext="&rf.about.updatecheck.tooltip;"/>
 
 			</hbox>

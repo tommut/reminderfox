@@ -14,7 +14,6 @@ const filterPrefs = reminderfox.string("rf.options.filepicker.filter.prefs");
 const filterSound = reminderfox.string("rf.options.filepicker.filter.sound");
 
 const extensionCalendar = ".ics";
-const extensionSound = ".wav";
 const extensionPrefs = ".js";
 var reminderFox_mPositionMax;
 
@@ -24,6 +23,7 @@ var rmFx_icsFileLocationNew ="";				// and check after closing 'Options..'
 
 var rmFx_CalDAV_accounts = 0;
 var rmFx_networkSync = false;
+
 
 function reminderFox_loadOptions() {
 //------------------------------------------------------------------------------
@@ -43,7 +43,6 @@ function reminderFox_loadOptions() {
 			eventsModified = window.arguments[0].modified;
 		}
 	}
-
 
 // reminderfox.util.FIREFOX_ID     = "{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
 // reminderfox.util.SEAMONKEY_ID   = "{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}";
@@ -183,30 +182,57 @@ function reminderFox_loadOptions() {
 	var defaultSnoozeAction = reminderfox.core.getPreferenceValue(reminderfox.consts.DEFAULTS_ALARM_SNOOZE_ACTION, 0);
 	document.getElementById("reminderFox-alarm-action").selectedIndex = defaultSnoozeAction;
 
+
+	// Alarm sound 
 	var playSound = reminderfox.core.getPreferenceValue(reminderfox.consts.ALARM_SOUND, true);
-	var playSoundAlert = reminderfox.core.getPreferenceValue(reminderfox.consts.ALERT_SOUND, true);
 	document.getElementById("reminderFox-alarmSound").setAttribute("checked", playSound);
-	document.getElementById("reminderFox-alertSound").setAttribute("checked", playSoundAlert);
+
 	// check if user has specified a specific file path for sound in their preferences
 	var soundFilePath = reminderfox.core.getPreferenceValue(reminderfox.consts.ALARM_SOUND_PATH, "");
+	document.getElementById("reminderFox-alarmSoundType-file").setAttribute("value", soundFilePath);
+
+	var soundCustom = reminderfox._prefsBranch.getBoolPref(reminderfox.consts.ALARM_SOUND_CUSTOM, false);
+	var group = document.getElementById("reminderFox-alarmSoundType");
+	if(soundCustom == true) {
+		group.setAttribute("checked", "true");
+	} else {
+		group.removeAttribute("checked");
+	}
 
 	var alarmSoundInterval = reminderfox.core.getPreferenceValue(reminderfox.consts.ALARM_SOUND_INTERVAL, -1);
 	if(alarmSoundInterval > 0) {
-		document.getElementById("reminderFox-alarmSoundIntervalTime").value = alarmSoundInterval;
+		document.getElementById("reminderFox-alarmSoundInterval-Time").value = alarmSoundInterval;
 		document.getElementById("reminderFox-alarmSoundInterval").setAttribute("checked", true);
 	} else {
 		document.getElementById("reminderFox-alarmSoundInterval").setAttribute("checked", false);
-		document.getElementById("reminderFox-alarmSoundIntervalTime").value = 5;
-		// set default val to 5
+		document.getElementById("reminderFox-alarmSoundInterval-Time").value = 5;  // default val to 5
 	}
 
-	document.getElementById("reminderFox-alarm-sound-text-position").setAttribute("value", soundFilePath);
-	var group = document.getElementById("reminderFox-alarmSound-group-position");
-	if(soundFilePath == null || soundFilePath == "") {
-		group.selectedIndex = 0;
+	// Alert Notification placement on screen
+	var sliderTop = reminderfox.core.getPreferenceValue(reminderfox.consts.PREF_ALERTSLIDER_TOP, false);
+	var sliderLeft = reminderfox.core.getPreferenceValue(reminderfox.consts.PREF_ALERTSLIDER_LEFT, false);
+
+	var group = document.getElementById("reminderFox-alertPosition-group")
+	if ((sliderTop == true) && (sliderLeft == true)) group.selectedIndex = 0;
+	if ((sliderTop == true) && (sliderLeft == false)) group.selectedIndex = 1;
+	if ((sliderTop == false) && (sliderLeft == true)) group.selectedIndex = 2;
+	if ((sliderTop == false) && (sliderLeft == false)) group.selectedIndex = 3;
+
+	var playSoundAlert = reminderfox.core.getPreferenceValue(reminderfox.consts.ALERT_SOUND, true);
+	document.getElementById("reminderFox-alertSound").setAttribute("checked", playSoundAlert);
+
+	// check if user has specified a specific file path for sound in their preferences
+	var soundFilePath = reminderfox.core.getPreferenceValue(reminderfox.consts.ALERT_SOUND_PATH, "");
+	document.getElementById("reminderFox-alertSoundType-file").setAttribute("value", soundFilePath);
+
+	var soundCustom = reminderfox._prefsBranch.getBoolPref(reminderfox.consts.ALERT_SOUND_CUSTOM, false);
+	var group = document.getElementById("reminderFox-alertSound-Type");
+	if(soundCustom == true) {
+		group.setAttribute("checked", "true");
 	} else {
-		group.selectedIndex = 1;
+		group.removeAttribute("checked");
 	}
+
 
 	var calStartDay = reminderfox.core.getPreferenceValue(reminderfox.consts.CALENDAR_START_DAY, reminderfox.consts.CALENDAR_START_DAY_DEFAULT);
 	document.getElementById("reminderFox-startDay").selectedIndex = calStartDay;
@@ -261,13 +287,10 @@ function reminderFox_loadOptions() {
 		repeatPositionText.setAttribute("value", repeatPrevious);
 	}
 
-	document.getElementById("reminderFox-alarmSound").setAttribute("checked", playSound);
-	document.getElementById("reminderFox-alertSound").setAttribute("checked", playSoundAlert);
-
 	// check if user has specified a specific file path for sound in their preferences
 	var soundFilePath = reminderfox.core.getPreferenceValue(reminderfox.consts.ALARM_SOUND_PATH, "");
-	document.getElementById("reminderFox-alarm-sound-text-position").setAttribute("value", soundFilePath);
-	var group = document.getElementById("reminderFox-alarmSound-group-position");
+	document.getElementById("reminderFox-alarmSoundType-file").setAttribute("value", soundFilePath);
+	var group = document.getElementById("reminderFox-alarmSoundType");
 	if(soundFilePath == null || soundFilePath == "") {
 		group.selectedIndex = 0;
 	} else {
@@ -338,17 +361,15 @@ function reminderFox_loadOptions() {
 		reminderFox_todoLists_listbox.appendChild(newItem);
 	}
 
-// *** old statusbar ****************
 	reminderFox_populateBars();
 	reminderFox_populatePositions();
 
+	reminderFox_alertTimeOpenChanged();
 
 	reminderFox_alertChanged();
 	reminderFox_alertNotificationChanged();
 	reminderFox_repeatChanged();
 
-
-// *** old statusbar ****************
 	reminderFox_groupPositionChanged();
 
 	var bowTextToolbar = reminderfox._prefsBranch.getCharPref(reminderfox.consts.TOOLBAR);
@@ -358,11 +379,11 @@ function reminderFox_loadOptions() {
 
 
 	reminderFox_alarmSoundChanged();
-	reminderFox_alarmSoundGroupPositionChanged();
+
 	reminderFox_icsFileLocationChanged();
 //	reminderFox_ValidateSynchronization();
 	reminderFox_repeatPreviousChanged();
-	reminderFox_alarmTimeOpenChanged();
+//	reminderFox_alertTimeOpenChanged();
 	reminderFox_repeatUpcomingChanged();
 
 	// disable file location change/selection with events pending
@@ -525,8 +546,8 @@ function reminderFox_exportPrefs() {
 
 function reminderFox_defaultCatChanged() {
 	var showAlert = document.getElementById("reminderFox-cat");
-	var alertVal = showAlert.getAttribute("checked");
-	if(alertVal == false || alertVal == "false") {
+	var alertValue = showAlert.getAttribute("checked");
+	if(alertValue == false || alertValue == "false") {
 		document.getElementById("reminderFox-cat-text").setAttribute("disabled", "true");
 	} else {
 		document.getElementById("reminderFox-cat-text").removeAttribute("disabled");
@@ -895,62 +916,74 @@ function reminderFox_updateOptions() {
 		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALARMS_SHOW_IN_TABS, false);
 	}
 
-	var showAlertVal = true;
+	var showAlertValue = true;
 	try {
 		var showAlert = document.getElementById("reminderFox-showAlert");
-		showAlertVal = showAlert.getAttribute("checked");
+		showAlertValue = showAlert.getAttribute("checked");
 	} catch(e) {
 	}
 
-	var alarmSound = document.getElementById("reminderFox-alarmSound");
-	var alarmSoundVal = alarmSound.getAttribute("checked");
+	//Alert Notification 
+	var customFileLocation = document.getElementById("reminderFox-alertSoundType-file").value;
+	reminderfox._prefsBranch.setCharPref(reminderfox.consts.ALERT_SOUND_PATH, customFileLocation);
 
-	var alarmSoundAlert = document.getElementById("reminderFox-alertSound");
-	var alarmSoundAlertVal = alarmSoundAlert.getAttribute("checked");
-
-	var alarmEnabled = false;
-	var alertEnabled = false;
-	if(alarmSoundVal == false || alarmSoundVal == "false") {
-		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALARM_SOUND, false);
-	} else {
-		alarmEnabled = true;
-		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALARM_SOUND, true);
-	}
-	if(alarmSoundAlertVal == false || alarmSoundAlertVal == "false") {
-		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALERT_SOUND, false);
-	} else {
-		alertEnabled = true;
+	var group = document.getElementById("reminderFox-alertSound");
+	if(group.getAttribute("checked") == "true" ) {
 		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALERT_SOUND, true);
+	} else {
+		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALERT_SOUND, false);
+	}
+
+	var group = document.getElementById("reminderFox-alertSound-Type");
+	if(group.getAttribute("checked") == "true" ) {
+		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALERT_SOUND_CUSTOM, true);
+	} else {
+		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALERT_SOUND_CUSTOM, false);
+	}
+
+
+	var positionIndex = document.getElementById("reminderFox-alertPosition-group");
+	var len = positionIndex._radioChildren.length
+	var pos;
+	for (var i = 0; i < len; i++) {
+		if (positionIndex._radioChildren[i].getAttribute("selected")== "true") pos = i;
+	}
+	reminderfox._prefsBranch.setBoolPref(reminderfox.consts.PREF_ALERTSLIDER_TOP, ((pos == 0) || (pos == 1)));
+	reminderfox._prefsBranch.setBoolPref(reminderfox.consts.PREF_ALERTSLIDER_LEFT, ((pos == 0) || (pos == 2)));
+
+//console.log("XXXX Alert positionIndex ", positionIndex, pos,
+// " Top:", reminderfox._prefsBranch.getBoolPref(reminderfox.consts.PREF_ALERTSLIDER_TOP),
+// " Left:", reminderfox._prefsBranch.getBoolPref(reminderfox.consts.PREF_ALERTSLIDER_LEFT));
+
+
+	//Alarm Sound 
+	var customFileLocation = document.getElementById("reminderFox-alarmSoundType-file").value;
+	reminderfox._prefsBranch.setCharPref(reminderfox.consts.ALARM_SOUND_PATH, customFileLocation);
+
+	var alarmSound = document.getElementById("reminderFox-alarmSound").getAttribute("checked")== "true";
+	if(alarmSound) {
+		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALARM_SOUND, true);
+	} else {
+		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALARM_SOUND, false);
 	}
 
 	// update alarm repeat interval
-	if(alarmEnabled) {
-		var alarmInterval = document.getElementById("reminderFox-alarmSoundInterval").getAttribute("checked");
-		if(alarmInterval == null || alarmInterval == false || alarmInterval == "false") {
-			reminderfox._prefsBranch.setIntPref(reminderfox.consts.ALARM_SOUND_INTERVAL, -1);
-		} else {
-			var interval = document.getElementById("reminderFox-alarmSoundIntervalTime").value;
-			reminderfox._prefsBranch.setIntPref(reminderfox.consts.ALARM_SOUND_INTERVAL, interval);
-		}
+	var alarmInterval = document.getElementById("reminderFox-alarmSoundInterval").getAttribute("checked")== "true";
+	if(alarmInterval) {
+		var interval = document.getElementById("reminderFox-alarmSoundInterval-Time").value;
+		reminderfox._prefsBranch.setIntPref(reminderfox.consts.ALARM_SOUND_INTERVAL, interval);
 	} else {
 		reminderfox._prefsBranch.setIntPref(reminderfox.consts.ALARM_SOUND_INTERVAL, -1);
 	}
 
-	if(alarmEnabled || alertEnabled) {
-		var group = document.getElementById("reminderFox-alarmSound-group-position");
-		if(group.selectedIndex == 0) {
-			reminderfox._prefsBranch.setCharPref(reminderfox.consts.ALARM_SOUND_PATH, "");
-		} else {
-			var customAlaramFileLocation = document.getElementById("reminderFox-alarm-sound-text-position").value;
-			reminderfox._prefsBranch.setCharPref(reminderfox.consts.ALARM_SOUND_PATH, customAlaramFileLocation);
-		}
+	// update alarm custom 
+	var alarmSoundCustom = document.getElementById("reminderFox-alarmSoundType").getAttribute("checked") == "true";
+	if (alarmSoundCustom) {
+		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALARM_SOUND_CUSTOM, true);
+	} else {
+		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALARM_SOUND_CUSTOM, false);
 	}
-
-	try {
-		reminderfox._prefsBranch.getCharPref(reminderfox.consts.ALARM_SOUND_PATH);
-	} catch(e) {
-		reminderfox._prefsBranch.setCharPref(reminderfox.consts.ALARM_SOUND_PATH, reminderfox.consts.ALARM_SOUND_PATH__DEFAULT);
-	}
+	/*--------------*/
 
 	var rfCat = document.getElementById("reminderFox-cat");
 	var catChecked = rfCat.getAttribute("checked");
@@ -984,7 +1017,7 @@ function reminderFox_updateOptions() {
 	}
 
 
-	if(showAlertVal == false || showAlertVal == "false") {
+	if(showAlertValue == false || showAlertValue == "false") {
 		reminderfox._prefsBranch.setCharPref(reminderfox.consts.ENABLE_ALERT_PREF, reminderfox.consts.ENABLE_ALERT_PREF_NONE);
 	} else {
 		var alertIndex = 0;
@@ -1182,14 +1215,14 @@ function reminderFox_updateOptions() {
 	}
 
 
-	var showAlert = document.getElementById("reminderFox-alert");
-	var alertVal = showAlert.getAttribute("checked");
-	if(alertVal == true || alertVal == "true") {
+	var showAlarm = document.getElementById("reminderFox-alert");
+	var alarmValue = showAlarm.getAttribute("checked");
+	if(alarmValue == true || alarmValue == "true") {
 		var alertTime = document.getElementById("reminderFox-alertTime");
-		var alertTimeVal = alertTime.label;
+		var alarmTimeVal = alertTime.label;
 
-		if(reminderfox.util.isInteger(alertTimeVal)) {
-			reminderfox._prefsBranch.setIntPref(reminderfox.consts.DEFAULT_ALARM_TIME, alertTimeVal);
+		if(reminderfox.util.isInteger(alarmTimeVal)) {
+			reminderfox._prefsBranch.setIntPref(reminderfox.consts.DEFAULT_ALARM_TIME, alarmTimeVal);
 			var timeUnitsList = document.getElementById('reminderFox-alertTimeUnits');
 			var timeSelected = timeUnitsList.selectedIndex;
 			reminderfox._prefsBranch.setIntPref(reminderfox.consts.DEFAULT_ALARM_UNITS, timeSelected);
@@ -1626,83 +1659,119 @@ function reminderFox_repeatChanged() {
 	}
 }
 
-function reminderFox_alertNotificationChanged() {
-	var showAlert = document.getElementById("reminderFox-alert");
-	var alertVal = showAlert.getAttribute("checked");
-	if(alertVal == false || alertVal == "false") {
-		document.getElementById("reminderFox-alertTime").setAttribute("disabled", "true");
-		document.getElementById("reminderFox-alertTimeUnits").setAttribute("disabled", "true");
-	} else {
-		document.getElementById("reminderFox-alertTime").removeAttribute("disabled");
-		document.getElementById("reminderFox-alertTimeUnits").removeAttribute("disabled");
-	}
 
+function reminderfox_toggleGroup(control, elements) {
+	var sx = elements.split(",");
+	for (var i in sx) {
+		var d = document.getElementById(sx[i])
+		try {
+			if(control == false || control == "false") {
+				d.setAttribute("disabled", "true");
+			}
+			else {
+				d.removeAttribute("disabled");
+			}
+		} catch(ex){
+			console.log("reminderfox_toggleGroup   >>"+sx[i]+"<< NOT found!")
+		}
+	}
 }
+function reminderFox_isChecked(elem) {
+	return document.getElementById(elem).getAttribute("checked")=="true";
+}
+
+// ------- Alert handling --------------- begin
 
 function reminderFox_alertChanged() {
-	var showAlert = document.getElementById("reminderFox-showAlert");
-	var showAlertVal = showAlert.getAttribute("checked");
-	if(showAlertVal == false || showAlertVal == "false") {
-		document.getElementById("reminderFox-alertTimeout").setAttribute("disabled", "true");
-		document.getElementById("reminderFox-alertList").setAttribute("disabled", "true");
-		document.getElementById("reminderFox-showAlert1").setAttribute("disabled", "true");
-		document.getElementById("reminderFox-showAlert2").setAttribute("disabled", "true");
-		document.getElementById("reminderFoxDisplay").setAttribute("disabled", "true");
-	} else {
-		document.getElementById("reminderFox-alertTimeout").removeAttribute("disabled");
-		document.getElementById("reminderFox-alertList").removeAttribute("disabled");
-		document.getElementById("reminderFox-showAlert1").removeAttribute("disabled");
-		document.getElementById("reminderFox-showAlert2").removeAttribute("disabled");
-		document.getElementById("reminderFoxDisplay").removeAttribute("disabled");
-	}
+	var checkedAlert = reminderFox_isChecked("reminderFox-showAlert");
 
+	reminderfox_toggleGroup(checkedAlert,
+		"reminderFox-alertSound,reminderFox-alertList,reminderFox-alertTimeout,"
+		+ "reminderFox-showAlert1,reminderFox-showAlert2,"
+		+ "reminderFox-group-alert-until,reminderFox-group-alert-for,reminderFox-text-alert-open-text,"
+		+ "reminderFox-alertPosition-top,reminderFox-alertPosition-top1,reminderFox-alertPosition-top2,"
+		+ "reminderFox-alertPosition-bottom,reminderFox-alertPosition-bottom1,reminderFox-alertPosition-bottom2,"
+		+ "reminderFox-alertHeight,"
+		+ "reminderFox-alertSound-Type,reminderFox-alarmSoundType-file,reminderFox-alertSoundType-browse");
+
+
+	var checkedAlertSound = reminderFox_isChecked("reminderFox-alertSound")
+	reminderfox_toggleGroup(checkedAlert && checkedAlertSound,
+		"reminderFox-alertSound-Type");
+
+	var checkedAlertSoundType = reminderFox_isChecked("reminderFox-alertSound-Type")
+	reminderfox_toggleGroup(checkedAlert && checkedAlertSound && checkedAlertSoundType,
+		"reminderFox-alertSoundType-file,reminderFox-alertSoundType-browse");
 }
 
+
+function reminderFox_alertSoundChanged() {
+	var checkedAlert = reminderFox_isChecked("reminderFox-showAlert");
+	var checkedSound = reminderFox_isChecked("reminderFox-alertSound");
+
+	reminderfox_toggleGroup(checkedAlert && checkedSound,
+		"reminderFox-alertSound-Type");
+
+	var checkedSoundType = reminderFox_isChecked("reminderFox-alertSound-Type");
+	reminderfox_toggleGroup(checkedAlert && checkedSound && checkedSoundType,
+		"reminderFox-alertSoundType-file,reminderFox-alertSoundType-browse");
+}
+
+
+function reminderFox_alertSoundType() {
+	reminderfox_toggleGroup(reminderFox_isChecked("reminderFox-alertSound-Type"),
+		"reminderFox-alertSoundType-file,reminderFox-alertSoundType-browse");
+}
+
+
+function reminderFox_alertNotificationChanged() {
+	reminderfox_toggleGroup(reminderFox_isChecked("reminderFox-alert"),
+		"reminderFox-alertTime,reminderFox-alertTimeUnits");
+}
+
+
+function reminderFox_alertTimeOpenChanged() {
+	var text = document.getElementById("reminderFox-text-alert-open-text");
+	var alertFor = document.getElementById("reminderFox-group-alert-for");
+
+	if (alertFor.getAttribute("selected") != "true"){
+		text.setAttribute("disabled", "true");
+	} else {
+		text.removeAttribute("disabled");
+	}
+}
+// ------- Alert handling ---------------end
+
+
+// --------Alarm handling ---------- begin
 function reminderFox_alarmSoundChanged() {
-	var alarmSound = document.getElementById("reminderFox-alarmSound");
-	var alarmSoundVal = alarmSound.getAttribute("checked");
-	var alertSound = document.getElementById("reminderFox-alertSound");
-	var alertSoundVal = alertSound.getAttribute("checked");
+	var checkedSound = reminderFox_isChecked("reminderFox-alarmSound");
 
-	if(alarmSoundVal == false || alarmSoundVal == "false") {
-		document.getElementById("reminderFox-alarmSoundInterval").setAttribute("disabled", "true");
-		document.getElementById("reminderFox-alarmSoundIntervalTime").setAttribute("disabled", "true");
-		document.getElementById("reminderFox-alarmIntervalMinutesLabel").setAttribute("disabled", "true");
-	} else {
-		document.getElementById("reminderFox-alarmSoundInterval").removeAttribute("disabled");
-		document.getElementById("reminderFox-alarmSoundIntervalTime").removeAttribute("disabled");
-		document.getElementById("reminderFox-alarmIntervalMinutesLabel").removeAttribute("disabled");
-	}
-	reminderFox_alarmIntervalSoundChanged();
+	reminderfox_toggleGroup(checkedSound,
+		"reminderFox-alarmSoundInterval,reminderFox-alarmSoundType");
 
-	if((alarmSoundVal == false || alarmSoundVal == "false") && (alertSoundVal == false || alertSoundVal == "false")) {
-		document.getElementById("reminderFox-alarmSound-group-position").setAttribute("disabled", "true");
-		document.getElementById("sound1").setAttribute("disabled", "true");
-		document.getElementById("sound2").setAttribute("disabled", "true");
-		document.getElementById("reminderFox-alarm-sound-text-position").setAttribute("disabled", "true");
-		document.getElementById("reminderFox_sound_browse").setAttribute("disabled", "true");
-	} else {
-		document.getElementById("reminderFox-alarmSound-group-position").removeAttribute("disabled");
-		document.getElementById("sound1").removeAttribute("disabled");
-		document.getElementById("sound2").removeAttribute("disabled");
-		document.getElementById("reminderFox-alarm-sound-text-position").removeAttribute("disabled");
-		document.getElementById("reminderFox_sound_browse").removeAttribute("disabled");
-		reminderFox_alarmSoundGroupPositionChanged();
-	}
+	reminderfox_toggleGroup(checkedSound && reminderFox_isChecked("reminderFox-alarmSoundInterval"),
+		"reminderFox-alarmSoundInterval-Time,reminderFox-alarmInterval-Label");
+
+	reminderfox_toggleGroup(checkedSound && reminderFox_isChecked("reminderFox-alarmSoundType") /*control*/,
+		"reminderFox-alarmSoundType-file,reminderFox-alarmSoundType-browse");
 }
 
-function reminderFox_alarmIntervalSoundChanged() {
-	var alarmInterval = document.getElementById("reminderFox-alarmSoundInterval").getAttribute("checked");
-	var alarmSoundVal = document.getElementById("reminderFox-alarmSound").getAttribute("checked");
 
-	if(alarmInterval == null || alarmInterval == false || alarmInterval == "false" || alarmSoundVal == false || alarmSoundVal == "false") {
-		document.getElementById("reminderFox-alarmSoundIntervalTime").setAttribute("disabled", "true");
-		document.getElementById("reminderFox-alarmIntervalMinutesLabel").setAttribute("disabled", "true");
-	} else {
-		document.getElementById("reminderFox-alarmSoundIntervalTime").removeAttribute("disabled");
-		document.getElementById("reminderFox-alarmIntervalMinutesLabel").removeAttribute("disabled");
-	}
+function reminderFox_alarmSoundInterval_Change() {
+	reminderfox_toggleGroup(reminderFox_isChecked("reminderFox-alarmSoundInterval"),
+		"reminderFox-alarmSoundInterval-Time,reminderFox-alarmInterval-Label");
 }
+
+
+function reminderFox_alarmSoundType() {
+	reminderfox_toggleGroup(reminderFox_isChecked("reminderFox-alarmSoundType"),
+		"reminderFox-alarmSoundType-file,reminderFox-alarmSoundType-browse");
+}
+// ----------- alarm handling ---------- end
+
+
+
 
 
 function reminderFox_statusBarControl() {
@@ -1712,17 +1781,6 @@ function reminderFox_statusBarControl() {
 	document.getElementById("reminderFox-statustext-control-1").checked = statusBarControl
 }
 
-
-function reminderFox_alarmTimeOpenChanged() {
-	var text = document.getElementById("reminderFox-text-alert-open-text");
-	var group = document.getElementById("reminderFox-group-alert-remain-open");
-
-	if(group.selectedIndex == 1) {
-		text.setAttribute("disabled", "true");
-	} else {
-		text.removeAttribute("disabled");
-	}
-}
 
 function reminderFox_repeatPreviousChanged() {
 	var text = document.getElementById("reminderFox-text-repeat-previous");
@@ -1743,29 +1801,6 @@ function reminderFox_repeatUpcomingChanged() {
 		text.setAttribute("disabled", "true");
 	} else {
 		text.removeAttribute("disabled");
-	}
-}
-
-function reminderFox_alarmSoundGroupPositionChanged() {
-	var text = document.getElementById("reminderFox-alarm-sound-text-position");
-	var group = document.getElementById("reminderFox-alarmSound-group-position");
-	var button = document.getElementById("reminderFox_sound_browse");
-
-	if(group.selectedIndex == 0) {
-		text.setAttribute("disabled", "true");
-		button.setAttribute("disabled", "true");
-	} else {
-		var alarmSound = document.getElementById("reminderFox-alarmSound");
-		var alarmSoundVal = alarmSound.getAttribute("checked");
-		var alertSound = document.getElementById("reminderFox-alertSound");
-		var alertSoundVal = alertSound.getAttribute("checked");
-		if((alarmSoundVal == false || alarmSoundVal == "false") && (alertSoundVal == false || alertSoundVal == "false")) {
-			text.setAttribute("disabled", "true");
-			button.setAttribute("disabled", "true");
-		} else {
-			text.removeAttribute("disabled");
-			button.removeAttribute("disabled");
-		}
 	}
 }
 
@@ -1802,24 +1837,26 @@ function reminderFox_splitOnAllNewlines(input) {
 }
 
 
-function reminderFox_pickSoundFile() {
+function reminderFox_pickSoundFile(type) {
 	//get file
 	var file = reminderFox_filePickerImportSound(window);
 	if(!file)
 		return;
 	var soundFilePath = file.path;
-	document.getElementById("reminderFox-alarm-sound-text-position").setAttribute("value", soundFilePath);
+	if (type == 'alarm')
+		document.getElementById("reminderFox-alarmSoundType-file").setAttribute("value", soundFilePath);
+	if (type == 'alert')
+		document.getElementById("reminderFox-alertSoundType-file").setAttribute("value", soundFilePath);
+		
+	reminderfox.core.playSound ('test' /*mode*/, soundFilePath)
 }
 
 
 function reminderFox_filePickerImport(aOpen, aWindow) {
-
 	var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(reminderFox_nsIFilePicker);
-	//picker.appendFilters( reminderFox_nsIFilePicker.filterText | reminderFox_nsIFilePicker.filterAll );
 	picker.appendFilters(reminderFox_nsIFilePicker.filterAll);
-	picker.appendFilter(filterCalendar, "*" + extensionCalendar);
+	picker.appendFilter(filterCalendar, "*.ics");
 	picker.filterIndex = 1;
-	picker.defaultExtension = "ics";
 
 	switch (aOpen) {
 		case 0:
@@ -1845,9 +1882,8 @@ function reminderFox_filePickerImport(aOpen, aWindow) {
 function reminderFox_filePickerImportSound(aWindow) {
 	var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(reminderFox_nsIFilePicker);
 	picker.appendFilters(reminderFox_nsIFilePicker.filterAll);
-	picker.appendFilter(filterSound, "*" + extensionSound);
+	picker.appendFilter("Audio Files (*.wav, *.ogg)","*.wav; *.ogg");
 	picker.filterIndex = 1;
-	picker.defaultExtension = "wav";
 	picker.init(aWindow, reminderfox.string("rf.options.sound.filepicker.title"), 
 		reminderFox_nsIFilePicker.modeOpen);
 
@@ -1863,9 +1899,8 @@ function reminderFox_filePickerImportSound(aWindow) {
 function reminderFox_filePickerImportPreferences(aWindow) {
 	var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(reminderFox_nsIFilePicker);
 	picker.appendFilters(reminderFox_nsIFilePicker.filterAll);
-	picker.appendFilter(filterSound, "*" + extensionPrefs);
+	picker.appendFilter("Preferences (*.js)","*.js");
 	picker.filterIndex = 1;
-	picker.defaultExtension = "js";
 	picker.init(aWindow, reminderfox.string("rf.options.prefs.filepicker.title"), 
 		reminderFox_nsIFilePicker.modeOpen);
 
@@ -1879,7 +1914,6 @@ function reminderFox_filePickerImportPreferences(aWindow) {
 
 
 function reminderFox_filePickerPreferences(aOpen, aWindow) {
-
 	var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(reminderFox_nsIFilePicker);
 	picker.defaultExtension = "js";
 	picker.appendFilter(filterPrefs, "*" + extensionPrefs); picker.appendFilters( reminderFox_nsIFilePicker.filterAll );

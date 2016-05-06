@@ -150,7 +150,7 @@
 					<grid>
 						<columns>
 							<column width="150px" />
-							<column width="250px" />
+							<column width="280px" />
 							<spacer width="10px" />
 							<column width="150px" />
 							<column flex="1" />
@@ -234,7 +234,7 @@
 
 					<grid flex="1">
 						<columns>
-							<column width="250px"/>
+							<column width="280px"/>
 							<column flex="1"/>
 						</columns>
 
@@ -268,7 +268,7 @@
 								</vbox>
 
 								<hbox>
-									<menulist id="reminderFox-list-bars" oncommand="reminderFox_populatePositions();" width="250px">
+									<menulist id="reminderFox-list-bars" oncommand="reminderFox_populatePositions();" width="280px">
 										<menupopup id="reminderFox-popup-bars" />
 									</menulist>
 								</hbox>
@@ -387,7 +387,7 @@
 					</caption>
 
 					<hbox align="center">
-						<label width="240px" value="&rf.options.main.dialog.Preselections;" />
+						<label width="280px" value="&rf.options.main.dialog.Preselections;" />
 						<menulist id="reminderFox-default-doubleclick" >
 							<menupopup>
 								<menuitem label="&rf.options.display.editOnClickReminders.label;"
@@ -414,7 +414,7 @@
 					</hbox>
 
 					<hbox align="center">
-						<description width="240px">&rf.options.list.reminder.defaults.filters.label;</description>
+						<description width="280px">&rf.options.list.reminder.defaults.filters.label;</description>
 						<menulist id="rmFx-filters-events">
 							<menupopup>
 								<menuitem label="&rf.options.list.reminder.defaults.allevents;" />
@@ -435,7 +435,7 @@
 						</menulist>
 					</hbox>
 					<hbox>
-						<description width="240px"></description>
+						<description width="280px"></description>
 						<menulist id="rmFx-filters-lists">
 							<menupopup>
 								<menuitem label="&rf.options.list.reminder.filters.alltodos.label;" />
@@ -516,8 +516,8 @@
 						</rows>
 					</grid>
 				</groupbox>
-				
-					<spacer height="15px" />
+
+				<spacer height="15px" />
 
 				<groupbox>
 					<caption id="layoutDefaults" flex="1">
@@ -574,7 +574,7 @@
 
 					</grid>
 				</groupbox>
-				
+
 
 			</tabpanel>
 
@@ -651,7 +651,7 @@
 							&rf.options.list.reminder.defaults.more.label;
 						</description>
 
-						<textbox id="defaultMoreLabel" disabled="true" size="25" width="305px"
+						<textbox id="defaultMoreLabel" disabled="true" size="25" width="330px"
 							class="reminderfoxTextboxDisabled" />
 						<button id="reminderFox_customize_defaultMoreLabel"
 							label="&rf.options.customize;" icon="false" class="reminderfox-editButton"
@@ -677,95 +677,130 @@
 					</hbox>
 
 					<hbox align="center">
-						<label value="&rf.options.display.showForNext.label;" width="240px"/>
+						<label value="&rf.options.display.showForNext.label;" width="280px"/>
 						<textbox id="remindersUpcomingDays" maxlength="3" size="2" />
 						<label value="&rf.options.display.showForNextUpcomingDays.label;" />
 					</hbox>
 
 					<hbox align="center">
-						<label value="&rf.options.todaysreminders.label;" width="240px"/>
+						<label value="&rf.options.todaysreminders.label;" width="280px"/>
 
 						<textbox id="todaysLabelOptions" disabled="true" width="300px"
 							class="reminderfoxTextboxDisabled" />
 						<button id="reminderFox_file_location_browse" 
 							label="&rf.options.customize;" icon="false" class="reminderfox-editButton"
 							onclick="reminderFox_openCustomizeTodayLabelWindow();"
-							tooltiptext="&rf.options.editTodays;" />
-
-
+							tooltiptext="&rf.options.editTodays;" width="80px"  />
 					</hbox>
 
 					<hbox align="center">
-						<label value="&rf.options.upcomingreminders.label;" width="240px"/>
+						<label value="&rf.options.upcomingreminders.label;" width="280px"/>
 
 						<textbox id="upcomingLabelOptions" disabled="true" width="300px"
 							class="reminderfoxTextboxDisabled" />
 						<button id="reminderFox_file_location_browse"
 							label="&rf.options.customize;" icon="false" class="reminderfox-editButton"
 							onclick="reminderFox_openCustomizeUpcomingLabelWindow();" 
-							tooltiptext="&rf.options.editUpcoming;"/>
+							tooltiptext="&rf.options.editUpcoming;" width="80px" />
 					</hbox>
 				</groupbox>
 
-				<spacer height="15px" />
+				<spacer height="12px" />
 
 				<groupbox id="reminderFox-slider">
 					<caption>
-						<checkbox id="reminderFox-showAlert" autocheck="false" 
-							oncommand="reminderFox_alertChanged()" 
-							label="&rf.options.alertSlider;"/>
+						<checkbox id="reminderFox-showAlert" autocheck="false"
+							oncommand="reminderFox_alertChanged()" label="Foxy Alert Notification" />
 					</caption>
-
+				
 					<hbox align="center">
-						<label value="&rf.options.alert.display.label;" id="reminderFoxDisplay" width="240px"/>
-						<menulist id="reminderFox-alertList"  width="300px">
-							<menupopup id="reminderFox-alertPopup" >
-								<menuitem label="&rf.options.alert.display.todaysandupcoming.label;"
-									value="0" />
-								<menuitem label="&rf.options.alert.display.todays.label;"
-									value="1" />
-								<menuitem label="&rf.options.alert.display.upcoming.label;"
-									value="2" />
+						<label value="Display reminders:" id="reminderFoxDisplay" width="280px" />
+						<menulist id="reminderFox-alertList" width="300px"
+							sizetopopup="pref" value="0" label="Show today's and upcoming reminders">
+							<menupopup id="reminderFox-alertPopup">
+								<menuitem label="Show today's and upcoming reminders"
+									value="0" selected="true" />
+								<menuitem label="Show only today's reminders" value="1" />
+								<menuitem label="Show only upcoming reminders" value="2" />
 							</menupopup>
 						</menulist>
 					</hbox>
 
-					<hbox align="center">
-						<checkbox id="reminderFox-alertSound" label="&rf.options.alert.playsound.label;"
-							autocheck="false" oncommand="reminderFox_alarmSoundChanged()" />
+					<hbox>
+						<vbox >
+							<hbox align="center">
+								<label id="reminderFox-showAlert1" value="Show Alert Notification every"/>
+								<textbox id="reminderFox-alertTimeout" maxlength="4" size="2"
+									value="1" disabled="true" />
+								<label id="reminderFox-showAlert2" value="min" style="margin-left:-3px"/>
+							</hbox>
+							<hbox align="center" width="280px">
+								<radiogroup id="reminderFox-group-alert-remain-open"
+									onselect="reminderFox_alertTimeOpenChanged()" value="1" >
+									<row align="center">
+										<label value="Keep Alert Notification open" class="valid-label" />
+									</row>
+
+									<row style="margin-left:12px">
+										<radio id="reminderFox-group-alert-for"
+										group="reminderFox-group-alert-remain-open"
+										label="for" value="0"/>
+										<hbox align="center">
+											<textbox id="reminderFox-text-alert-open-text" size="1"
+												maxlength="3" value="10" />
+											<label value="sec" class="valid-label" style="margin-left:-3px"/>
+										</hbox>
+										<radio id="reminderFox-group-alert-until" 
+											group="reminderFox-group-alert-remain-open" 
+											label="until clicked" value="1" focused="false" selected="true" />
+									</row>
+								</radiogroup>
+							</hbox>
+						</vbox>
+
+						<vbox style="margin-top: 8px;">
+							<vbox  style="margin-left: 10px;">
+								<label id="reminderFox-alertPosition" value="Position of Alert Notification on screen" />
+								<radiogroup id="reminderFox-alertPosition-group" >
+									<hbox>
+										<label id="reminderFox-alertPosition-top" value="Top" width="80" style="margin-left: 20px;" />
+										<radio id="reminderFox-alertPosition-top1" group="reminderFox-alertPosition-group" label="left"
+											width="80" />
+										<radio id="reminderFox-alertPosition-top2" group="reminderFox-alertPosition-group" label="right"/>
+									</hbox>
+
+									<hbox>
+										<label id="reminderFox-alertPosition-bottom" value="Bottom" width="80" style="margin-left: 20px;" />
+										<radio id="reminderFox-alertPosition-bottom1" group="reminderFox-alertPosition-group" label="left"
+											width="80"  />
+										<radio id="reminderFox-alertPosition-bottom2" group="reminderFox-alertPosition-group" label="right" />
+									</hbox>
+								</radiogroup>
+
+
+							<hbox align="center">
+								<label id="reminderFox-showAlertHeight" value="Maximum Alert Notification height:" />
+								<textbox id="reminderFox-alertHeight" maxlength="4" size="4" value="180"/>
+								<label id="reminderFox-showAlertHeight2" value="pixels" />
+							</hbox>
+							</vbox>
+						</vbox>
 					</hbox>
 
 					<hbox align="center">
-						<label id="reminderFox-showAlertHeight" value="&rf.options.alert.maxheight.label;" />
-						<textbox id="reminderFox-alertHeight" maxlength="4" size="4" />
-						<label id="reminderFox-showAlertHeight2" value="&rf.options.alert.maxheightpixels.label;" />
-					</hbox>
+							<checkbox id="reminderFox-alertSound" label="Play sound for Alert Notifications"
+								autocheck="false" oncommand="reminderFox_alertSoundChanged()"
+								checked="false" disabled="true" width="280px"/>
 
-					<hbox align="center">
-						<label id="reminderFox-showAlert1" value="&rf.options.alert.showevery.label;" />
-						<textbox id="reminderFox-alertTimeout" maxlength="4" size="2" />
-						<label id="reminderFox-showAlert2" value="&rf.options.alert.showeveryminutes.label;" />
-					</hbox>
+							<hbox width="310px">
+								<checkbox id="reminderFox-alertSound-Type" label="Custom Sound" flex="2"
+									oncommand="reminderFox_alertSoundType()"/>
+								<textbox flex="4" id="reminderFox-alertSoundType-file" />
+							</hbox>
 
-					<hbox align="center">
-						<radiogroup id="reminderFox-group-alert-remain-open"
-							onselect="reminderFox_alarmTimeOpenChanged()">
-							<row align="center">
-								<label value="&rf.options.alert.keepopen.label;" class="valid-label" />
-								<radio group="reminderFox-group-alert-remain-open" label="&rf.options.alert.keepopen.for.label;"
-									value="0" />
-								<hbox align="center">
-									<textbox id="reminderFox-text-alert-open-text" size="1"
-										maxlength="3" />
-									<label value="&rf.options.alert.keepopen.seconds.label;"
-										class="valid-label" />
-								</hbox>
-								<radio group="reminderFox-group-alert-remain-open"
-									label="&rf.options.alert.keepopen.untilclicked.label;" value="1" />
-							</row>
-						</radiogroup>
+							<button id="reminderFox-alertSoundType-browse" class="reminderfox-editButton"
+								label="..." width="80px" oncommand="reminderFox_pickSoundFile('alert');" />
 					</hbox>
-
 				</groupbox>
 			</tabpanel>
 
@@ -776,7 +811,7 @@
 
 					<hbox align="center">
 						<description width="150px">&rf.options.alarms.show.label;</description>
-						<menulist id="reminderFox-showInTabs"  width="250px">
+						<menulist id="reminderFox-showInTabs"  width="280px">
 							<menupopup id="reminderFox-alertPopup" >
 								<menuitem label="&rf.options.alarms.show.tabs.label;"
 									value="0" />
@@ -831,14 +866,15 @@
 				<spacer height="15px" />
 
 				<groupbox id="reminderFox-alarmSoundGroup">
-					<caption label="&rf.options.sound.label;" />
+					<caption label="Alarm Sound" />             <!--"&rf.options.sound.label;" -->
 					<vbox>
 						<checkbox id="reminderFox-alarmSound" label="&rf.options.alarm.playsound.label;"
 							autocheck="false" oncommand="reminderFox_alarmSoundChanged()" />
-						<hbox align="center" id="alarmSoundIntervalHbox">
+
+						<hbox align="center" style="margin-left: 20px;">
 							<checkbox id="reminderFox-alarmSoundInterval" label="&rf.options.alarm.resoundInterval.label;"
-								autocheck="false" oncommand="reminderFox_alarmIntervalSoundChanged()" />
-							<menulist id="reminderFox-alarmSoundIntervalTime"
+								autocheck="false" oncommand="reminderFox_alarmSoundInterval_Change()" />
+							<menulist id="reminderFox-alarmSoundInterval-Time"
 								editable="true" tabindex="13">
 								<menupopup>
 									<menuitem label="1" />
@@ -849,26 +885,22 @@
 									<menuitem label="60" />
 								</menupopup>
 							</menulist>
-							<label id="reminderFox-alarmIntervalMinutesLabel"
+							<label id="reminderFox-alarmInterval-Label"
 								value="&rf.options.alarm.resoundInterval.minutes.label;" />
 						</hbox>
 
-						<hbox align="center">
-							<radiogroup id="reminderFox-alarmSound-group-position"
-								onselect="reminderFox_alarmSoundGroupPositionChanged()">
-								<row>
-									<radio id="sound1" group="alarmSound-position"
-										label="&rf.options.alarm.sound.default.label;" value="-1" />
-									<radio id="sound2" group="alarmSound-position"
-										label="&rf.options.alarm.sound.custom.label;" value="0" />
-									<hbox align="center" flex="2">
-										<textbox flex="3" id="reminderFox-alarm-sound-text-position" />
-									</hbox>
-									<button id="reminderFox_sound_browse" label="..."
-										oncommand="reminderFox_pickSoundFile();" />
-								</row>
-							</radiogroup>
+
+						<hbox align="center"  style="margin-left: 20px;">
+								<hbox width="310px">
+									<checkbox id="reminderFox-alarmSoundType" label="Custom Sound" width="150px"
+										oncommand="reminderFox_alarmSoundType()"/>
+									<textbox id="reminderFox-alarmSoundType-file" />
+								</hbox>
+
+								<button id="reminderFox-alarmSoundType-browse" class="reminderfox-editButton"
+									label="Browse ..." width="80px" oncommand="reminderFox_pickSoundFile('alarm');" />
 						</hbox>
+
 					</vbox>
 				</groupbox>
 

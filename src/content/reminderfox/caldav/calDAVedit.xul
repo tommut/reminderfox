@@ -709,7 +709,7 @@
 				newBox.setAttribute("colorNum", n);
 				accountColors.appendChild(newBox);
 			}
-			reminderfox.colorMap.cssFileWrite()
+//XXX			reminderfox.colorMap.cssFileWrite()
 		},
 
 		accountColorsSelect : function (xthis) {

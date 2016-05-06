@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-	<project name="buildXPI" default="createJAR">
+	<project name="buildXPI" >
 
 	<description>
 		'build_eANT.xml' is used to generate a MOZ extension using 'Eclispe SDK' 
@@ -87,6 +87,12 @@
 	</concat>
 	<delete file="version_1.txt" />
 
+	<copy
+		todir="../src/content/reminderfox"
+		failonerror="true" overwrite="true">
+		<fileset dir="" includes="version.log" />
+	</copy>
+
 
 	<!--  PART 2 ______  generate JAR / XPI / version.log  _________________  -->
 
@@ -99,17 +105,28 @@
 		</target>
 
 
+	<!--  PART 3 ______  generate  XPI  _________________  -->
+
+		<target name="create {ada4..}.XPI" description=".xpi for profile/extension">
+			<zip destfile="${GUID}.xpi">	
+				<zipfileset dir="${X.jarDir}"   includes="${X.jarContent}"   prefix="chrome"/>
+				<zipfileset dir="${X.xpiDir}"   includes="${X.xpiContent}"/>
+				<zipfileset dir=""              includes="build*.*,version.log"/>
+			</zip>
+
+		</target>
+
+
 		<target name="createXPI">
 			<zip destfile="${xpiDIR}${xpiNameString}">	
-				<zipfileset dir="${X.jarDir}"   prefix="chrome"    includes="${X.jarContent}" />
-				<zipfileset dir="${X.xpiDir}"        includes="${X.xpiContent}"/>
+				<zipfileset dir="${X.jarDir}"   includes="${X.jarContent}"   prefix="chrome" />
+				<zipfileset dir="${X.xpiDir}"   includes="${X.xpiContent}"/>
 				<zipfileset dir=""              includes="build*.*,version.log"/>
 			</zip>
 		</target>
 
-	<!--  PART 3 _________  Optional  Copy JAR / XPI   _____________________  -->
 
-		<!-- PART 3.1....... XPI to Dropbox ............................-->
+	<!--  PART 3 _________  Optional  Copy XPI to Dropbox __________________ -->
 		<target name="copyXPI_Dropbox" description="XPI to Dropbox">
 			<copy
 				todir="${user.home}/Dropbox/Public/${X.shortName}/XPI/${X.fork}"
@@ -118,50 +135,17 @@
 				<fileset dir="" includes="version.log" />
 			</copy>
 		</target>
-		<!--........... -->
 
-		<!--  PART 3.2 ...... JAR to TB profile directories ............ -->
-		<target name="copy_TB_LX" description="JAR to TB (Linux)">
+
+
+		<!--  PART 3.1 ..... XPI to FX profile directory ...............  -->
+		<target name="copy_FX_LX" description="XPI to FX (Linux)">
 			<copy
-				todir="${X.LX.dir}${X.TB.profiles}/Profiles/${X.TB.p}/extensions/${GUID}/chrome"
-				failonerror="true" overwrite="false">
-				<fileset dir="" includes="${xpiname}.jar" />
+				todir="${X.LX.dir}${X.FX.profiles}/Profiles/${X.FX.p}/extensions/"
+				failonerror="true" overwrite="true">
+				<fileset dir="" includes="${GUID}.xpi" />
 			</copy>
 		</target>
 
-		<target name="copy_TB_Win" description="JAR to TB (Win)">
-			<copy
-				todir="${X.WIN.dir}${X.TB.profiles}/Profiles/${X.TB.p}/extensions/${GUID}/chrome"
-				failonerror="true" overwrite="false">
-				<fileset dir="" includes="${xpiname}.jar" />
-			</copy>
-		</target>
-
-
-		<!--  PART 3.3 ..... JAR to FX profile directory ...............  -->
-		<target name="copy_FX_LX" description="JAR to FX (Linux)">
-			<copy
-				todir="${X.LX.dir}${X.FX.profiles}/Profiles/${X.FX.p}/extensions/${GUID}/chrome"
-				failonerror="true" overwrite="false">
-				<fileset dir="" includes="${xpiname}.jar" />
-			</copy>
-		</target>
-
-		<target name="copy_FX_WIN" description="JAR to FX (Win)">
-			<copy
-				todir="${X.WIN.dir}${X.FX.profiles}/Profiles/${X.FX.p}/extensions/${GUID}/chrome"
-				failonerror="true" overwrite="false">
-				<fileset dir="" includes="${xpiname}.jar" />
-			</copy>
-		</target>
-
-
-		<!--  PART 3.4 ..... JAR to SM2 profile directory ...........  -->
-		<target name="copySM" description="JAR to SM (LX)">
-			<copy todir="${X.SM.profiles}${X.SM.p}/extensions/${GUID}/chrome"
-				failonerror="true" overwrite="false">
-				<fileset dir="" includes="${xpiname}.jar" />
-			</copy>
-		</target>
 
 	</project>

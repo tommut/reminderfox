@@ -33,7 +33,7 @@
 	<vbox id="alertContainer" mousethrough="always">
 		<hbox>
 			<spacer  flex="1" />
-			<toolbarbutton id="closeButton" top="0" right="0" onclick="fadeOutAlert(true);"/>
+			<toolbarbutton id="closeButton" onclick="fadeOutAlert(true);"/>
 		</hbox>
 
 		<hbox>

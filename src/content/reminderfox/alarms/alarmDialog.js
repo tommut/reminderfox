@@ -61,7 +61,7 @@ function loadAlarm() {
 	reminderAlarmArray = window.arguments[0].alarmInfos;
 
 	var msg = " //XXX loadAlarm    no of alarms: " + reminderAlarmArray.length
-	rmFXaLog(msg)
+	//rmFXaLog(msg)
 
 
 	calDAVaccounts = window.arguments[0].calDAVaccounts;
@@ -87,7 +87,7 @@ function loadAlarm() {
 		}
 
 		var msg = "  //XXX loadAlarm   reminder: " + tabTitle
-		rmFXaLog(msg)  //XXX
+		//rmFXaLog(msg)  //XXX
 
 		if(tabTitle != null && tabTitle.length > MAX_TAB_TITLE_LENGTH) {
 			tabTitle = tabTitle.substring(0, MAX_TAB_TITLE_LENGTH);
@@ -718,7 +718,6 @@ rmFXaLog(rmFXtDate() + msg)
 			reminderfox.core.playSound();
 			window.focus();
 			// TODO: could select the appropriate tab ?  Or that might be annoying
-	//XXXXXXXXXXXXX 		selectAlarmTab();
 
 		} // end if
 	} catch ( e ) {
@@ -1422,6 +1421,8 @@ function reminderFox_actionChanged() {
 
 function rmFx_datePickerQAopen(event, xThis) {
 //	reminderfox.util.Logger('qalarm', "rmFx_datePickerQA: " + xThis.id);
+//console.log("//XXX  rmFx_datePickerQAopen ")
+//console.trace()
 
 	var reminderDate = new Date();
 	reminderDate.setHours(0);
@@ -1471,8 +1472,11 @@ function rmFx_datePickerQAopen(event, xThis) {
 	// set the new time values 
 	var timepicker = document.getElementById("timePickerCurrent");
 	timepicker.setAttribute('is24HourClock', "false");			//gWis24HourClock //gWXXX  use Option setting
+console.log("//XXX  rmFx_datePickerQAopen      #8", snoozeDate2)
 
 	timepicker.dateValue = snoozeDate2;
+
+console.log("//XXX  rmFx_datePickerQAopen      #9", timepicker)
 
 	document.getElementById("rmFx-moz-datepicker").showPopup(datepickerAnchor, event.screenX, event.screenY, "bottomleft", "topleft");
 	reminderFox_QAcalendarOpened = true;
