@@ -593,11 +593,17 @@
 				document.getElementById('accountStatus').setAttribute('style', "font-weight: normal;color:black;");
 
 				var p = username.indexOf("@");
+			/*----   2016-05-17  changed to allow buisness accounts 
 				if (p != -1) {
 					useraddress = username.substring(p);
 					username = username.substring(0,p);
 				}
 				if (useraddress != '@googlemail.com') {
+					username += '@gmail.com';
+					document.getElementById('accountLogin').value = username;
+				}
+			-----------*/
+				if (p == -1) {
 					username += '@gmail.com';
 					document.getElementById('accountLogin').value = username;
 				}
