@@ -2,6 +2,9 @@
 ##
 ##  version.txt
 ##
+2016-05-17_00   Version wip 2.1.5.5.3
+	Edit/Open of events with Calendar day popup failed.
+
 
 2016-05-06_14   Version wip 2.1.5.5.3
 	Known Problem:

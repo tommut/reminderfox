@@ -314,6 +314,8 @@ function initializeAlarm(reminderAlarmOptions, hasNotes, firstTab) {
 		//getChildElementById(tabPanel, "timeDescLabel").setAttribute("hidden", true);
 		getChildElementById(tabPanel, "reminderTimeText").setAttribute("hidden", true);
 	}
+	getChildElementById(tabPanel, "reminderID").setAttribute("tooltiptext", recentReminder.id)
+	getChildElementById(tabPanel, "reminderID").setAttribute("uid", recentReminder.id)
 
 
 	var tabbox = document.getElementById("tabbox");
