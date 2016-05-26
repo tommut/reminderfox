@@ -314,8 +314,8 @@ function initializeAlarm(reminderAlarmOptions, hasNotes, firstTab) {
 		//getChildElementById(tabPanel, "timeDescLabel").setAttribute("hidden", true);
 		getChildElementById(tabPanel, "reminderTimeText").setAttribute("hidden", true);
 	}
-	getChildElementById(tabPanel, "reminderID").setAttribute("tooltiptext", recentReminder.id)
-	getChildElementById(tabPanel, "reminderID").setAttribute("uid", recentReminder.id)
+	//XXX getChildElementById(tabPanel, "reminderID").setAttribute("tooltiptext", recentReminder.id)
+	//XXX getChildElementById(tabPanel, "reminderID").setAttribute("uid", recentReminder.id)
 
 
 	var tabbox = document.getElementById("tabbox");
@@ -1474,11 +1474,9 @@ function rmFx_datePickerQAopen(event, xThis) {
 	// set the new time values 
 	var timepicker = document.getElementById("timePickerCurrent");
 	timepicker.setAttribute('is24HourClock', "false");			//gWis24HourClock //gWXXX  use Option setting
-console.log("//XXX  rmFx_datePickerQAopen      #8", snoozeDate2)
 
-	timepicker.dateValue = snoozeDate2;
+	timepicker.value = snoozeDate2.getHours() + ":" + snoozeDate2.getMinutes();
 
-console.log("//XXX  rmFx_datePickerQAopen      #9", timepicker)
 
 	document.getElementById("rmFx-moz-datepicker").showPopup(datepickerAnchor, event.screenX, event.screenY, "bottomleft", "topleft");
 	reminderFox_QAcalendarOpened = true;

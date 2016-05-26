@@ -86,8 +86,9 @@
                    <label id="reminderTimeText" align="bottom" />
                </hbox>
                -->
-					<hbox align="center" id="reminderID" uid="" tooltiptext=".."
-						onclick="copytoClipboard(this)">   <!-- //XXX -->
+			<!--		<hbox align="center" id="reminderID" uid="" tooltiptext=".."
+						onclick="copytoClipboard(this)">  -->  <!-- //XXX to display the id as tooltiptext on 'Date' XXX just for testing -->
+					<hbox align="center" id="reminderID">
 						<label id="reminderDateLabel" value="&rf.reminderoptions.date.label;"
 							   align="bottom" />
 						<label id="reminderDateText" align="bottom" />

@@ -91,7 +91,7 @@
 
 					<hbox id="timepickerBox">	<!-- time will be set with JS -->
 						<spacer width="3px"/>
-						<timepicker id="timePickerCurrent" hideseconds="true" />
+						<timepicker id="timePickerCurrent" hideseconds="true" value="12:05" />
 
 						<button label="&rf.ok;" id="okButton" default="true"
 							oncommand="rmFx_datePickerQAClosed(this);" />
