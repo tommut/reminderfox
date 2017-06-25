@@ -359,7 +359,6 @@
 				Url:    "",
 				Login:  "",
 				isNew:  true,
-
 				accounts :      this.calDAVaccounts
 			};
 			window.openDialog("chrome://reminderfox/content/caldav/calDAVedit.xul", 
@@ -380,7 +379,7 @@
 		 */
 		function rmFx_calDAV_Configure(xthis) {
 		//-------------------------------------------
-		var style;
+			var style;
 
 			reminderfox.colorMap.setup();
 			var elem = xthis.parentNode;
@@ -516,10 +515,11 @@
 
 		function rmFx_calDAV_AddAccount (accounts, accountID, newAccount) {
 		//-------------------------------------------
+//console.log("//XXX    function rmFx_calDAV_AddAccount");
+//console.trace()
 
 		reminderfox.util.Logger('calDAV', "  rmFx_calDAV_AddAccount   accounts: " + accounts
 		 + "\n  accountID: " + accountID  +"  newAccount: " + newAccount );
-
 
 		var nextAccount, style, tboxName, button;
 

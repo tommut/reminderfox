@@ -76,26 +76,27 @@
 								 multiline="true" rows="4" hidden="true" />
 					</hbox>
 					<!--
-                                        <hbox align="center">
-                                            <label id="reminderDateLabel" value="&rf.reminderoptions.date.label;"
-                                                align="bottom" />
-                                            <label id="reminderDateText" align="bottom" />
-                                        </hbox>
-                                        <hbox align="center">
-                                            <label id="timeDescLabel" value="&rf.reminderoptions.time.label;" />
-                                            <label id="reminderTimeText" align="bottom" />
-                                        </hbox>
-                    -->
-					<hbox align="center">
+               <hbox align="center">
+                   <label id="reminderDateLabel" value="&rf.reminderoptions.date.label;"
+                       align="bottom" />
+                   <label id="reminderDateText" align="bottom" />
+               </hbox>
+               <hbox align="center">
+                   <label id="timeDescLabel" value="&rf.reminderoptions.time.label;" />
+                   <label id="reminderTimeText" align="bottom" />
+               </hbox>
+               -->
+			<!--		<hbox align="center" id="reminderID" uid="" tooltiptext=".."
+						onclick="copytoClipboard(this)">  -->  <!-- //XXX to display the id as tooltiptext on 'Date' XXX just for testing -->
+					<hbox align="center" id="reminderID">
 						<label id="reminderDateLabel" value="&rf.reminderoptions.date.label;"
 							   align="bottom" />
 						<label id="reminderDateText" align="bottom" />
-						<!--<label id="timeDescLabel" value="" hidden="true" />-->
 						<label id="reminderTimeText" align="bottom" />
 					</hbox>
 
 					<!-- show Time Until if there is one -->
-					<hbox align="center" id="timeUntilHBox" hidden="true">
+					<hbox align="center" id="timeUntilHBox" hidden="true"> 
 						<label id="timeUntilLabel" value="&rf.alarm.occursIn.label;" />
 						<label id="timeUntilText" align="bottom" />
 					</hbox>
@@ -200,5 +201,12 @@
 			</tabpanel>
 		</tabpanels>
 	</tabbox>
+
+	<script>
+	function copytoClipboard(xthis) {				//XXX
+		var data = xthis.getAttribute("uid");
+		reminderfox.util.copytoClipboard(data);
+	}
+	</script>
 
 </window>

@@ -84,6 +84,7 @@
   -moz-appearance: none;
   border: none !important;
   padding: 2px;
+  margin-right: 8px;
 }
 
 #closeButton:hover {

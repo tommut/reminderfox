@@ -287,12 +287,13 @@ reminderfox.calendar.ui.exportOrSend= function (event) {
 reminderfox.calendar.ui.eventMenus= function(xThis, xEvent){
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	var _reminder = reminderfox.calendar.ui.event4Day(xThis);
+	if (_reminder == null) return;
+
 	var instanceDate = reminderfox.date.getDateObject(xThis.getAttribute('numDate'));
 
 	var layout = reminderfox.calendar.layout.status;
 
 	if (xEvent.button == 2) { // was context menu ..
-		if (_reminder == null) return;
 
 		// first make sure the _reminder is the 'selected' on List
 		reminderfox.calendar.drawList =  false;
@@ -353,14 +354,9 @@ reminderfox.calendar.ui.eventMenus= function(xThis, xEvent){
 	} // was context menu ..
 
 	// open _reminder for edit
-	if (xThis.attributes['idValue'].value.indexOf("id:") == 0) {
-		reminderfox.calendar.ui.eventContext ('Edit', null, xThis.getAttribute('numDate'));
-	}
-	else {	// if we are here --> ERROR !?
-		//alert(xThis.attributes['idValue'].value);
-		var msgErr = " ERROR: reminderfox.calendar.ui.eventMenus   ['idValue'] : " + xThis.attributes['idValue'].value;
-		reminderfox.util.PromptAlert (msgErr, true);
-	}
+//console.log(" open _reminder for edit ", xThis.getAttribute('numDate'), xThis.getAttribute('idValue'));		//XXX
+//console.trace()
+	reminderfox.calendar.ui.eventContext ('Edit', null, xThis.getAttribute('numDate'));
 };
 
 
@@ -376,7 +372,8 @@ reminderfox.calendar.ui.event4Day= function (xThis, dayBoxNum) {
 		var dayBoxNum = xThis.getAttribute('numDate');
 
 		if (dayBoxNum != "undefined") {
-			var n = xThis.attributes['idValue'].value.substring(3);
+			var n = xThis.getAttribute('idValue');
+			if (n == "") return event;
 
 			event = reminderfox.calendar.numDaysArray[dayBoxNum][n];
 			event.date = event.orgStartDate;
@@ -427,9 +424,6 @@ reminderfox.calendar.ui.eventContext= function (mode, xThis, selectedDate) {
 	//  with any event handling directly change the 'selected' day on the calendar
 	reminderfox.calendar.ui.selectDay(selectedDate);
 
-	// works with 'event' (reminderfox.calendar.selectedEvents[0]) which is set by .ui.event4Day
-//	if(selectedDate != null) var selectedEventDate = reminderfox.date.getDateObject(selectedDate)
-//		else 
 	var selectedEventDate = reminderfox.date.getDateObject(reminderfox.datePicker.gSelectedDate);
 
 	var isTodo = !reminderfox_isReminderTabSelected();
@@ -922,7 +916,7 @@ reminderfox.calendar.ui.openUrl= function(xThis){
  */
 reminderfox.calendar.ui.openByMessageID= function (xThis) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	var n = xThis.attributes['idValue'].value;
+	var n = +xThis.attributes['idValue'];
 	var numDate = xThis.attributes['numDate'].value;
 
 	reminderfox.mail.openByMessageID (reminderfox.calendar.numDaysArray[numDate][n]);
@@ -2154,7 +2148,7 @@ reminderfox.calendar.ttt.addDay= function(dayPanel, numDate) {
 };
 
 
-reminderfox.calendar.ttt.addReminder= function(dayPanel, reminder, n, mode, add2Date) {
+reminderfox.calendar.ttt.addReminder= function(dayPanel, reminder, nEvent, mode, add2Date) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	add2Date = reminderfox.date.getDate(add2Date);
 
@@ -2162,11 +2156,12 @@ reminderfox.calendar.ttt.addReminder= function(dayPanel, reminder, n, mode, add2
 		eventDrawer.setAttribute("class", "rmFx_dayPanelEvent");
 		eventDrawer.setAttribute("flex", "0");
 
-	// spacer
-	var spacer = document.createElement("hbox");
-	spacer.setAttribute("class", "reminderFox-footer2");
-	spacer.setAttribute("align", "center");
-	eventDrawer.appendChild(spacer);
+	// eventBox
+	var eventBox = document.createElement("vbox");
+		eventBox.addEventListener("click", function(event) {reminderfox.calendar.ui.eventMenus(this, event); });
+		eventBox.setAttribute("idValue", nEvent);
+
+	eventDrawer.appendChild(eventBox);
 
 	// *** check current reminder for some attributes ***
 	var icons = {};
@@ -2237,19 +2232,19 @@ reminderfox.calendar.ttt.addReminder= function(dayPanel, reminder, n, mode, add2
 
 	//  TTT first line w date/time and summary
 	if (dateString != "") {
-		reminderfox.calendar.ttt.addLabel(eventDrawer, 'summary',
-			dateString, summaryStyle, "", "id:" + n, reminderDateNum, mode);
+		reminderfox.calendar.ttt.addLabel(eventBox, 'summary',
+			dateString, summaryStyle, "", nEvent, reminderDateNum, mode);
 	}
 
 	//  TTT  attribute-icons and summary
-	reminderfox.calendar.ttt.addSummaryLine(eventDrawer, icons, summaryStyle, reminder, n, reminderDateNum, mode);
+	reminderfox.calendar.ttt.addLabel(eventBox, 'summary',
+		reminder.summary, summaryStyle, "", nEvent, reminderDateNum, mode, reminder.id);
 
 	if (reminder.completedDate != null) {
 		var completedDate = reminderfox.date.getDateVariableString(
 				reminder, reminder.completedDate);
-		reminderfox.calendar.ttt.addLabel(eventDrawer, null,
-			completedDate, "",
-			reminderfox.string('rf.add.reminders.tooltip.dateCompleted'));
+		reminderfox.calendar.ttt.addLabel(eventBox, null,
+			completedDate, "", reminderfox.string('rf.add.reminders.tooltip.dateCompleted'), nEvent, reminderDateNum, mode);
 	}
 
 	if (icons.Location) {
@@ -2261,20 +2256,23 @@ reminderfox.calendar.ttt.addReminder= function(dayPanel, reminder, n, mode, add2
 		reminderfox.calendar.ttt.addUrlLine(eventDrawer, reminder.url,
 			reminderfox.string("rf.add.reminders.tooltip.url"), reminderDateNum);
 	}
-	reminderfox.calendar.ttt.addIconLine(eventDrawer, icons, summaryStyle, reminder, n, reminderDateNum, mode);
+	reminderfox.calendar.ttt.addIconLine(eventDrawer, icons, summaryStyle, reminder, nEvent, reminderDateNum, mode);
+
+	// spacer
+	var spacer = document.createElement("hbox");
+	spacer.setAttribute("class", "reminderFox-footer2");
+	spacer.setAttribute("align", "center");
+	eventDrawer.appendChild(spacer);
 
 	dayPanel.appendChild(eventDrawer);
 };
 
 
 reminderfox.calendar.ttt.addLabel= function(dayPanel,
-	columnId, value, sStyle, labelText, idValue, numDate, mode) {
+	columnId, value, sStyle, labelText, idValue, numDate, mode, rmID) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	var eventbox = document.createElement("hbox");
 		eventbox.setAttribute("flex", "1");
-
-	var hbox = document.createElement("hbox");
-		hbox.setAttribute("flex", "1");
 
 	var columnLabel;
 	if (columnId == null) { columnLabel = labelText;
@@ -2284,11 +2282,10 @@ reminderfox.calendar.ttt.addLabel= function(dayPanel,
 
 	// add link
 	if (idValue != null) {
-		hbox.addEventListener("click", function(event) {reminderfox.calendar.ui.eventMenus(this, event); });
+		eventbox.setAttribute("idValue", idValue);
 
-		hbox.setAttribute("idValue", idValue);
-		hbox.setAttribute("numDate", numDate);
-		hbox.setAttribute("mode", mode);
+		eventbox.setAttribute("numDate", numDate);
+		eventbox.setAttribute("mode", mode);
 	}
 
 	if ((columnLabel != null) && (columnId != 'summary')) {
@@ -2298,7 +2295,9 @@ reminderfox.calendar.ttt.addLabel= function(dayPanel,
 		title.setAttribute("flex", "1");
 		title.setAttribute("crop", "end");
 		title.setAttribute("numDate", numDate);
-		hbox.appendChild(title);
+		if (rmID != null) title.setAttribute("rmID", rmID);
+
+		eventbox.appendChild(title);
 	}
 
 	var tooltipValue = document.createElement("description");
@@ -2307,11 +2306,12 @@ reminderfox.calendar.ttt.addLabel= function(dayPanel,
 	tooltipValue.setAttribute("style", sStyle);
 	tooltipValue.setAttribute("crop", "end");
 	tooltipValue.setAttribute("flex", "1");
-	tooltipValue.setAttribute("tooltiptext", value);
-	tooltipValue.setAttribute("numDate", numDate);
-	hbox.appendChild(tooltipValue);
 
-	eventbox.appendChild(hbox);
+	tooltipValue.setAttribute("tooltiptext", ((rmID != null)? (value + "  " + rmID) : value));				//XXXshowRmFXID
+
+	tooltipValue.setAttribute("numDate", numDate);
+	tooltipValue.setAttribute("idValue", idValue);
+	eventbox.appendChild(tooltipValue);
 
 	dayPanel.appendChild(eventbox);
 };
@@ -2339,16 +2339,8 @@ reminderfox.calendar.ttt.addUrlLine= function (eventDrawer, reminderUrl, labelTe
 	eventDrawer.appendChild(eventbox);
 };
 
-reminderfox.calendar.ttt.addSummaryLine= function (eventDrawer, icons, summaryStyle, reminder, n, numDate, mode) {
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	var summaryBox = document.createElement("hbox");
-	reminderfox.calendar.ttt.addLabel(summaryBox, 'summary',
-		reminder.summary, summaryStyle, "", "id:" + n, numDate, mode);
-	eventDrawer.appendChild(summaryBox);
-};
 
-
-reminderfox.calendar.ttt.addIconLine= function (eventDrawer, icons, summaryStyle, reminder, n, numDate, mode) {
+reminderfox.calendar.ttt.addIconLine= function (eventDrawer, icons, summaryStyle, reminder, nEvent, numDate, mode) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// icons List:  .Completed, .Mail, .Categories, .Notes;
 
@@ -2367,7 +2359,6 @@ reminderfox.calendar.ttt.addIconLine= function (eventDrawer, icons, summaryStyle
 			calDAVTTT = reminderfox.string('rf.caldav.calendar.account') + ' [ ' +reminder.calDAVid + ' ] ' + account.Name;
 			var icon = document.createElement("toolbarbutton");
 			icon.setAttribute("class", "rmFx-calDAV-share");
-			icon.setAttribute("idValue", n);
 			icon.setAttribute("numDate", numDate);
 			icon.setAttribute("tooltiptext", calDAVTTT);
 			iconbox.appendChild(icon);
@@ -2378,7 +2369,7 @@ reminderfox.calendar.ttt.addIconLine= function (eventDrawer, icons, summaryStyle
 		var icon = document.createElement("toolbarbutton");
 		icon.setAttribute("class", "displayMail");
 		icon.setAttribute("type", "checkbox");
-		icon.setAttribute("idValue", n);
+		icon.setAttribute("idValue", nEvent);
 		icon.setAttribute("numDate", numDate);
 		icon.addEventListener("click", function() {reminderfox.calendar.ui.openByMessageID(this);},false);
 		icon.setAttribute("tooltiptext", reminderfox.string('rf.add.mail.message.open'));
@@ -2388,7 +2379,6 @@ reminderfox.calendar.ttt.addIconLine= function (eventDrawer, icons, summaryStyle
 	if (icons.Categories == true) { // isCategories
 		var icon = document.createElement("toolbarbutton");
 		icon.setAttribute("class", "displayCategory");
-	//	icon.setAttribute("type", "checkbox");
 		icon.setAttribute("tooltiptext", reminderfox.string('rf.add.reminders.tooltip.categories')+ ': ' +reminder.categories);
 		iconbox.appendChild(icon);
 	};
@@ -2396,7 +2386,6 @@ reminderfox.calendar.ttt.addIconLine= function (eventDrawer, icons, summaryStyle
 	if (icons.Notes == true) { // isNotes
 		var icon = document.createElement("toolbarbutton");
 		icon.setAttribute("class", "displayNotes");
-	//	icon.setAttribute("type", "checkbox");
 		icon.setAttribute("tooltiptext", reminder.notes);
 		iconbox.appendChild(icon);
 	};
@@ -2405,7 +2394,6 @@ reminderfox.calendar.ttt.addIconLine= function (eventDrawer, icons, summaryStyle
 		var icon = document.createElement("toolbarbutton");
 		if (reminder.remindUntilCompleted == "1") icon.setAttribute("class", "remindUntilCompleted1");
 		if (reminder.remindUntilCompleted == "2") icon.setAttribute("class", "remindUntilCompleted2");
-	//	icon.setAttribute("type", "checkbox");
 		var statusText = (reminder.remindUntilCompleted == 2)
 			? reminderfox.string('rf.calendar.overdue.isoverdue')
 			: reminderfox.string('rf.calendar.overdue.remindoverdue');		//§§§§  missing string    //$$$_locale 
@@ -2417,7 +2405,6 @@ reminderfox.calendar.ttt.addIconLine= function (eventDrawer, icons, summaryStyle
 	if (reminder.recurrence.type != null) {
 		var icon = document.createElement("toolbarbutton");
 		icon.setAttribute("class", "displayRecurrence");
-	//	icon.setAttribute("type", "checkbox");
 		icon.setAttribute("numDate", numDate);
 		var currentDate =  new Date()
 		var s = reminderfox.core.writeOutRecurrence(reminder, currentDate, ", ", "");  // (reminder, currentDate, separator, newline)
@@ -2431,7 +2418,6 @@ reminderfox.calendar.ttt.addIconLine= function (eventDrawer, icons, summaryStyle
 	if (reminder.alarm != null) {
 		var icon = document.createElement("toolbarbutton");
 		icon.setAttribute("class", "displayAlarm");
-	//	icon.setAttribute("type", "checkbox");
 		icon.setAttribute("numDate", numDate);
 		icon.setAttribute("tooltiptext", reminderfox.date.alarmInfo(reminder)); 	//gWUIstrings
 		iconbox.appendChild(icon);
@@ -2440,7 +2426,6 @@ reminderfox.calendar.ttt.addIconLine= function (eventDrawer, icons, summaryStyle
 	if (icons.showInTooltip && (icons.showInTooltip == true)) { //
 		var icon = document.createElement("toolbarbutton");
 		icon.setAttribute("class", "displayShowInTooltip");
-	//	icon.setAttribute("type", "checkbox");
 		icon.setAttribute("tooltiptext", reminderfox.string('rf.calendar.tooltip.showInTooltip'));
 		iconbox.appendChild(icon);
 	};

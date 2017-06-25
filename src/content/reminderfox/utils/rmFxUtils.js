@@ -1273,7 +1273,6 @@ reminderfox.util.fileCheck= function (filepath) {
 		sfile = Components.classes["@mozilla.org/file/local;1"]
 			.createInstance(Components.interfaces.nsIFile);
 	}
-	//reminderfox.util.Logger('calDAV', " .util.fileCheck: >>" + filepath + '<<')   //XXXgW
 	try {
 		sfile.initWithPath(filepath);
 	} catch (ex){
@@ -1649,10 +1648,13 @@ reminderfox.util.PromptAlert= function(msgErr, noAlert){
 		.getService(Components.interfaces.nsIPromptService);
 
 	promptService.alert(window, "ReminderFox Alert : \n\n", msgErr);
-	if (!noAlert)
-		reminderfox.util.Logger('ALERT', msgErr);		// 'ALERT'  adds the stack to the console output
+	if (!noAlert) {
+	//	reminderfox.util.Logger('ALERT', msgErr);		// 'ALERT'  adds the stack to the console output
+		console.log('ALERT', msgErr);		// 'ALERT'  adds the stack to the console output
+		console.trace();
+	}
 	else
-		reminderfox.util.LogToConsole(msgErr);		//   no stack to the console output	
+		console.error(msgErr);		//   no stack to the console output	
 };
 
 
@@ -1744,8 +1746,8 @@ reminderfox.util.Logger = function (Log, msg) {
 	var _LogLevel = {
 		FATAL:  70,
 		ERROR:  60,
-		WARN:   50,
-		INFO:   40,
+		WARN:   50,		// 70 .. 50  console.error (with trace)
+		INFO:   40,		//  0 .. 40  console.info
 		CONFIG: 30,
 		DEBUG:  20,
 		TRACE:  10,
@@ -1754,11 +1756,14 @@ reminderfox.util.Logger = function (Log, msg) {
 
 	if (Log.toLowerCase().search('alert') > -1){
 		var date = new Date();
-		logMsg = "\nReminderfox  ** Alert **    " + date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + "\n" + msg;
+		logMsg = "Reminderfox  ** Alert **    "
+			+ date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + " >" + +(new Date()) + "<" 
+			+ "\n" + msg;
+
 		if (Log == 'ALERT') logMsg += "\n" + reminderfox.util.STACK();
 		if (Log == 'Alert') logMsg += "\n" + reminderfox.util.STACK(1);
 		if (Log == 'alert') logMsg += "\n";
-		reminderfox.util.LogToConsole(logMsg, Components.stack.caller.filename, "", Components.stack.caller.lineNumber);
+		console.info(logMsg, Components.stack.caller.filename + " #" + Components.stack.caller.lineNumber);
 		return;
 	}
 
@@ -1782,33 +1787,18 @@ reminderfox.util.Logger = function (Log, msg) {
 
 
 	var date = new Date();
-	logMsg = "\nReminderfox Logger : "+ rootID + "  [" + Log + " : " + logId + "]      "
-		+ date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + "\n" + msg;
+	logMsg = "Reminderfox Logger : "+ rootID + "  [" + Log + " : " + logId + "]      "
+		+ date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + " >" + +(new Date()) + "<" 
+		+ "\n" + msg;
 
 	if (logNum >= 50 /* 'Warn', 'Error', 'Fatal' */) {
-		logMsg += "\n" + reminderfox.util.STACK();
+		console.error(logMsg)
 	} else {
-		logMsg += "\n" + reminderfox.util.STACK(1);
+		console.info(logMsg + "\n" + reminderfox.util.STACK(1));
 	}
-
-	reminderfox.util.LogToConsole(logMsg, Components.stack.caller.filename, "", Components.stack.caller.lineNumber);
 };
 
-
-reminderfox.util.LogToConsole= function (aMessage, aSourceName, aSourceLine, aLineNumber,
-		aColumnNumber) {
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
-		.getService(Components.interfaces.nsIConsoleService);
-	var scriptError = Components.classes["@mozilla.org/scripterror;1"]
-		.createInstance(Components.interfaces.nsIScriptError);
-
-	scriptError.init(aMessage, aSourceName, aSourceLine, aLineNumber,
-		aColumnNumber, 
-		Components.interfaces.nsIScriptError.warningFlag, "component javascript");
-
-	consoleService.logMessage(scriptError);
-};
+//  console.log(), console.info(), console.warn(), console.error() 
 
 
 /**
@@ -2468,16 +2458,35 @@ reminderfox.about= function() {
 			reminderfox.consts.SPECIAL_VERSION_DETAIL);
 	}
 
-
-	var msg = reminderfox.aboutXPI(); //		+ "\n  " + navigator.userAgent + " (" + navigator.language + ")";
-	reminderfox.util.copytoClipboard(msg);
-
-	if (document.getElementById('logoText')) 
-		document.getElementById('logoText').setAttribute( "tooltiptext", msg);
-
-	document.getElementById('supportPage').setAttribute('value', reminderfox.consts.SUPPORT);
-	sizeToContent();
+	reminderfox.aboutXPI();
 };
+
+
+
+reminderfox.promiseRequest = {
+//--------------------------------------------------------------------------
+	get : function (url) {
+	return new Promise(function(resolve, reject) {
+		var req = new XMLHttpRequest();
+		req.open('GET', url);
+		req.onload = function() {
+			if (req.status == 200) {
+			// Resolve the promise with the response text
+				resolve(req.response);
+			}
+			else {
+				reject(Error(req.statusText));
+			}
+		};
+		// Handle network errors
+		req.onerror = function() {
+			reject(Error("Network Error"));
+		};
+		// Make the request
+		req.send();
+	});
+}
+}
 
 
 function rmFxTDate(i) {
@@ -2495,66 +2504,13 @@ function rmFxTDate(i) {
  *     as of:    Di, 15 Jan 2013 19:11:36 +0100 (MEZ)
  *     'reminderfox2.0.2.CalDAV_20130115_1911.xpi'   <'20130115_1911'>
  */
-reminderfox.versionCompare = {
+reminderfox.aboutXPI= function (mode) {
 //--------------------------------------------------------------------------
-	get : function () {
+	var xmode = mode;
 
-		if ((!reminderfox.consts.DROPBOX) || (reminderfox.consts.DROPBOX === "")) return;
+	var pathString = ("chrome://reminderfox/content/version.log");
+	reminderfox.promiseRequest.get(pathString).then(function(logFile) {
 
-			this.method       = 'GET';
-			this.urlstr       = reminderfox.consts.DROPBOX + "version.log";
-
-			this.body      = '';
-			this.contentType  = 'text/xml';
-			this.headers      = null;
-
-			this.username     = "";
-			this.password     = "";
-
-			this.timeout      = 30;
-
-			this.callback     = 'onResult';
-			this.onError      = 'onResult';
-
-		reminderfox.HTTP.request(this);
-	},
-
-	onResult : function (status, xml, text, headers, statusText) {
-		if (status === 0 || (status >= 200 && status < 300)) {
-
-			var localText = reminderfox.aboutXPI();
-			var versions = {
-				localText: localText,
-				remoteText: text,
-			};
-			window.openDialog("chrome://reminderfox/content/utils/rmFxUpdateXPI.xul",
-				"reminderFox-versionControl", "chrome,resizable,modal", versions);
-
-		} else {  // ERROR Handling
-			var msg = ("Local XPI version is:\n\n"
-				+ reminderfox.aboutXPI());
-	
-			var parser = new DOMParser();
-			var aText = parser.parseFromString(text, "text/html");
-			atext = aText.body.textContent.replace(/\n /g,'\n').replace(/\n \n/g,'\n').replace(/n\n/g,'\n').replace(/\n\n\n/g,'\n');
-	
-			alert (msg + "\nDropbox system message: \n" + atext);
-		}
-	}
-};
-
-
-reminderfox.aboutXPI= function () {
-//--------------------------------------------------------------------------
-		var xFile = reminderfox.util.ProfD_extend('extensions');
-		var profD = xFile.parent.path;
-
-		xFile.append( "{ada4b710-8346-4b82-8199-5de2b400a6ae}");
-		xFile.append( "version.log");
-
-		var stamp = "";
-
-		var logFile = reminderfox.util.readInFileContents(xFile.path);
 		var logLines = logFile.split("\n");
 		logFile = "";
 		for (var a=0; a <5;a++){
@@ -2563,12 +2519,41 @@ reminderfox.aboutXPI= function () {
 			if (p > -1) stamp = logLines[a].substring(p-2,99);
 		}
 
-	return "ReminderFox  [" + reminderfox.consts.MIGRATED_PREF_VERSION + "]   "
-			+ ((reminderfox.consts.SPECIAL_VERSION_DETAIL) ? reminderfox.consts.SPECIAL_VERSION_DETAIL : "")
-			+ "  " + stamp
-			+ "\n  Profile directory: " + profD
-			+ "\n  " + navigator.userAgent + " (" + navigator.language + ")";
+		var xFile = reminderfox.util.ProfD_extend('extensions');
+		var profD = xFile.parent.path;
 
+		var msg = "ReminderFox  [" + reminderfox.consts.MIGRATED_PREF_VERSION + "]   "
+				+ ((reminderfox.consts.SPECIAL_VERSION_DETAIL) ? reminderfox.consts.SPECIAL_VERSION_DETAIL : "")
+				+ "  " + stamp
+				+ "\n  Profile directory: " + profD
+				+ "\n  " + navigator.userAgent + " (" + navigator.language + ")";
+
+		reminderfox.util.copytoClipboard(msg);
+
+		if (document.getElementById('logoText')) 
+			document.getElementById('logoText').setAttribute( "tooltiptext", msg);
+
+		document.getElementById('supportPage').setAttribute('value', reminderfox.consts.SUPPORT);
+		sizeToContent();
+		return msg;
+
+	}, function(error) {
+		console.error("reminderfox.aboutXPI   Failed!", new Date(), error);
+	})
+	.then(function(msg){
+
+		if (xmode  == true) {  // open the UpdateCheck window
+			var pathString = reminderfox.consts.DROPBOX + "version.log";
+			reminderfox.promiseRequest.get(pathString).then(function(logVersion) {
+				var versions = {
+					localText: msg,
+					remoteText: logVersion,
+				};
+				window.openDialog("chrome://reminderfox/content/utils/rmFxUpdateXPI.xul",
+					"reminderFox-versionControl", "chrome,resizable,modal", versions);
+			});
+		}
+	});
 };
 
 
@@ -2579,21 +2564,23 @@ reminderfox.aboutXPI= function () {
  * return {object}  calDAVmap.css
  */
 if (!reminderfox.colorMap)   reminderfox.colorMap = {};
+//------ reminderfox.calDAV.colorMap Handling -------------------------- begin
+
+
 reminderfox.colorMap.cssFileGet= function(){
 //-------------------------------------------------------------
-	var cssfile = reminderfox.util.ProfD_extend("reminderfox");
-	cssfile.append("calDAVmap.css");
+	var cssFile = reminderfox.util.ProfD_extend("reminderfox");
+	cssFile.append("preferences");
+	cssFile.append("calDAVmap.css");
 
-	if (cssfile.exists() === false) {
-		var cssOrg = reminderfox.util.ProfD_extend("extensions")
-		cssOrg.append("{ada4b710-8346-4b82-8199-5de2b400a6ae}");
-		cssOrg.append("defaults");
-		cssOrg.append("preferences");
-		cssOrg.append("calDAVmap.css");
-		var cssfileParent = cssfile.parent;
-		cssOrg.copyTo(cssfileParent, "calDAVmap.css");
+//console.info("//XXX  .colorMap.cssFileGet  cssFile ", cssFile.path)
+//console.trace()
+
+	if (cssFile.exists() === false) {
+		console.error("reminderfox.colorMap.cssFileGet::  Failed to find  'calDAVmap.css' ");
+		return null;
 	}
-	return cssfile;
+	return cssFile;
 };
 
 
@@ -2602,7 +2589,13 @@ reminderfox.colorMap.cssFileGet= function(){
  */
 reminderfox.colorMap.cssFileRead= function() {
 //-------------------------------------------------------------
-	var cssString = reminderfox.core.readInFileContents (reminderfox.colorMap.cssFileGet());
+	var cssFile  = reminderfox.colorMap.cssFileGet();
+	if (cssFile == null) {
+		console.error("reminderfox.colorMap.cssFileRead::  Missing 'calDAV colorMap' file!")
+		return
+	}
+
+	var cssString = reminderfox.core.readInFileContents (cssFile);
 	var colorCode;
 	var pos = 0;
 	var num = 0;
@@ -2688,6 +2681,10 @@ reminderfox.colorMap.cssFileWrite= function () {
 	out +=  '\ncolorpicker {color: #626262;}';
 
 	var cssFile = reminderfox.colorMap.cssFileGet();
+	if (cssFile == null) {
+		console.error("reminderfox.colorMap.cssFileWrite::  Missing 'calDAV colorMap' file!")
+		return
+	}
 	reminderfox.util.makeFile8(out, cssFile.path)
 
 		function hsl(colorHue) {
@@ -2696,6 +2693,7 @@ reminderfox.colorMap.cssFileWrite= function () {
 		}
 };
 
+
 /*
 * load calDAVcolorMap and set the CSS file to respect prefs saturation  --------
 */
@@ -2703,12 +2701,17 @@ reminderfox.colorMap.setup= function () {
 //-----------------------------------------------------
 	reminderfox.colorMap.cssFileRead();
 
-	var cssfile = reminderfox.colorMap.cssFileGet();
+	var cssFile  = reminderfox.colorMap.cssFileGet();
+	if (cssFile == null) {
+		console.error("reminderfox.colorMap.setup::  Missing 'calDAV cssMap' file!")
+		return
+	}
+
 	var sss = Components.classes["@mozilla.org/content/style-sheet-service;1"]
 						.getService(Components.interfaces.nsIStyleSheetService);
 	var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
 
-	var uri = ios.newURI("file:" + cssfile.path, null, null);
+	var uri = ios.newURI("file:" + cssFile.path, null, null);
 	try {
 		sss.loadAndRegisterSheet(uri, sss.USER_SHEET);
 	} catch (ex) {
@@ -2808,8 +2811,8 @@ reminderfox.calDAV.accountsWrite= function (calDAVaccounts) {
 		//+ ",calendarMainWindow"
 	var xWin = xulWin.split(",")
 
-    var windowManager = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService();
-    var windowManagerInterface = windowManager.QueryInterface(Components.interfaces.nsIWindowMediator);
+	var windowManager = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService();
+	var windowManagerInterface = windowManager.QueryInterface(Components.interfaces.nsIWindowMediator);
 
 	msg = " ....  enum xulWindows"
 
@@ -3197,188 +3200,7 @@ reminderfox.online = {
 
 			}
 	}
-
 };
-
-// ========= was in /network/passwordManagerUtils.js ================= begin === 
-/* ---------------------
-if(!reminderfox)              var reminderfox = {};
-if(!reminderfox.network)          reminderfox.network = {};
-if(!reminderfox.network.password) reminderfox.network.password = {};
-
-var REMINDERFOX_PASSWORD_CID = "@mozilla.org/passwordmanager;1";
-
-var gReminderFox_PasswordManager;
-var gReminderFox_PasswordManagerInternal;
-
-function reminderFox_getPasswordManager() {
-	if(!gReminderFox_PasswordManager) {
-		try {
-			gReminderFox_PasswordManager = Components.classes[REMINDERFOX_PASSWORD_CID].getService();
-			gReminderFox_PasswordManager = gReminderFox_PasswordManager.QueryInterface(Components.interfaces.nsIPasswordManager);
-		} catch (e) {
-			reminderfox.core.logMessageLevel("reminderFox_getPasswordManager() failed: " + e.name + " -- " + e.message, reminderfox.consts.LOG_LEVEL_INFO);
-
-		}
-	}
-	return gReminderFox_PasswordManager;
-}
-
-function reminderFox_getPasswordManagerInternal() {
-	try {
-		gReminderFox_PasswordManagerInternal = Components.classes[REMINDERFOX_PASSWORD_CID].getService();
-		gReminderFox_PasswordManagerInternal = gReminderFox_PasswordManagerInternal.QueryInterface(Components.interfaces.nsIPasswordManagerInternal);
-	} catch (e) {
-		reminderfox.core.logMessageLevel("reminderFox_getPasswordManagerInternal() failed: " + e.name + " -- " + e.message, reminderfox.consts.LOG_LEVEL_INFO);
-	}
-
-	return gReminderFox_PasswordManagerInternal;
-}
-
-function reminderFox_getPassword(loginData) {
-	if(!loginData) {
-		return null;
-	}
-
-	if("@mozilla.org/passwordmanager;1" in Components.classes) {
-		var pmInternal = reminderFox_getPasswordManagerInternal();
-		if(!pmInternal) {
-			return null;
-		}
-
-		var host = {
-			value : ''
-		};
-		var user = {
-			value : ''
-		};
-		var password = {
-			value : ''
-		};
-
-		try {
-			pmInternal.findPasswordEntry(loginData.ljURL, '', '', host, user, password);
-			loginData.username = user.value;
-			loginData.password = password.value;
-			return loginData;
-		} catch(e) {
-			reminderfox.core.logMessageLevel("findPasswordEntry() failed: " + e.name + " -- " + e.message, reminderfox.consts.LOG_LEVEL_INFO);
-		}
-
-
-	} else if("@mozilla.org/login-manager;1" in Components.classes) {
-		// Login Manager exists so this is Firefox 3
-		// Login Manager code
-		try {
-			// Get Login Manager
-			var myLoginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
-
-			// Find users for the given parameters
-			// var logins = myLoginManager.findLogins({}, hostname, formSubmitURL, httprealm);
-
-			// Find users for the given parameters
-			if (loginData.httpRealm != null) {
-				var logins = myLoginManager.findLogins({}, loginData.ljURL, null, loginData.httpRealm);
-			} else {
-				var logins = myLoginManager.findLogins({}, loginData.ljURL, "User login", null);
-			}
-
-			// Find user from returned array of nsILoginInfo objects
-			for(var i = 0; i < logins.length; i++) {
-				if(logins[i].username == loginData.username) {
-					loginData.password = logins[i].password;
-					return loginData;
-				}
-			}
-		} catch(ex) {
-			// This will only happen if there is no nsILoginManager component class
-		}
-
-	}
-	return null;
-}
-
-function reminderFox_savePassword(loginData) {
-	if(!loginData || !loginData.ljURL || !loginData.username)
-		return false;
-
-	if("@mozilla.org/passwordmanager;1" in Components.classes) {
-		// Password Manager exists so this is not Firefox 3 (could be Firefox 2, Netscape, SeaMonkey, etc).
-		// Password Manager code
-		var pm = reminderFox_getPasswordManager();
-
-		if(!pm)
-			return false;
-
-		try {
-			pm.removeUser(loginData.ljURL, loginData.username);
-		} catch(e) {
-			reminderfox.core.logMessageLevel("removeUser() failed: " + e.name + " -- " + e.message, reminderfox.consts.LOG_LEVEL_INFO);
-		}
-
-		if(loginData.savePassword) {
-			try {
-				pm.addUser(loginData.ljURL, loginData.username, loginData.password);
-			} catch(e) {
-				reminderfox.core.logMessageLevel("addUser failed: " + e.name + " -- " + e.message, reminderfox.consts.LOG_LEVEL_INFO);
-			}
-			return true;
-		}
-	} else if("@mozilla.org/login-manager;1" in Components.classes) {
-		// Login Manager exists so this is Firefox 3
-		// Login Manager code
-
-		// Get Login Manager
-		var myLoginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
-
-		var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1", Components.interfaces.nsILoginInfo, "init");
-
-		// remove existing user
-		// Find users for this extension
-		var logins = myLoginManager.findLogins({}, loginData.ljURL, "User login", null);
-		// Find user from returned array of nsILoginInfo objects
-		for(var i = 0; i < logins.length; i++) {
-			if(logins[i].username == loginData.username) {
-				myLoginManager.removeLogin(logins[i]);
-				break;
-			}
-		}
-		if(loginData.savePassword) {
-			if(loginData.password != null && loginData.password.length > 0) {// check: can't save null/empty password
-				var login_info = new nsLoginInfo(loginData.ljURL, "User login", null, loginData.username, loginData.password, "", "");
-				myLoginManager.addLogin(login_info);
-			}
-		}
-	}
-
-	return false;
-}
-
-function reminderFox_deleteAccount(loginData) {
-	if(!loginData || !loginData.ljURL || !loginData.username)
-		return false;
-
-	try {
-		// Get Login Manager
-		var passwordManager = Components.classes["@mozilla.org/login-manager;1"].
-				getService(Components.interfaces.nsILoginManager);
-
-		// Find users for this extension
-		var logins = passwordManager.findLogins({}, loginData.ljURL,  "User login" / *formSubmitURL* /, null / *httprealm* /);
-
-		for (var i = 0; i < logins.length; i++) {
-			if (logins[i].username == loginData.username) {
-				passwordManager.removeLogin(logins[i]);
-				break;
-			}
-		}
-	}
-	catch(ex) {
-		// This will only happen if there is no nsILoginManager component class
-	}
-};
-// ========= was in /network/passwordManagerUtils.js =================== end === 
-------------------------*/
 
 
 //go4news   functions to support a "Reminderfox News"  on the Main Dialog -----

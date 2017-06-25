@@ -117,7 +117,7 @@ function rmFx_datePickerQA(event) {
 	datepickerBox.appendChild(datepicker);
 
 	var timepicker = document.getElementById("timePickerCurrent");
-	timepicker.dateValue = currentDateTime;
+	timepicker.value = currentDateTime.getHours() + ":" + currentDateTime.getMinutes(); 
 
 	var datepicker = document.getElementById("rmFx-moz-datepicker");
 	datepicker.showPopup(datepickerAnchor, event.screenX, event.screenY, "bottomleft", "topleft");

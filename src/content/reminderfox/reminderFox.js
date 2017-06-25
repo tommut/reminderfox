@@ -1,3 +1,8 @@
+if (Cu === undefined)		var Cu = Components.utils;
+if (Ci === undefined)		var Ci = Components.interfaces;
+if (Cc === undefined)		var Cc = Components.classes;
+
+
 if (!reminderfox)     var reminderfox = {};
 if (!reminderfox.overlay)    reminderfox.overlay = {};
 if (!reminderfox.overlay.consts)    reminderfox.overlay.consts = {};
@@ -653,7 +658,7 @@ reminderfox.overlay.openAlarmWindow= function(alarmArray, ignoreCheck) {
 var msg = "*** .overlay.openAlarmWindow  ***  "
 reminderfox.core.logMessageLevel (msg, reminderfox.consts.LOG_LEVEL_SUPER_FINE);
 
-	var calDAVaccounts = reminderfox.core.getReminderEvents()		//gW2015-02            //XXX 
+	var calDAVaccounts = reminderfox.core.getReminderEvents();
 
     var showAlarmsInTabs= reminderfox.core.getPreferenceValue( reminderfox.consts.ALARMS_SHOW_IN_TABS );
 
@@ -2435,9 +2440,6 @@ reminderfox.overlay.showAlertSlider= function(){
                         upcomingReminders = null;
                     }
 
-							if (reminderfox._prefsBranch.getBoolPref(reminderfox.consts.ALERT_SOUND)){
-								reminderfox.core.playSound();
-							}
 							var newOptions = {
 								todaysReminders: todaysReminders,
 								upcomingReminders: upcomingReminders,
@@ -2445,6 +2447,9 @@ reminderfox.overlay.showAlertSlider= function(){
 								hideGayPaw:reminderfox.core.getPreferenceValue( reminderfox.consts.HIDE_FOX_PAW )
 							};
 							window.openDialog("chrome://reminderfox/content/newAlert/newAlert.xul", "window:alert", "chrome,dialog=yes,titlebar=no,popup=yes", newOptions);
+							if (reminderfox._prefsBranch.getBoolPref(reminderfox.consts.ALERT_SOUND)){
+								reminderfox.core.playSound('alert');
+							}
 						}
 
                 //checkData  gW:disable this for testing 2014-05-11			reminderfox.core.clearRemindersAndTodos();
@@ -2759,8 +2764,86 @@ reminderfox.overlay.start= function(){
 
     window.setTimeout(function() { reminderfox.overlay.start_postInit(); }, 100);
 
-
+	rmFx_extractXPI("chrome/content/reminderfox/defaults/");	//unpack
 }
+
+
+/**
+ * Extracts dirs/files from xpi 'chrome' directory  
+ *   to ../Profile/{profile.default}/reminderfox
+ * If a file already exsists it will be skipped/no overwrite
+ *
+ * @param  aZipDir     The source ZIP dir in xpi/add-on.
+ */
+function rmFx_extractXPI(aZipDir) {
+//---------------------------------------------------------
+	// aZipDir = "chrome/content/reminderfox/defaults/"
+
+	var aZipDirLen = aZipDir.length;
+
+		function getTargetFile(aDir, entry) {
+			var target =reminderfox.util.ProfD_extend('reminderfox');
+			entry.split("/").forEach(function(aPart) {
+				target.append(aPart);
+			});
+			return target;
+		}
+
+	var aDir =reminderfox.util.ProfD_extend('reminderfox');
+
+	var pathToXpiToRead = OS.Path.join(OS.Constants.Path.profileDir, 
+		'extensions', '{ada4b710-8346-4b82-8199-5de2b400a6ae}.xpi');
+	var aZipFile = new FileUtils.File(pathToXpiToRead);
+
+	var zipReader = Cc["@mozilla.org/libjar/zip-reader;1"]
+		.createInstance(Ci.nsIZipReader);
+	zipReader.open(aZipFile);
+
+	try {
+		// create directories first
+		var entries = zipReader.findEntries(aZipDir + "*/");
+		while (entries.hasMore()) {
+			var entryName = entries.getNext();
+			var target = getTargetFile(aDir, entryName.substring(aZipDirLen));
+
+			if (!target.exists()) {
+				try {
+					target.create(Ci.nsIFile.DIRECTORY_TYPE,
+					FileUtils.PERMS_DIRECTORY);
+				}
+				catch (e) {
+					console.log("rmFx_extractXPI: failed to create target directory for extraction file = " 
+						+ target.path + "\n");
+				}
+			}
+		}
+
+		// extract/copy files 
+		entries = zipReader.findEntries(aZipDir + "*");
+		while (entries.hasMore()) {
+			var entryName = entries.getNext();
+			var target = getTargetFile(aDir, entryName.substring(aZipDirLen));
+
+			if (target.exists())
+				continue;
+
+			zipReader.extract(entryName, target);
+			try {
+				target.permissions |= FileUtils.PERMS_FILE;
+			}
+			catch (e) {
+				console.log("rmFx_extractXPI: Failed to set permissions " 
+					+ FileUtils.PERMS_FILE.toString(8) + " on " + target.path + " " + e + "\n");
+			}
+		}
+	}
+	finally {
+		zipReader.close();
+	}
+};
+
+
+
 reminderfox.overlay.start_postInit= function() {
 //===================================================================
     // the very first time we install reminderfox, we do not need to show the alert slider.
@@ -3280,6 +3363,9 @@ reminderfox.overlay.showCalendar= function(event){
  */
 function reminderfox_xmlPrint (xThis, isXPI) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//console.log("//XXX   reminderfox_xmlPrint ")
+//console.trace()
+
     var isReminder = true;
     try {
         isReminder = reminderfox_isReminderTabSelected() ? true : false;
@@ -3689,11 +3775,10 @@ function reminderfox_xmlPrint (xThis, isXPI) {
  */
 function reminderfox_prntPath (){
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    var prnt = reminderfox.util.ProfD_extend('extensions')
-
-    prnt.append("{ada4b710-8346-4b82-8199-5de2b400a6ae}");
-    prnt.append("defaults");
+    var prnt = reminderfox.util.ProfD_extend('reminderfox')
     prnt.append("printing");
+
+//console.log("//XXX   reminderfox_prntPath  ", prnt.path);
     return prnt;
 };
 
@@ -3703,6 +3788,8 @@ function reminderfox_prntPath (){
  */
 function reminderfox_PrintMenuSetup(xThis){
 //---------------------------------------------------------
+//console.log("//XXX   reminderfox_PrintMenuSetup ")
+//console.trace()
     reminderfox_PrintTemplatesCopy();
 
     // remove all items from popup menu, hold 'Agenda' and separator

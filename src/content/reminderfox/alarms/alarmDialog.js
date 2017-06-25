@@ -61,7 +61,7 @@ function loadAlarm() {
 	reminderAlarmArray = window.arguments[0].alarmInfos;
 
 	var msg = " //XXX loadAlarm    no of alarms: " + reminderAlarmArray.length
-	rmFXaLog(msg)
+	//rmFXaLog(msg)
 
 
 	calDAVaccounts = window.arguments[0].calDAVaccounts;
@@ -87,7 +87,7 @@ function loadAlarm() {
 		}
 
 		var msg = "  //XXX loadAlarm   reminder: " + tabTitle
-		rmFXaLog(msg)  //XXX
+		//rmFXaLog(msg)  //XXX
 
 		if(tabTitle != null && tabTitle.length > MAX_TAB_TITLE_LENGTH) {
 			tabTitle = tabTitle.substring(0, MAX_TAB_TITLE_LENGTH);
@@ -314,6 +314,8 @@ function initializeAlarm(reminderAlarmOptions, hasNotes, firstTab) {
 		//getChildElementById(tabPanel, "timeDescLabel").setAttribute("hidden", true);
 		getChildElementById(tabPanel, "reminderTimeText").setAttribute("hidden", true);
 	}
+	//XXX getChildElementById(tabPanel, "reminderID").setAttribute("tooltiptext", recentReminder.id)
+	//XXX getChildElementById(tabPanel, "reminderID").setAttribute("uid", recentReminder.id)
 
 
 	var tabbox = document.getElementById("tabbox");
@@ -718,7 +720,6 @@ rmFXaLog(rmFXtDate() + msg)
 			reminderfox.core.playSound();
 			window.focus();
 			// TODO: could select the appropriate tab ?  Or that might be annoying
-	//XXXXXXXXXXXXX 		selectAlarmTab();
 
 		} // end if
 	} catch ( e ) {
@@ -1422,6 +1423,8 @@ function reminderFox_actionChanged() {
 
 function rmFx_datePickerQAopen(event, xThis) {
 //	reminderfox.util.Logger('qalarm', "rmFx_datePickerQA: " + xThis.id);
+//console.log("//XXX  rmFx_datePickerQAopen ")
+//console.trace()
 
 	var reminderDate = new Date();
 	reminderDate.setHours(0);
@@ -1472,7 +1475,8 @@ function rmFx_datePickerQAopen(event, xThis) {
 	var timepicker = document.getElementById("timePickerCurrent");
 	timepicker.setAttribute('is24HourClock', "false");			//gWis24HourClock //gWXXX  use Option setting
 
-	timepicker.dateValue = snoozeDate2;
+	timepicker.value = snoozeDate2.getHours() + ":" + snoozeDate2.getMinutes();
+
 
 	document.getElementById("rmFx-moz-datepicker").showPopup(datepickerAnchor, event.screenX, event.screenY, "bottomleft", "topleft");
 	reminderFox_QAcalendarOpened = true;

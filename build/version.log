@@ -1,24 +1,64 @@
 
-	Reminderfox  [2.1.5.5] release
-	   as of:    Sat, 2 Apr 2016 23:25:26 +0200 (CEST)
-	'reminderfox_2.1.5.5_release_20160402_2325.xpi'   <'20160402_2325'>
+	Reminderfox  [2.1.5.6] release
+	   as of:    Sun, 25 Jun 2017 10:59:01 -0400 (EDT)
+	'reminderfox_2.1.5.6_release_20170625_1059.xpi'   <'20170625_1059'>
+	
+
+2017-06-25  Version 2.1.5.6:
+  Set multiprocessCompatible flag to true; verified working on multiprocess FF.
+
+2016-05-26_14   Version wip 2.1.5.5.3
+	Fixed: Timeselector on Alarm and Quick Alarm dialogs failed. 
 
 
-2016-04-02_17    Version wip 2.1.5.5
+2016-05-17_01   Version wip 2.1.5.5.3
+	Edit/Open of events with Calendar day popup failed.
+	GCal2 changed to allow business accounts 
+
+
+2016-05-06_14   Version wip 2.1.5.5.3
+	Known Problem:
+	-- Timeselector on Alarm and Quick Alarm dialogs fail. Use has to enter
+	   time values numerically to the dialog
+
+
+2016-05-04_24   Version wip 2.1.5.5.3
+	Due to removal of 'unpack' in install.rdf
+	-- /defaults directory moved to chrome/content/defaults.
+	   At startup /defaults dir is extracted to ../Profile/{profile.default}/reminderfox
+	   to support calDAV colors and Agenda/Printing
+	-- About Reminderfox changed for no-release-version checking
+	-- build_eANT.xml changed!
+	Logging - minor changes to make use of console.info/.log/.error etc
+
+
+2016-04-21_21    Version wip 2.1.5.5.2
+	Alert/Alarm:  On Options selecting a sound file will play it for testing
+	About Reminderfox Dialog updated for unpack setup
+
+
+2016-04-18_00    Version wip 2.1.5.5.2
+	XPI generated without unpack for installation
+
+	Alert Notification Slider 
+	-- on Options Notification selection to place on screen Top/bottom,left/right
+	-- red button closes without fading
+	-- separate sound file selection, preset for wav,ogg
+
+
+2016-04-01_00    Version wip 2.1.5.5 
 ==============================================
 	Alert Slider modification
 	-- content/reminderfox/alert  replaced with ../newAlert
 	--> Alert fades in/out (fct is similar to TB new mail notification)
 	--> can be closed with red X on slider
 
-		Known Problem:
+		Known Problem: 
 		Playing sound for the Alert Slider isn't working with all OS:
 		-- WIN7   OK  (WIN8/10 not tested)
 		-- OSX    Works with default (system beep), not with .wav/.ogg files
 		-- Linux  Don't work with default (system beep), not with .wav files,
 		          but OK with .ogg files
-
-	Fixed: On FX45 click on calendar day defaulted to year 1899
 
 	About and Foxy menu changed for Google Forum link
 
@@ -28,10 +68,10 @@
 
 	Disable storing ICS data with no events/todos during sync
 	Subscribe failed due to missing lib link
-	D&D failed with FX/SM Nightly builds;
+	D&D failed with FX/SM Nightly builds; 
 	   fixed with removing drag elements from <statusbar/> at overlay.
 
-	CalDAV Sync
+	CalDAV Sync 
 	-- changed for DST
 	-- UTC preference setting was not respected for sending ICS data to remote
 	   Thanks to  M.P.Ragavendra
@@ -130,6 +170,10 @@ wip 2015-02-14 __ version 2.1.5.2 (wip)
 
 
 -----------------
+wip  2015-01-25 __ version 2.1.5.2 (wip)
+	Sent++ supporting IMAP Sent folder
+
+
 wip  2015-01-25 __ version 2.1.5.2 (wip)
 	Sent++ supporting IMAP Sent folder
 

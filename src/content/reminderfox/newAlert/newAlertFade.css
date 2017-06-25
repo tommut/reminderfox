@@ -12,7 +12,7 @@
 
 #alertContainer[fade-in] {
   animation-timing-function: ease-out;
-  animation-duration: 2s;
+  animation-duration: 0.8s;
   animation-fill-mode: both;
   animation-name: fade-in;
 }
@@ -24,7 +24,7 @@
 
 #alertContainer[fade-out] {
   animation-timing-function: ease-in;
-  animation-duration: 2s;
+  animation-duration: 0.8s;
   animation-fill-mode: both;
   animation-name: fade-out;
 }
