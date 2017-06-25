@@ -1,10 +1,11 @@
 
-	Reminderfox  [2.1.5.5.3] release
-	   as of:    Tue, 19 Jul 2016 21:29:44 -0400 (EDT)
-	'reminderfox_2.1.5.5.3_release_20160719_2129.xpi'   <'20160719_2129'>
+	Reminderfox  [2.1.5.6] release
+	   as of:    Sun, 25 Jun 2017 10:59:01 -0400 (EDT)
+	'reminderfox_2.1.5.6_release_20170625_1059.xpi'   <'20170625_1059'>
 	
-2016-07-14:
-     Reduced fade-in/out animation duration for alert slider
+
+2017-06-25  Version 2.1.5.6:
+  Set multiprocessCompatible flag to true; verified working on multiprocess FF.
 
 2016-05-26_14   Version wip 2.1.5.5.3
 	Fixed: Timeselector on Alarm and Quick Alarm dialogs failed. 

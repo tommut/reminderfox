@@ -3,6 +3,9 @@
 ##  version.txt
 ##
 
+2017-06-25  Version 2.1.5.6:
+  Set multiprocessCompatible flag to true; verified working on multiprocess FF.
+
 2016-05-26_14   Version wip 2.1.5.5.3
 	Fixed: Timeselector on Alarm and Quick Alarm dialogs failed. 
 
