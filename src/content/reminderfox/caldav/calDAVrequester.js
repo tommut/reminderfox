@@ -135,13 +135,14 @@ reminderfoxX.calDAVhttp.prototype.sendContentToURL = function(caller,call) {
 	}
 
 	logMsg = "CalDAV  HTTP sendContentToURL  [" + call.request + "|" + call.callback +"]  (" + call.ID + ")"
-		+ '\n  method: ' + call.method +  "  headers >>\n" + call.header + "\n<<"
-		+ "\n  urlstr:"    + urlstr + "  login : " + call.username
+		+ "\n  method: " + call.method 
+		+ "\n  headers \n>>\n" + call.header + "\n<<"
+		+ "\n  login : " + call.username
+		+ "\n  urlstr: "  + urlstr
 		+ "\n  contentType:" + call.contentType
-		+ "\n  content   >>\n" + call.body + "\n<<";
-	reminderfox.util.Logger('calDAVhttp', logMsg);
-
-	var spdy = rmFX_GCal_SPDYset(call,  ("[" + call.request + "|" + call.callback +"]  (" + call.ID + ")" ))
+		+ "\n  content \n>>\n" + call.body + "\n<<";
+	reminderfox.util.Logger('calDAV', logMsg);
+	//reminderfox.util.Logger('Alert', logMsg);			//XXXgW
 
 	var requester;
 	var currentApp = this;
@@ -156,7 +157,6 @@ reminderfoxX.calDAVhttp.prototype.sendContentToURL = function(caller,call) {
 		body          : call.body,
 		headers       : call.headers,
 		returnHeaders : true,
-		spdy          : spdy,
 
 		onOpened : function() {
 		},
@@ -166,55 +166,8 @@ reminderfoxX.calDAVhttp.prototype.sendContentToURL = function(caller,call) {
 		},
 
 		onSuccess : function(status, xml, text, headers, statusText) {
-			rmFX_GCal_SPDYreset(call, "(" + call.ID + ")" )
 			caller[call.callback](status, xml, text, headers, statusText, call);
 		}
 	});
 	return;
 };
-
-
-/*
- * gW 2014-10-24 
- * SPDY handling with Google CalDAV handling
- * See [Bug 1072525] Interfacing with Google DAV services over HTTP/2.0 Fails with "400 Bad Request"
- *   https://bugzilla.mozilla.org/show_bug.cgi?id=1072525
- * 
- * call.Url : 
- * https://www.googleapis.com/caldav/v2/gneandr%40googlemail.com/events/
- * https://accounts.google.com/o/oauth2/token
- * https://apidata.googleusercontent.com/caldav/v2/" + username,
- * https://www.google.com/calendar/dav/{AccountLogin}/
- */
-function rmFX_GCal_SPDYset(call, aStatus) {
-
-	//	return;		//enable the return if SPDY handling Google/Mozilla works
-
-	if ((call.url.search('www.google.com') > -1)
-		|| (call.url.search('www.googleapis.com') > -1)
-		|| (call.url.search('accounts.google.com') > -1)) {
-
-		try {
-			call.spdy = reminderfox._prefs.getBoolPref('network.http.spdy.enabled');
-			var msg = " ** SPDY setting:" + call.spdy + "  status: " + aStatus
-				+ "\n  call.url : " + call.url
-			//			reminderfox.util.Logger('SPDY', msg)
-			if (call.spdy == true) {
-				reminderfox._prefs.setBoolPref('network.http.spdy.enabled', false);
-				call.spdy = false
-			}
-		} catch(e) {}
-	} else {
-		return call.spdy
-	}
-}
-
-function rmFX_GCal_SPDYreset(call, id) {
-	var msg = " ** SPDY status:" + call.spdy + "  call.id: " + id
-
-	if ((!call.spdy)&&(call.spdy == false)) {
-		reminderfox._prefs.setBoolPref('network.http.spdy.enabled', true);
-		var msg = " ** SPDY reset  call.id: " + id
-	}
-	//	reminderfox.util.Logger('SPDY', msg)
-}

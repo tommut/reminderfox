@@ -354,8 +354,7 @@ reminderfox.calendar.ui.eventMenus= function(xThis, xEvent){
 	} // was context menu ..
 
 	// open _reminder for edit
-//console.log(" open _reminder for edit ", xThis.getAttribute('numDate'), xThis.getAttribute('idValue'));		//XXX
-//console.trace()
+//reminderfox.util.Logger('calndr', " open _reminder for edit ", xThis.getAttribute('numDate'), xThis.getAttribute('idValue'));		//XXX
 	reminderfox.calendar.ui.eventContext ('Edit', null, xThis.getAttribute('numDate'));
 };
 

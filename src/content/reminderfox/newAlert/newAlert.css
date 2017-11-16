@@ -7,7 +7,7 @@
   == Styles specific to the alerts dialog.
   ======================================================================= */
 
-@import url("chrome://messenger/skin/");
+/* ????? @import url("chrome://messenger/skin/");    ????*/
 
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
@@ -47,34 +47,9 @@
   -moz-margin-start: 11px;
 }
 
-.folderSummary-message-row {
-  /* This max width ends up dictating the overall width of the alert window
-     because it controls how large the preview, subject and sender text can be
-     before cropping kicks in */
-  max-width: 450px;
-  padding: 0px 5px;
-}
 
-.folderSummary-subject {
-  font-weight: bold;
-}
-
-.folderSummary-sender, .folderSummary-subject {
-  cursor: inherit;
-}
-
-.folderSummary-previewText {
-  opacity: 0.6;
-}
-
-.folderSummaryMessage:hover > .folderSummary-message-row {
-  cursor: pointer;
-  color: -moz-hyperlinktext;
-}
-
-.folderSummaryMessage:hover:active > .folderSummary-message-row {
-  color: -moz-activehyperlinktext;
-}
+/* .folderSummary-message-row -----  removed .. not used in RmFX    //XXXgW
+*/
 
 
 
@@ -89,6 +64,7 @@
 
 #closeButton:hover {
   -moz-image-region: rect(0px, 32px, 16px, 16px);
+  cursor:pointer;
 }
 
 #closeButton:hover:active {

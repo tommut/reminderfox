@@ -188,10 +188,10 @@ function reminderFox_loadOptions() {
 	document.getElementById("reminderFox-alarmSound").setAttribute("checked", playSound);
 
 	// check if user has specified a specific file path for sound in their preferences
-	var soundFilePath = reminderfox.core.getPreferenceValue(reminderfox.consts.ALARM_SOUND_PATH, "");
-	document.getElementById("reminderFox-alarmSoundType-file").setAttribute("value", soundFilePath);
+	var alarmSoundPath = reminderfox.core.getPreferenceValue(reminderfox.consts.ALARM_SOUND_PATH, "");     //  = "alarmSoundPath";
+	document.getElementById("reminderFox-alarmSoundType-File").setAttribute("value", alarmSoundPath);
 
-	var soundCustom = reminderfox._prefsBranch.getBoolPref(reminderfox.consts.ALARM_SOUND_CUSTOM, false);
+	var soundCustom = reminderfox.core.getPreferenceValue(reminderfox.consts.ALARM_SOUND_CUSTOM, false);  // = "alarmSoundCustom";
 	var group = document.getElementById("reminderFox-alarmSoundType");
 	if(soundCustom == true) {
 		group.setAttribute("checked", "true");
@@ -222,8 +222,8 @@ function reminderFox_loadOptions() {
 	document.getElementById("reminderFox-alertSound").setAttribute("checked", playSoundAlert);
 
 	// check if user has specified a specific file path for sound in their preferences
-	var soundFilePath = reminderfox.core.getPreferenceValue(reminderfox.consts.ALERT_SOUND_PATH, "");
-	document.getElementById("reminderFox-alertSoundType-file").setAttribute("value", soundFilePath);
+	var alertSoundPath = reminderfox.core.getPreferenceValue(reminderfox.consts.ALERT_SOUND_PATH, "");
+	document.getElementById("reminderFox-alertSoundType-File").setAttribute("value", alertSoundPath);
 
 	var soundCustom = reminderfox._prefsBranch.getBoolPref(reminderfox.consts.ALERT_SOUND_CUSTOM, false);
 	var group = document.getElementById("reminderFox-alertSound-Type");
@@ -288,10 +288,10 @@ function reminderFox_loadOptions() {
 	}
 
 	// check if user has specified a specific file path for sound in their preferences
-	var soundFilePath = reminderfox.core.getPreferenceValue(reminderfox.consts.ALARM_SOUND_PATH, "");
-	document.getElementById("reminderFox-alarmSoundType-file").setAttribute("value", soundFilePath);
+	var alarmSoundPath = reminderfox.core.getPreferenceValue(reminderfox.consts.ALARM_SOUND_PATH, "");     //  = "alarmSoundPath";
+	document.getElementById("reminderFox-alarmSoundType-File").setAttribute("value", alarmSoundPath);
 	var group = document.getElementById("reminderFox-alarmSoundType");
-	if(soundFilePath == null || soundFilePath == "") {
+	if(alarmSoundPath == null || alarmSoundPath == "") {
 		group.selectedIndex = 0;
 	} else {
 		group.selectedIndex = 1;
@@ -924,7 +924,7 @@ function reminderFox_updateOptions() {
 	}
 
 	//Alert Notification 
-	var customFileLocation = document.getElementById("reminderFox-alertSoundType-file").value;
+	var customFileLocation = document.getElementById("reminderFox-alertSoundType-File").value;
 	reminderfox._prefsBranch.setCharPref(reminderfox.consts.ALERT_SOUND_PATH, customFileLocation);
 
 	var group = document.getElementById("reminderFox-alertSound");
@@ -951,13 +951,13 @@ function reminderFox_updateOptions() {
 	reminderfox._prefsBranch.setBoolPref(reminderfox.consts.PREF_ALERTSLIDER_TOP, ((pos == 0) || (pos == 1)));
 	reminderfox._prefsBranch.setBoolPref(reminderfox.consts.PREF_ALERTSLIDER_LEFT, ((pos == 0) || (pos == 2)));
 
-//console.log("XXXX Alert positionIndex ", positionIndex, pos,
+//reminderfox.util.Logger('alert'," Alert positionIndex ", positionIndex, pos,
 // " Top:", reminderfox._prefsBranch.getBoolPref(reminderfox.consts.PREF_ALERTSLIDER_TOP),
 // " Left:", reminderfox._prefsBranch.getBoolPref(reminderfox.consts.PREF_ALERTSLIDER_LEFT));
 
 
 	//Alarm Sound 
-	var customFileLocation = document.getElementById("reminderFox-alarmSoundType-file").value;
+	var customFileLocation = document.getElementById("reminderFox-alarmSoundType-File").value;
 	reminderfox._prefsBranch.setCharPref(reminderfox.consts.ALARM_SOUND_PATH, customFileLocation);
 
 	var alarmSound = document.getElementById("reminderFox-alarmSound").getAttribute("checked")== "true";
@@ -979,7 +979,7 @@ function reminderFox_updateOptions() {
 	// update alarm custom 
 	var alarmSoundCustom = document.getElementById("reminderFox-alarmSoundType").getAttribute("checked") == "true";
 	if (alarmSoundCustom) {
-		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALARM_SOUND_CUSTOM, true);
+		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALARM_SOUND_CUSTOM, true);    // = "alarmSoundCustom";
 	} else {
 		reminderfox._prefsBranch.setBoolPref(reminderfox.consts.ALARM_SOUND_CUSTOM, false);
 	}
@@ -1692,7 +1692,7 @@ function reminderFox_alertChanged() {
 		+ "reminderFox-alertPosition-top,reminderFox-alertPosition-top1,reminderFox-alertPosition-top2,"
 		+ "reminderFox-alertPosition-bottom,reminderFox-alertPosition-bottom1,reminderFox-alertPosition-bottom2,"
 		+ "reminderFox-alertHeight,"
-		+ "reminderFox-alertSound-Type,reminderFox-alarmSoundType-file,reminderFox-alertSoundType-browse");
+		+ "reminderFox-alertSound-Type,reminderFox-alarmSoundType-File,reminderFox-alertSoundType-browse");
 
 
 	var checkedAlertSound = reminderFox_isChecked("reminderFox-alertSound")
@@ -1701,7 +1701,7 @@ function reminderFox_alertChanged() {
 
 	var checkedAlertSoundType = reminderFox_isChecked("reminderFox-alertSound-Type")
 	reminderfox_toggleGroup(checkedAlert && checkedAlertSound && checkedAlertSoundType,
-		"reminderFox-alertSoundType-file,reminderFox-alertSoundType-browse");
+		"reminderFox-alertSoundType-File,reminderFox-alertSoundType-browse");
 }
 
 
@@ -1714,13 +1714,13 @@ function reminderFox_alertSoundChanged() {
 
 	var checkedSoundType = reminderFox_isChecked("reminderFox-alertSound-Type");
 	reminderfox_toggleGroup(checkedAlert && checkedSound && checkedSoundType,
-		"reminderFox-alertSoundType-file,reminderFox-alertSoundType-browse");
+		"reminderFox-alertSoundType-File,reminderFox-alertSoundType-browse");
 }
 
 
 function reminderFox_alertSoundType() {
 	reminderfox_toggleGroup(reminderFox_isChecked("reminderFox-alertSound-Type"),
-		"reminderFox-alertSoundType-file,reminderFox-alertSoundType-browse");
+		"reminderFox-alertSoundType-File,reminderFox-alertSoundType-browse");
 }
 
 
@@ -1754,7 +1754,7 @@ function reminderFox_alarmSoundChanged() {
 		"reminderFox-alarmSoundInterval-Time,reminderFox-alarmInterval-Label");
 
 	reminderfox_toggleGroup(checkedSound && reminderFox_isChecked("reminderFox-alarmSoundType") /*control*/,
-		"reminderFox-alarmSoundType-file,reminderFox-alarmSoundType-browse");
+		"reminderFox-alarmSoundType-File,reminderFox-alarmSoundType-browse");
 }
 
 
@@ -1766,7 +1766,7 @@ function reminderFox_alarmSoundInterval_Change() {
 
 function reminderFox_alarmSoundType() {
 	reminderfox_toggleGroup(reminderFox_isChecked("reminderFox-alarmSoundType"),
-		"reminderFox-alarmSoundType-file,reminderFox-alarmSoundType-browse");
+		"reminderFox-alarmSoundType-File,reminderFox-alarmSoundType-browse");
 }
 // ----------- alarm handling ---------- end
 
@@ -1844,9 +1844,9 @@ function reminderFox_pickSoundFile(type) {
 		return;
 	var soundFilePath = file.path;
 	if (type == 'alarm')
-		document.getElementById("reminderFox-alarmSoundType-file").setAttribute("value", soundFilePath);
+		document.getElementById("reminderFox-alarmSoundType-File").setAttribute("value", soundFilePath);
 	if (type == 'alert')
-		document.getElementById("reminderFox-alertSoundType-file").setAttribute("value", soundFilePath);
+		document.getElementById("reminderFox-alertSoundType-File").setAttribute("value", soundFilePath);
 		
 	reminderfox.core.playSound ('test' /*mode*/, soundFilePath)
 }

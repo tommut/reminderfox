@@ -251,8 +251,8 @@ function initializeAlarm(reminderAlarmOptions, hasNotes, firstTab) {
 		}
 		var dateString = reminderfox.date.getDateVariable(null, recentReminder.date, _dateVariableString);
 
-		document.title = reminderfox.string("rf.alarm.title");
-		document.title += reminderFox_alarmListNameCheck(alarmListName)
+		document.title = reminderFox_alarmListNameCheck(alarmListName)
+		document.title += " " + reminderfox.string("rf.alarm.title");		// 'Reminderfox'
 
 		// if this is a past reminder, indicate that in the title
 		if(alarmMissed == "true") {
@@ -270,11 +270,12 @@ function initializeAlarm(reminderAlarmOptions, hasNotes, firstTab) {
 			if(compare == 1) {
 				// compare Dates: recentReminder.date, currentDate.
 				// if current date is after reminder date, show 'missed'
-				document.title = document.title + " (" + reminderfox.string("rf.alarm.missedalarm.title") + ")";
+				document.title = " (" + reminderfox.string("rf.alarm.missedalarm.title") + ") " + document.title;  //XXXalarmTitle
 			}
 		}
 
-		document.title = document.title + ": " + reminderString;
+	//XXXalarmTitle	document.title = document.title + ": " + reminderString;
+		document.title = reminderString + " " + document.title;
 
 		getChildElementById(tabPanel, "reminderDateText").setAttribute("value", dateString);
 
@@ -564,8 +565,8 @@ function selectAlarmTab(xThis) {
 		getChildElementById(tabPanel, "notesText").setAttribute("hidden", true);
 	}
 
-	document.title = reminderfox.string("rf.alarm.title");
-	document.title += reminderFox_alarmListNameCheck(alarmListName)
+	document.title = reminderFox_alarmListNameCheck(alarmListName)
+	document.title += " - " + reminderfox.string("rf.alarm.title");		//XXXalarmTitle
 
 
 	// if this is a past reminder, indicate that in the title
@@ -584,7 +585,8 @@ function selectAlarmTab(xThis) {
 		if(compare == 1) {
 			// compare Dates: recentReminder.date, currentDate.
 			// if current date is after reminder date, show 'missed'
-			document.title = document.title + " (" + reminderfox.string("rf.alarm.missedalarm.title") + ")";
+	//XXXalarmTile		document.title = document.title + " (" + reminderfox.string("rf.alarm.missedalarm.title") + ")";
+			document.title = " (" + reminderfox.string("rf.alarm.missedalarm.title") + ") " + document.title;
 		}
 	}
 
@@ -594,7 +596,8 @@ function selectAlarmTab(xThis) {
 	} else {
 		info = reminderAlarmArray[index].quickAlarmText;
 	}
-	document.title = document.title + ": " + info 
+	//XXXalarmTitle  document.title = document.title + ": " + info;
+	document.title = info + " " + document.title;
 }
 
 
@@ -747,8 +750,9 @@ function reminderFox_editReminderFromAlarm() {
 		tabList.children[index].label=returnedSummary;
 		document.getElementById('reminderDescriptionText').value = returnedSummary
 
-		document.title = reminderfox.string("rf.alarm.title");
-		document.title += returnedSummary;
+		document.title = returnedSummary;
+		document.title += " - " + reminderfox.string("rf.alarm.title");	//XXXalarmTitle
+
 	}
 }
 
@@ -1422,9 +1426,7 @@ function reminderFox_actionChanged() {
 }
 
 function rmFx_datePickerQAopen(event, xThis) {
-//	reminderfox.util.Logger('qalarm', "rmFx_datePickerQA: " + xThis.id);
-//console.log("//XXX  rmFx_datePickerQAopen ")
-//console.trace()
+reminderfox.util.Logger('qalarm', "rmFx_datePickerQA: " + xThis.id);
 
 	var reminderDate = new Date();
 	reminderDate.setHours(0);

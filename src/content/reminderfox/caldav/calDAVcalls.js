@@ -45,9 +45,7 @@
 	}
 ----------------------------------------------------------------------------*/
 
-
-
-if (!reminderfoxX)     var reminderfoxX = {};
+var reminderfoxX = reminderfoxX || {};
 if (!reminderfox.calDAVcalls)  reminderfox.calDAVcalls = {
 
 // ======================= call definitions ====================================
@@ -424,10 +422,9 @@ var rmFx_UIDpending = []
 
 
 function rmFx_calDAVpendingADD(rUID){
-	var msg=(" -->> rmFx_calDAV Pending ADD " + rUID)
+	var msg=(" -->> rmFx_calDAV Pending ADD: " + rUID + "  pending: " + rmFx_UIDpending.toString())
 	reminderfox.util.Logger('calDAV',msg)
 
-	console.log(rmFx_UIDpending)
 	rmFx_UIDpending.push(rUID)
 }
 
@@ -480,7 +477,7 @@ function rmFx_CalDAV_updatePendingNext() {
 	}
 
 	var msg = "  Reminderfox  Reminders pending:: " + rmFx_UIDpending.toString() + "  (" + rmFx_UIDpending.length + ")"
-	if (rmFx_UIDpending.length != 0) console.log(msg)
+	if (rmFx_UIDpending.length != 0) reminderfox.util.Logger('calDAV', msg)
 
 	if (rmFx_UIDpending.length == 0) {
 		rmFx_CalDAV_SyncActiveAccounts()
@@ -871,7 +868,10 @@ function rmFx_CalDAV_accountsGet (xthis, xAccounts) {
 
 	// **** Google Calendar with OAuth2 ****
 	if (serverID == "GCal2") {
-		url = "https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=22822497261.apps.googleusercontent.com&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=https://www.googleapis.com/auth/calendar"; 
+		url = "https://accounts.google.com/o/oauth2/auth?response_type=code"
+			+ "&client_id=22822497261.apps.googleusercontent.com"
+			+ "&redirect_uri=urn:ietf:wg:oauth:2.0:oob"
+			+ "&scope=https://www.googleapis.com/auth/calendar"; 
 		reminderfox.util.openURL(url);
 		return;
 	}
@@ -1115,8 +1115,6 @@ reminderfoxX.calDAVrequest = function () {}
 			if ((status == 401) && (call.url.search("https://www.googleapis.com/caldav/v2/") === 0)){
 
 				msg = " in 'gCalPrincipalFound'   Refresh gcal2 access_token  (401)  "  + call.username;
-		//		msg += "\n  [" + call.account.ID + "]  " + call.account.Name;
-		//2015-11-11_23		msg += "\n" + callMsg;
 				reminderfox.util.Logger('calDAVv2', msg);
 
 				rmFx_CalDAV_getGCALAccessToken (call.username);
@@ -1571,13 +1569,11 @@ reminderfoxX.calDAVrequest = function () {}
 				return;
 			}
 
-			//gWTEST after iscout returned error 500 and all events/todos were erased!!!
 			if ((status == 500) && (call.url.search("https://www.googleapis.com/caldav/v2/") === 0)){
 				msg = callMsg;
 				msg += "\n *** ERROR ***CalDAV     Status: 500  Internal Server Error  ";
 				msg += "\n  [" + call.account.ID + "]  " + call.account.Name;
 				reminderfox.util.Logger('calDAVv2', msg);
-	//			rmFx_CalDAV_getGCALAccessToken (call.username, call.account.ID);
 				return;
 			}
 
@@ -2220,7 +2216,7 @@ reminderfoxX.calDAVrequest = function () {}
 		else {  // ERROR Handling
 			if ((status == 401) && (call.url.search("https://www.googleapis.com/caldav/v2/") === 0)){
 				msg = "  in 'onETAG'  Refresh gcal2 access_token  (401)  "  + call.username;
-				msg += "  account/call status is set to = -2 which is equal to 'pending update'"
+				msg += "\n  account/call status is set to = -2 which is equal to 'pending update'"
 				msg += "\n  [" + call.account.ID + "]  " + call.account.Name;
 				msg += "\n" + callMsg;
 				reminderfox.util.Logger('calDAVv2', msg);
@@ -2303,7 +2299,7 @@ reminderfoxX.calDAVrequest = function () {}
 			call.request      = grant;
 			call.callback     = 'havegcal2Token';
 
-			call.url          = "https://accounts.google.com/o/oauth2/token";
+			call.url          = "https://www.googleapis.com/oauth2/v4/token";
 			call.username     = document.getElementById('accountLogin').value;
 
 			call.contentType  = 'application/x-www-form-urlencoded';
@@ -2365,6 +2361,9 @@ reminderfoxX.calDAVrequest = function () {}
 			}
 
 		} else {  // ERROR Handling
+
+			reminderfox.util.Logger("Alert", " ------- .havegcal2Token ERROR Handling ------- status: " + status);    //XXXgW
+
 			if ((status == 404) && (call.url.search("https://www.googleapis.com/caldav/v2/") === 0)) {
 				msg = "  Refresh gcal2 access_token  (404)  "  + call.username;
 				msg += "\n  [" + call.account.ID + "]  " + call.account.Name;
@@ -2429,7 +2428,7 @@ function rmFx_CalDAV_getGCALAccessToken (user, previousAccountID) {
 			call.request      = 'refresh_token';
 			call.callback     = 'haveGCALAccessToken';
 
-			call.url          = "https://accounts.google.com/o/oauth2/token";
+			call.url          = "https://www.googleapis.com/oauth2/v4/token";
 
 			call.contentType  = 'application/x-www-form-urlencoded';
 			var login          = rmFX_calDAV_gcalOAuth2(call.username);

@@ -564,7 +564,6 @@ function rmFx_mainDialogLoad(restartSkip){
 		Components.utils.reportError(ex);
 	}
 
-
 	//gWABContact Handling
 	reminderfox.msgnr.whichMessenger();
 	var addContext = document.getElementById("treechildren-contextmenu");
@@ -1926,6 +1925,8 @@ function createUIListItemReminder(baseReminder){
 					}
 				}
 	}
+
+	var calDAVaccounts = reminderfox.calDAV.getAccounts()
 
 	for (var j = startIndex; j < endIndex; j++) {
 		var treeSelection;

@@ -1650,8 +1650,6 @@ reminderfox.util.PromptAlert= function(msgErr, noAlert){
 	promptService.alert(window, "ReminderFox Alert : \n\n", msgErr);
 	if (!noAlert) {
 	//	reminderfox.util.Logger('ALERT', msgErr);		// 'ALERT'  adds the stack to the console output
-		console.log('ALERT', msgErr);		// 'ALERT'  adds the stack to the console output
-		console.trace();
 	}
 	else
 		console.error(msgErr);		//   no stack to the console output	
@@ -1756,14 +1754,14 @@ reminderfox.util.Logger = function (Log, msg) {
 
 	if (Log.toLowerCase().search('alert') > -1){
 		var date = new Date();
-		logMsg = "Reminderfox  ** Alert **    "
-			+ date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + " >" + +(new Date()) + "<" 
+		logMsg = "\nReminderfox  ** Alert **    "
+			+ date + " >" + +(new Date()) + "<" 
 			+ "\n" + msg;
 
 		if (Log == 'ALERT') logMsg += "\n" + reminderfox.util.STACK();
 		if (Log == 'Alert') logMsg += "\n" + reminderfox.util.STACK(1);
 		if (Log == 'alert') logMsg += "\n";
-		console.info(logMsg, Components.stack.caller.filename + " #" + Components.stack.caller.lineNumber);
+		console.info(logMsg);
 		return;
 	}
 
@@ -1787,14 +1785,14 @@ reminderfox.util.Logger = function (Log, msg) {
 
 
 	var date = new Date();
-	logMsg = "Reminderfox Logger : "+ rootID + "  [" + Log + " : " + logId + "]      "
-		+ date.toLocaleFormat("%Y-%m-%d %H:%M:%S") + " >" + +(new Date()) + "<" 
+	logMsg = "\nReminderfox Logger : "+ rootID + "  [" + Log + " : " + logId + "]      "
+		+ date + (" >"+ +date + "<")
 		+ "\n" + msg;
 
 	if (logNum >= 50 /* 'Warn', 'Error', 'Fatal' */) {
-		console.error(logMsg)
+		console.error(logMsg, "   ")
 	} else {
-		console.info(logMsg + "\n" + reminderfox.util.STACK(1));
+		console.info(logMsg + "\n  ==> " + reminderfox.util.STACK(1));
 	}
 };
 
@@ -2451,13 +2449,6 @@ reminderfox.about= function() {
 	document.getElementById('rmFx_Version').setAttribute( "value",
 		reminderfox.consts.MIGRATED_PREF_VERSION);
 
-	if (reminderfox.consts.SPECIAL_VERSION_DETAIL && (reminderfox.consts.SPECIAL_VERSION_DETAIL != 'release')) {
-		document.getElementById('versionDetailLink').setAttribute( "hidden", false);
-
-		document.getElementById('versionDetail').setAttribute( "value",
-			reminderfox.consts.SPECIAL_VERSION_DETAIL);
-	}
-
 	reminderfox.aboutXPI();
 };
 
@@ -2523,7 +2514,6 @@ reminderfox.aboutXPI= function (mode) {
 		var profD = xFile.parent.path;
 
 		var msg = "ReminderFox  [" + reminderfox.consts.MIGRATED_PREF_VERSION + "]   "
-				+ ((reminderfox.consts.SPECIAL_VERSION_DETAIL) ? reminderfox.consts.SPECIAL_VERSION_DETAIL : "")
 				+ "  " + stamp
 				+ "\n  Profile directory: " + profD
 				+ "\n  " + navigator.userAgent + " (" + navigator.language + ")";
@@ -2540,20 +2530,6 @@ reminderfox.aboutXPI= function (mode) {
 	}, function(error) {
 		console.error("reminderfox.aboutXPI   Failed!", new Date(), error);
 	})
-	.then(function(msg){
-
-		if (xmode  == true) {  // open the UpdateCheck window
-			var pathString = reminderfox.consts.DROPBOX + "version.log";
-			reminderfox.promiseRequest.get(pathString).then(function(logVersion) {
-				var versions = {
-					localText: msg,
-					remoteText: logVersion,
-				};
-				window.openDialog("chrome://reminderfox/content/utils/rmFxUpdateXPI.xul",
-					"reminderFox-versionControl", "chrome,resizable,modal", versions);
-			});
-		}
-	});
 };
 
 
@@ -2591,9 +2567,10 @@ reminderfox.colorMap.cssFileRead= function() {
 //-------------------------------------------------------------
 	var cssFile  = reminderfox.colorMap.cssFileGet();
 	if (cssFile == null) {
-		console.error("reminderfox.colorMap.cssFileRead::  Missing 'calDAV colorMap' file!")
+		console.error("reminderfox.colorMap.cssFileRead::  Missing 'calDAV colorMap' file!");
 		return
 	}
+//reminderfox.util.Logger('calDAV',"  reminderfox.colorMap.cssFileRead  OK");			//XXXgW
 
 	var cssString = reminderfox.core.readInFileContents (cssFile);
 	var colorCode;
@@ -2625,7 +2602,6 @@ reminderfox.colorMap.cssFileRead= function() {
 		}
 		msg += '\n' + num + ':' + colorCode0 + ',' + colorCode;
 	}
-	// reminderfox.util.Logger('calDAV',  ".calDAVmapReadIn " + msg);
 
 	reminderfox.colorMap.cssFileWrite();
 };
@@ -3089,6 +3065,8 @@ reminderfox.util.layoutStatus= function () {
  *   <image class="rmFx_pic" id="rmFx_pic0" tooltiptext="Google Authorisation Request -- Requires [Accept]"
  *    src='https://dl.dropboxusercontent.com/u/35444930/rmFXxpiPictures/gCal_AuthPermission.thumb.png'
  *    onmouseover="reminderfox.util.picturePanel(this)" />
+ * 
+ * gW 2016-12   Images moved into RmFX/images -- Dropbox will stop supporting 'public' folders etc
  *
  * @param  'anchor'  dom element
  *  */
@@ -3178,6 +3156,9 @@ reminderfox.online = {
 //--------------------------------------------------------------------------
 	status : function () {
 
+//console.log("-------reminderfox.online ----------XXXgW ")
+//console.trace();
+
 			var foxy = document.getElementById("rmFx-foxy-icon-small");
 			var msg = "  System status"
 
@@ -3199,118 +3180,5 @@ reminderfox.online = {
 				reminderfox.core.statusSet(msg, true)
 
 			}
-	}
-};
-
-
-//go4news   functions to support a "Reminderfox News"  on the Main Dialog -----
-if (!reminderfox.go4news)    reminderfox.go4news = {};
-
-// in /defaults/preferences/reminderfox.js
-//pref("extensions.reminderFox.news", true);   // last news status, set after reading to false
-//pref("extensions.reminderFox.newsStamp", <2015-10-01);   // last news date
-//pref("extensions.reminderFox.newsLink", "https://dl.dropbox.com/u/35444930/rmFX/XPI/");
-
-// in reminderFoxCore.js
-//reminderfox.consts.NEWS
-//reminderfox.consts.NEWSSTAMP
-//reminderfox.consts.NEWSLINK
-
-
-reminderfox.go4news = {
-//------------------------------------------------------------------------------
-	currentNews : "--",
-
-
-	setButton : function () {
-		var newsStatus = reminderfox.core.getPreferenceValue(reminderfox.consts.NEWS, false)
-		if (newsStatus == true) {
-			document.getElementById('reminderfox-News-box').removeAttribute("hidden");
-		}
-	},
-
-
-	status : function () {  // this run *only* at FX/TB startup !
-		this.get('go4_news', 'status2')
-	},
-
-	status2 : function () {
-
-		var nLines = this.currentNews
-		var n1 = nLines.search('<')
-		var n2 = nLines.search('>') +1
-		var newsStampRemote = nLines.substring(n1,n2)
-
-		var newsStatus = reminderfox.core.getPreferenceValue(reminderfox.consts.NEWS, false)
-		var newsStamp = reminderfox.core.getPreferenceValue(reminderfox.consts.NEWSSTAMP, "")
-		var newsLink = reminderfox.core.getPreferenceValue(reminderfox.consts.NEWSLINK, "")
-
-		//reminderfox.util.Logger('ALERT'," Reminderfox News    #1 stamps ::" +n1 + " " + n2
-		//		+ " \n" + newsStatus + "  >"  + newsLink + "<  " 
-		//		+ newsStampRemote + "::" + newsStamp + " "  + (newsStampRemote > newsStamp))
-
-		if ((newsLink != "") && (newsStampRemote >= newsStamp)){ 
-			// there is NEWS available, update items to let button shown with MainDialog
-
-			reminderfox.core.setPreferenceValue(reminderfox.consts.NEWSSTAMP, newsStampRemote)
-			reminderfox.core.setPreferenceValue(reminderfox.consts.NEWS, true)
-		}
-
-		else {
-			// no NEWS, disable the button/icon on RmFX Main List
-			reminderfox.core.getPreferenceValue(reminderfox.consts.NEWS, false)
-		}
-
-		return
-	},
-
-
-	get : function (callback, callnext) {
-
-			this.method       = 'GET';
-			this.urlstr       = reminderfox.core.getPreferenceValue(reminderfox.consts.NEWSLINK, "")
-
-			this.body         = '';
-			this.contentType  = 'text/xml';
-			this.headers      = null;
-
-			this.username     = "";
-			this.password     = "";
-
-			this.timeout      = 30;
-
-			this.callback     = callback;
-			this.onError      = callback;
-			this.callnext     = callnext
-
-		reminderfox.HTTP.request(this);
-	},
-
-	go4_news : function (status, xml, text, headers, statusText, call) {
-
-		var parser = new DOMParser();
-
-		var aText = parser.parseFromString(text, "text/html");
-		atext = aText.body.textContent.replace(/\n /g,'\n').replace(/\n \n/g,'\n').replace(/n\n/g,'\n').replace(/\n\n\n/g,'\n');
-
-		if (status === 0 || (status >= 200 && status < 300)) {
-
-			this.currentNews = atext;
-
-			if (call.callnext != null) {
-				call[call.callnext]()
-				return
-			}
-
-			reminderfox.util.PromptAlert (atext);
-
-		} else {  // ERROR Handling
-
-			reminderfox.util.PromptAlert ("\n Reminderfox News missing!" + atext);
-		}
-
-		// set for 'News has been read' and hide button
-		reminderfox.core.setPreferenceValue(reminderfox.consts.NEWS, false)
-		document.getElementById('newsButton').setAttribute( "hidden", true);
 	}
 };

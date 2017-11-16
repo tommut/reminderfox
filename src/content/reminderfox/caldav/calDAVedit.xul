@@ -126,16 +126,16 @@
 							<hbox>
 							<vbox height="47px">
 								<image class="rmFx_pic" id="rmFx_pic0"
-									src='https://dl.dropboxusercontent.com/u/35444930/rmFXxpiPictures/gCal_AuthPermission.thumb.png'
+									src='chrome://reminderfox/skin/images/gCal_AuthPermission.thumb.png'
 									onmouseover="reminderfox.util.picturePanel(this)" 
-									tooltiptext="&rf.caldav.google.request.requires;" /> <!--  //$$$_locale  change to wordpress location -->
+									tooltiptext="&rf.caldav.google.request.requires;" /> <!--  //$$$_locale -->
 							</vbox>
 							<spacer width="10px" />
 							<vbox height="28px">
 								<image class="rmFx_pic" id="rmFx_pic1"
-									src='https://dl.dropboxusercontent.com/u/35444930/rmFXxpiPictures/gCal_ACCEPT.thumb.png'
+									src='chrome://reminderfox/skin/images/gCal_ACCEPT.thumb.png'
 									onmouseover="reminderfox.util.picturePanel(this)"
-									tooltiptext="&rf.caldav.google.auth.token;"/> 		<!--  //$$$_locale  change to wordpress location -->
+									tooltiptext="&rf.caldav.google.auth.token;"/> 		<!--  //$$$_locale -->
 							</vbox>
 							</hbox>
 						</vbox>
@@ -630,7 +630,7 @@
 		// ------------------------------------------------
 			var grant ='authorization_code';
 			var token = reminderfox.util.copyTextfromClipboard();
-
+			console.log("gcal2Save   Token >>" + token + "<<");
 			var myRequest = new reminderfoxX.calDAVrequest();
 			myRequest.gcal2Token(this, grant, token);
 		},

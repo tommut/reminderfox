@@ -187,7 +187,8 @@ reminderfox.abCard.addReminder4Contact = function(op){
 	reminderfox.msgnr.whichMessenger();
 	reminderfox.abCard.selectedABURI = GetSelectedDirectory();
 	reminderfox.abCard.cDirectory = GetDirectoryFromURI(reminderfox.abCard.selectedABURI).dirName;
-	
+reminderfox.util.Logger('AB',"  .abCard.cDirectory: " + reminderfox.abCard.cDirectory + "\n  ..selectedABURI: " + reminderfox.abCard.selectedABURI)
+
 	if (reminderfox.abCard.cDirectory.isMailList) {
 		return;
 	} // terminate if on 'List'
@@ -199,30 +200,30 @@ reminderfox.abCard.addReminder4Contact = function(op){
 				reminderfox.util.PromptAlert(reminderfox.string("rf.contacts.abcard.single"));
 				return;
 			}
+
+			var dirId = reminderfox.abCard.cCard.directoryId.substring(0, reminderfox.abCard.cCard.directoryId.indexOf("&"));
+			var cardDirectory = MailServices.ab.getDirectoryFromId(dirId).URI
+reminderfox.util.Logger('AB',"  card belongs to: "+ cardDirectory)
+
 			// --- setup the reminder -----
 			var time = new Date();
-			//time.getTime();
 			var timeString = reminderfox.date.getTimeString(time);
 			var _dateVariableString;
 			try {
 				_dateVariableString = reminderfox.core.getUnicodePref(reminderfox.consts.LIST_DATE_LABEL);
-			} 
-			catch (e) {
-						}
+			}
+			catch (e) {}
+
 			var remFoxDate = reminderfox.date.getDateVariable(null, time, _dateVariableString) + "  " + timeString;
 			var newDate = new Date();
 			newDate.setDate(newDate.getDate() + 1); // default to using tomorrow's date for reminder
 			var reminderId = reminderfox.core.generateUniqueReminderId(newDate);
-			
-			//if (typeof Components.interfaces.nsIAbItem == "object") { // if TB/AB3 then add an "UUID" element to the card
-						// alert ("we are in reminderfox.abCard.addReminder4Contact ... ")
-				// reminderfox.abCard.cCard.setProperty("UUID", reminderId);
-			//}
+
 			var remFoxSummary = "[" + reminderfox.abCard.itemName("LabelContact") + "] " +
 			reminderfox.abCard.cCardItem(reminderfox.abCard.cCard, "DisplayName");
 			var newReminderToBeAdded = new reminderfox.core.ReminderFoxEvent(reminderId, newDate, remFoxSummary);
 			newReminderToBeAdded.extraInfo = "X-REMINDERFOX-CONTACT:" +
-			reminderfox.abCard.selectedABURI +
+			cardDirectory +
 			"::" +
 			reminderfox.abCard.cDirectory +
 			"::" +
@@ -624,19 +625,25 @@ reminderfox.abCard.openABcard = function(event){
 	 }
 	 }
 	 --------- */
-	// X-REMINDERFOX-CONTACT:moz-abmdbdirectory://abook.mab::Personal Address Book::Werny Nigger\\nDTSTAMP:20090722T114039
-	
+	// X-REMINDERFOX-CONTACT:moz-abmdbdirectory://abook.mab::Personal Address Book::Wern Nigg\\nDTSTAMP:20090722T114039
+
 	var abManager = Components.classes["@mozilla.org/abmanager;1"].getService(Components.interfaces.nsIAbManager);
-	
 	var exPos = selectedEvents[0].extraInfo.indexOf("X-REMINDERFOX-CONTACT:");
-	
+
 	if (exPos != -1) {
-	
-		var contactInfo = selectedEvents[0].extraInfo.substring(22);
-		var contactStr = contactInfo.split("\\n")[0];
-		var contactDetails = contactStr.split("::");
-		var abURI = contactDetails[0];
-		
+		var contactInfo = selectedEvents[0].extraInfo;
+		var contactElem = contactInfo.split("\\n");
+reminderfox.util.Logger('AB',"contactElem :" + contactElem.toString())
+
+		var x, abURI;
+		for (x in contactElem) {
+			if (contactElem[x].search("X-REMINDERFOX-CONTACT") == 0) {
+				var contactDetails = contactElem[x].replace("X-REMINDERFOX-CONTACT:","").split("::")
+reminderfox.util.Logger('AB',"contactDetails:" + contactDetails.toString())
+				abURI = contactDetails[0];
+			}
+		}
+
 		if (selectedEvents[0].url != null) {
 			var thisMailAdr = selectedEvents[0].url.substring(7);
 			var thisCard = abManager.getDirectory(abURI).cardForEmailAddress(thisMailAdr);

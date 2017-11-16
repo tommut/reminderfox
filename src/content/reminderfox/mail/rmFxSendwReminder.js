@@ -24,7 +24,8 @@ reminderfox.sendPlus.reminder = function () {
 	var identity = reminderfox.msgnr.getIdentity(msgIdentity)
 	reminderfox.mail.FCC = identity.fccFolder;	// remember 'send folder' for account
 
-//reminderfox.util.Logger('FolderListener', "  ######## sendPlus : " +  identity.fccFolder + "   key:" + identity.key)
+var msg = "  sendPlus : " +  identity.fccFolder + "   key:" + identity.key;
+reminderfox.util.Logger('FolderListener', msg);
 
 	reminderfox.mail.setFolderListener("add");
 
@@ -34,7 +35,6 @@ reminderfox.sendPlus.reminder = function () {
 	var rmFx_SwRm_Reference = reminderfox.core.generateUniqueReminderId(newDate);
 
 	reminderfox.core.lastReminderID = rmFx_SwRm_Reference   //gW2015-01-22
-
 
 	var org_References = gMsgCompose.compFields.references;
 	if (gMsgCompose.compFields.references == null || gMsgCompose.compFields.references == "") {
@@ -88,16 +88,21 @@ reminderfox.sendPlus.reminder = function () {
 		// msgID will be reset  with nsIMsgCompDeliverMode.Now and .Later 
 		// using .Later will store the msg to the FCC Folder
 		// before finally sending catch the msgId from for the reminder using Listener
-		try {
-			GenericSendMessage(nsIMsgCompDeliverMode.Now, true);  // second parameter for PB
 
-			// for msgs with forward/reply etc add a tag 'Followup'
-			var aUri = window.gMsgCompose.originalMsgURI
+		GenericSendMessage(nsIMsgCompDeliverMode.Now);
+
+		// for msgs with forward/reply etc add a tag 'Followup'
+		var aUri = window.gMsgCompose.originalMsgURI
+
+		if (aUri != '') {
 			var messageService = gMessenger.messageServiceFromURI(aUri);
 			var orgMsgHdr = gMessenger.messageServiceFromURI(aUri).messageURIToMsgHdr(aUri);
 
 			reminderfox.tagging.msg('Followup', true, '#009900', orgMsgHdr)
-		} catch (e) {}
+		}
+
+		var msg = "  GenericSend   done   aUri  >>" + aUri + "<<"
+reminderfox.util.Logger('send++',msg)
 
 	}
 };

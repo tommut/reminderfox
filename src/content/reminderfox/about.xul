@@ -24,17 +24,10 @@
 		<vbox>
 			<text id="rmFx_Name" value="&rf.name;"
 				style="font-weight: bold; font-size: x-large;" />
+
 			<hbox>
 				<text id="rmFx_Version" value="&rf.about.version.label;" />
 				<spacer width="10px" />
-
-				<!--  *** USED WITH 'rmFxUpdateXPI.xul ***  Control by reminderfox.consts.SPECIAL_VERSION_DETAIL -->
-				<text id="versionDetail"/>
-				<spacer width="20px" />
-				<text id="versionDetailLink" class="urlBold" hidden="true"
-					onclick="reminderfox.aboutXPI(true);"
-					value="&rf.about.updatecheck.label;" tooltiptext="&rf.about.updatecheck.tooltip;"/>
-
 			</hbox>
 
 			<separator class="thin" />

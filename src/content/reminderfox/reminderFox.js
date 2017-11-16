@@ -367,7 +367,7 @@ msg += "\n  --  if  alarmLastAck >"  +  rmFXtDate(recentReminderOrTodo.alarmLast
         }  // endOf:: if (windowEnumerator.hasMoreElements()) {
         if (alarmInfoArray != null) {
 //var cmsg = " test 4 alarmInfo" 
-//reminderfox.util.Logger("TEST", cmsg)
+//reminderfox.util.Logger('TEST', cmsg)
            msg += ("\n --- overlay.processAlarm ------   \n" + reminderfox.overlay.alarm_Infos(alarmInfoArray) + " --- overlay.processAlarm ------  ")
         }
      }   // endOf::  timeDifferenceInMinutes >= 0 && timeDifferenceInMinutes  <= 60 ) 
@@ -491,7 +491,7 @@ rmFXaLog(msg)
 reminderfox.overlay.showMissedAlarms= function( alarmInfos ) {
 var msg = "*** .overlay.showMissedAlarms  ***  " + alarmInfos.length  + reminderfox.overlay.alarm_Infos(alarmInfos)
 reminderfox.core.logMessageLevel (msg, reminderfox.consts.LOG_LEVEL_SUPER_FINE);
-//reminderfox.util.Logger("TEST", msg)
+//reminderfox.util.Logger('TEST', msg)
 
 //JSON.stringify(alarmInfos)
 
@@ -949,7 +949,7 @@ reminderfox.overlay.openAboutReminderFoxDialog= function() {
 reminderfox.overlay.processRecentReminders= function(processQuickAlarms){
 var msg = (" #   overlay.processRecentReminders    " )
 //reminderfox.core.logMessageLevel(" #   overlay.processRecentReminders    ", reminderfox.consts.LOG_LEVEL_SUPER_FINE);
-//reminderfox.util.Logger("TEST",msg)
+//reminderfox.util.Logger('TEST',msg)
 
     var changed = false;
     var alarmInfos = new Array();
@@ -984,7 +984,7 @@ var msg = (" #   overlay.processRecentReminders    " )
     startDate.setDate(startDate.getDate() - NUM_OF_PAST_DAYS_TO_PROCESS);
 
 //var msg = " overlay.processRecentReminders  with  startDate " + rmFXtDate(startDate)
-//reminderfox.util.Logger("TEST", msg)
+//reminderfox.util.Logger('TEST', msg)
 
     for (i = 0; i < reminderEvents.length; i++) {
         reminder = reminderEvents[i];
@@ -1914,9 +1914,7 @@ reminderfox.overlay.initializeReminderFoxUpdatingTimer = {
     notify: function (timer) {
 
         var msg =  '   ReminderFoxTimer Fired!    in "overlay.initializeReminderFoxUpdatingTimer" ';		//XXX
-        rmFXaLog(rmFXtDate() + msg)
-
-      //  reminderfox.core.logMessageLevel("initialize ReminderFoxTimer ", reminderfox.consts.LOG_LEVEL_INFO);
+        reminderfox.core.logMessageLevel(msg, reminderfox.consts.LOG_LEVEL_INFO);
 
         reminderfox.overlay.initializeReminderFox(true);
         //do stuff here, this stuff will finish and then timer will start countdown of myTimerInterval.
@@ -1968,13 +1966,12 @@ reminderfox.overlay.initializeReminderFox= function(clearReminders){
          //       lastTimeElapsed = parseInt(lastTime) + reminderfox.overlay.consts.HOUR_TIMEOUT;
                 lastTimeElapsed = parseInt(lastTime) + timeout;
             }
-       //     reminderfox.core.logMessageLevel("  Check ReminderFoxTimer - should Initialize: " + (lastTime == null || lastTime == "" || (currentTime + 1500) >= lastTimeElapsed) + " ==  lastTime " 
        var msg = "  Check ReminderFoxTimer - should Initialize: " + (lastTime == null || lastTime == "" || (currentTime + 1500) >= lastTimeElapsed) + " ==  lastTime " 
                 + lastTime + " -- currentTime: " + currentTime 
                 + " -- lastTimeElapsed: " + lastTimeElapsed 
                 + " - Difference (currentTime+1500) - lastTimeElapsed:" + ((currentTime + 1500) - lastTimeElapsed)
                 + " - Inkrement timer: " + timeout;
-       rmFXaLog(rmFXtDate() + msg)
+       reminderfox.core.logMessageLevel(msg, reminderfox.consts.LOG_LEVEL_SUPER_FINE) 
 
             // make sure that the HOURLY_TIMEOUT has passed before we continue.
             // Also add a 1.5 second buffer, as it seems sometimes Mozilla doesn't call the setTimeout at the
@@ -2455,6 +2452,9 @@ reminderfox.overlay.showAlertSlider= function(){
                 //checkData  gW:disable this for testing 2014-05-11			reminderfox.core.clearRemindersAndTodos();
                 reminderfox.core.logMessageLevel("AlertSlider ! ", reminderfox.consts.LOG_LEVEL_INFO);
                 reminderfox.overlay.storeTimeOfLastAlert();
+//console.log("----------- testing ---------------  XXXgW");
+//console.trace();
+
             }
         }
     }
@@ -2760,7 +2760,7 @@ reminderfox.overlay.runDebug= function() {
 reminderfox.overlay.start= function(){
     // run this later and let the window load.
 
-    console.log(" rmFX overlay.start", new Date())
+//reminderfox.util.Logger('TEST'," rmFX overlay.start", new Date())
 
     window.setTimeout(function() { reminderfox.overlay.start_postInit(); }, 100);
 
@@ -2836,6 +2836,8 @@ function rmFx_extractXPI(aZipDir) {
 					+ FileUtils.PERMS_FILE.toString(8) + " on " + target.path + " " + e + "\n");
 			}
 		}
+	} catch (ex) {
+		reminderfox.util.Logger('Alert', ex)
 	}
 	finally {
 		zipReader.close();
@@ -3363,8 +3365,8 @@ reminderfox.overlay.showCalendar= function(event){
  */
 function reminderfox_xmlPrint (xThis, isXPI) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//console.log("//XXX   reminderfox_xmlPrint ")
-//console.trace()
+console.log("//XXX   reminderfox_xmlPrint ")
+console.trace()
 
     var isReminder = true;
     try {
@@ -3435,7 +3437,6 @@ function reminderfox_xmlPrint (xThis, isXPI) {
     var attrElem = xmlGeneral.createElement('version');
     attrElem.textContent= "Reminderfox vers."
         + reminderfox.consts.MIGRATED_PREF_VERSION
-        + reminderfox.consts.SPECIAL_VERSION_DETAIL;
     generalElem.appendChild(attrElem);
 
     var attrElem = xmlGeneral.createElement('template');
@@ -3778,7 +3779,7 @@ function reminderfox_prntPath (){
     var prnt = reminderfox.util.ProfD_extend('reminderfox')
     prnt.append("printing");
 
-//console.log("//XXX   reminderfox_prntPath  ", prnt.path);
+console.log("//XXX   reminderfox_prntPath  ", prnt.path);
     return prnt;
 };
 
@@ -3788,8 +3789,8 @@ function reminderfox_prntPath (){
  */
 function reminderfox_PrintMenuSetup(xThis){
 //---------------------------------------------------------
-//console.log("//XXX   reminderfox_PrintMenuSetup ")
-//console.trace()
+console.log("//XXX   reminderfox_PrintMenuSetup ")
+console.trace()
     reminderfox_PrintTemplatesCopy();
 
     // remove all items from popup menu, hold 'Agenda' and separator
@@ -4042,6 +4043,6 @@ function rmFXaLog(msg){
 
     var logLevel = reminderfox._prefsBranch.getIntPref(reminderfox.consts.LOG);
     if (logLevel == 88){
-       console.log(msg)
+       console.info(msg, "\n  ==> " + Components.stack.caller.filename + "#" + Components.stack.caller.lineNumber);
     }
 }

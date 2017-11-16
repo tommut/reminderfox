@@ -26,6 +26,7 @@
 		align="start"
 		onload="onAlertLoad()">
 
+	<script type="application/x-javascript" src="chrome://reminderfox/content/utils/rmFxUtils.js" />
 	<script type="application/x-javascript" src="chrome://reminderfox/content/reminderFoxCore.js" />
 	<script type="application/javascript" src="chrome://reminderfox/content/newAlert/newAlert.js" />
 

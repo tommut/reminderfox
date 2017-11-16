@@ -9,20 +9,13 @@ if (!reminderfox.calDAV)   reminderfox.calDAV = {};
 if (!reminderfox.calDAV.accounts)   reminderfox.calDAV.accounts = {};    //calDAV  main definition of accounts
 
 // constants
-reminderfox.consts.MIGRATED_PREF_VERSION					= "2.1.5.5.3";	// update also install.rdf and build.properties
+reminderfox.consts.MIGRATED_PREF_VERSION                = "2.1.6";	// update also install.rdf and build.properties
 
-// ************************* for dev, use "wip"; for offical MOZILLA set to "release"  *****
-// if set to "wip" enables the check-for-update link; if set to release, hides the update link in about dialog
-reminderfox.consts.SPECIAL_VERSION_DETAIL				= "release"  //"release" // "wip" 
-reminderfox.consts.DROPBOX									= "https://dl.dropbox.com/u/35444930/rmFX/XPI/"
-    + reminderfox.consts.SPECIAL_VERSION_DETAIL + "/";
+reminderfox.consts.SUPPORT                              = "reminderfox@googlegroups.com";
 
-
-reminderfox.consts.SUPPORT									= "reminderfox@googlegroups.com";
-
-reminderfox.consts.REMINDER_FOX_WELCOME_UPDATE_PAGE_URL	= "http://www.reminderfox.org/update";
-reminderfox.consts.REMINDER_FOX_PAGE_URL						= "http://www.reminderfox.org";
-reminderfox.consts.REMINDER_FOX_WELCOME_PAGE_URL			= "http://www.reminderfox.org/welcome-to-reminderfox";
+reminderfox.consts.REMINDER_FOX_WELCOME_UPDATE_PAGE_URL = "http://www.reminderfox.org/update";
+reminderfox.consts.REMINDER_FOX_PAGE_URL                = "http://www.reminderfox.org";
+reminderfox.consts.REMINDER_FOX_WELCOME_PAGE_URL        = "http://www.reminderfox.org/welcome-to-reminderfox";
 
 
 //gWCalendar ________________________________________
@@ -33,9 +26,9 @@ reminderfox.core.lastReminderID = null;
 reminderfox.core.lastSendReminder = null
 
 if (!reminderfox.tabInfo) reminderfox.tabInfo = {};
-reminderfox.tabInfo.tabName		= "Reminders";
-reminderfox.tabInfo.tabID			= "Xreminder";		// "xtodo" or "reminderFoxList:{tabName}
-reminderfox.tabInfo.tabIndex			= 0;
+reminderfox.tabInfo.tabName      = "Reminders";
+reminderfox.tabInfo.tabID        = "Xreminder";		// "xtodo" or "reminderFoxList:{tabName}
+reminderfox.tabInfo.tabIndex     = 0;
 
 reminderfox.tabInfo.Set= function (tabName, tabID, tabIndex) {
     var tab = document.getElementById("rmFx-allLists");
@@ -100,7 +93,7 @@ reminderfox.consts.PREF_ALERTSLIDER_TOP = "alert.notification.top";
 
 reminderfox.consts.ALERT_TIMEOUT_PREF = "alertTimeout";
 reminderfox.consts.ALERT_TIMEOUT_DEFAULT = 120; // number of minutes between alerts
-reminderfox.consts.HTML_STYLESHEET_PREF = "html.stylesheet";
+//P?reminderfox.consts.HTML_STYLESHEET_PREF = "html.stylesheet";
 
 reminderfox.consts.SHOW_WEEK_NUMS_PREF = "showWeekNumbers";
 
@@ -426,7 +419,7 @@ reminderfox.core.initUserPrefsArray= function(){
     reminderfox._prefsUser[reminderfox.consts.ADDRESS] = reminderfox._prefsTYPE.CHAR;
     reminderfox._prefsUser[reminderfox.consts.USERNAME] = reminderfox._prefsTYPE.CHAR;
 
-    reminderfox._prefsUser[reminderfox.consts.HTML_STYLESHEET_PREF] = reminderfox._prefsTYPE.CHAR;
+//P?    reminderfox._prefsUser[reminderfox.consts.HTML_STYLESHEET_PREF] = reminderfox._prefsTYPE.CHAR;
     reminderfox._prefsUser[reminderfox.consts.TODO_LISTS] = reminderfox._prefsTYPE.COMPLEX;
     reminderfox._prefsUser[reminderfox.consts.SUBSCRIPTIONS] = reminderfox._prefsTYPE.COMPLEX;
     reminderfox._prefsUser[reminderfox.consts.CATEGORIES] = reminderfox._prefsTYPE.COMPLEX;
@@ -574,9 +567,10 @@ reminderfox.core.logMessageLevel= function(logString, level){
 
             var caller1 = Components.stack.caller.filename + " #" + Components.stack.caller.lineNumber
 
-            console.info("Reminderfox: " + new Date().toLocaleFormat("%Y-%m-%d %H:%M:%S") + " >" + +(new Date()) + "<" 
-                + "\n" + caller0 + " --> " + caller1 
-                + "\n  " + logString);
+            console.info("Reminderfox: [" + level +" |" + logLevel +"]  ", new Date(), (" >"+ +(new Date()) + "<"), 
+                 "\n  ",  logString, "   ",
+                 "\n  ==>", caller0, 
+                 "\n  --> ", caller1);
         }
     }
 
@@ -2958,6 +2952,11 @@ reminderfox.core.constructReminderOutput= function(reminderEvents, _todosArray, 
 
     reminderfox.core.utc = reminderfox.core.getPreferenceValue (reminderfox.consts.UTC_DEFAULT, false)
 
+    var msg =  "  ---- constructReminderOutput  .utc " + reminderfox.core.utc		//gWcheckData
+    	+ "  isCalDAV : " + isCalDAV	//gWcheckData
+    reminderfox.util.Logger('checkData', msg)
+
+
     if (navigator.appVersion.lastIndexOf('Win') != -1) {
         newline = "\r\n";
     }
@@ -3360,7 +3359,7 @@ reminderfox.core.createStringForDate= function(reminderOrTodo, currentDate, isEx
     else
 
     //  UTC Format 
-    if ((reminderfox.core.utc == true) && !isCalDAV) {
+    if ((reminderfox.core.utc) || isCalDAV) {
 
         var dateZ = new Date(currentDate).toISOString().replace(/-/g,"").replace(/:/g,"").substring(0,15)+"Z"
         outputStr = "DTSTART" + separator + dateZ + newline;
@@ -5014,9 +5013,9 @@ reminderfox.core.readInReminderTodo= function(reminderTodo, index, readIn, remin
                 reminderTodo.date = new Date(eventDate.substring(0, 4), monthInt, eventDate.substring(6, 8));
                 reminderTodo.date.setHours(eventDate.substring(9, 11), eventDate.substring(11, 13));
 
-//console.log("XXXutc   readin DTSTART  in  eventDate:", "_"+eventDate+"_", "   _"+reminderTodo.date+"_")
-                reminderfox.date.adjustTimeZones(eventDate, readIn, reminderTodo.date);
-//console.log("XXXutc   readin DTSTART  out eventDate:", "_"+eventDate+"_", "   _"+reminderTodo.date+"_")
+//console.log("utc   readin DTSTART  in  eventDate:", "_"+eventDate+"_", "   _"+reminderTodo.date+"_")
+//                reminderfox.date.adjustTimeZones(eventDate, readIn, reminderTodo.date);
+//console.log("utc   readin DTSTART  out eventDate:", "_"+eventDate+"_", "   _"+reminderTodo.date+"_")
 
                 reminderTodo.allDayEvent = false;
             }
@@ -5626,8 +5625,6 @@ reminderfox.core.importRemindersUpdateAll= function(isNetworkImport, lastModifie
     // ex.;  X-REMINDERFOX-SUMMARY:Events=227 Todos=195
     var pos0 = outputStr.search("X-REMINDERFOX-SUMMARY:Events=");
 
-    // console.log(" X-REMINDERFOX-SUMMARY ", outputStr.substring(pos0))
-
     var summary = outputStr.substring(pos0).split("=");
     var nEvents = summary[1].split(' ')[0];
     var nTodos  = summary[2].split('\n')[0];
@@ -5639,9 +5636,8 @@ reminderfox.core.importRemindersUpdateAll= function(isNetworkImport, lastModifie
         +" \nPlease check your reminder store file and restore from backup if necessary!")
         reminderfox.util.Logger('calDAV', "\n" + logMsg + "\n\n");
 
-        var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
-        promptService.alert(window, "Reminderfox Warning", logMsg)
-
+    //    var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
+    //    promptService.alert(window, "Reminderfox Warning", logMsg)
         return;
     }
 

@@ -108,7 +108,7 @@ function resizeAlert() {
 	window.moveTo(x, y);
 
 
-var logMsg = "XXX NewAlert Slider on screen details  "
+var logMsg = " NewAlert Slider on screen details  "
 	+"  ALERT_LEFT " + ALERT_LEFT + "  ALERT_TOP " + ALERT_TOP
 	+ "\n  final   x:"+ x + " y:" + y 
 	+ "\n  screen.width  | window.outerWidth   :: " 
@@ -119,7 +119,7 @@ var logMsg = "XXX NewAlert Slider on screen details  "
 	+ "\n  alertSliderMaxHeight | gFinalHeight  :: " 
 		+ alertSliderMaxHeight +" | "+ gFinalHeight 
 	+ "\n";
-//XXX console.log(logMsg)
+//reminderfox.util.Logger("alert",logMsg)
 }
 
 

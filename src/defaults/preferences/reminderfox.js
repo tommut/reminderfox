@@ -21,14 +21,9 @@ pref("extensions.reminderFox.highlightTodaysReminders", true);
 pref("extensions.reminderFox.enableContextMenus", true);
 pref("extensions.reminderFox.hideThatRidiculousFox", false);
 pref("extensions.reminderFox.reminderDefaultFilter", 0);
-
 pref("extensions.reminderFox.alertTimeout", 120);
 pref("extensions.reminderFox.alertOpenTime", 5);
-pref("extensions.reminderFox.alertSoundCustom", false);
-
 pref("extensions.reminderFox.alarmSoundInterval", -1);
-pref("extensions.reminderFox.alarmSoundCustom", false);
-
 pref("extensions.reminderFox.calendarStartDay", 0);
 pref("extensions.reminderFox.calendar.daypopup.delay", 1000);
 pref("extensions.reminderFox.calendarMonths", 1 );

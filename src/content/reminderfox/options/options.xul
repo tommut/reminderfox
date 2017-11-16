@@ -795,7 +795,7 @@
 							<hbox width="310px">
 								<checkbox id="reminderFox-alertSound-Type" label="Custom Sound" flex="2"
 									oncommand="reminderFox_alertSoundType()"/>
-								<textbox flex="4" id="reminderFox-alertSoundType-file" />
+								<textbox flex="4" id="reminderFox-alertSoundType-File" />
 							</hbox>
 
 							<button id="reminderFox-alertSoundType-browse" class="reminderfox-editButton"
@@ -894,7 +894,7 @@
 								<hbox width="310px">
 									<checkbox id="reminderFox-alarmSoundType" label="Custom Sound" width="150px"
 										oncommand="reminderFox_alarmSoundType()"/>
-									<textbox id="reminderFox-alarmSoundType-file" />
+									<textbox id="reminderFox-alarmSoundType-File" />
 								</hbox>
 
 								<button id="reminderFox-alarmSoundType-browse" class="reminderfox-editButton"
